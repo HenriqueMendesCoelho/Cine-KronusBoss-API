@@ -10,7 +10,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -41,22 +40,22 @@ public class Movie {
 	private String director;
 	
 	@NotBlank
-	@Lob
+	@Column(columnDefinition = "text")
 	private String urlImage;
 	
 	@NotBlank
-	@Lob
+	@Column(columnDefinition = "text")
 	private String portugueseUrlTrailer;
 	
 	@NotBlank
-	@Lob
+	@Column(columnDefinition = "text")
 	private String englishUrlTrailer;
 	
 	@NotBlank
-	@Lob
+	@Column(columnDefinition = "text")
 	private String description;
 	
-	@Column(scale = 4)
+	@Column(columnDefinition = "numeric(4)")
 	private int year;
 	
 	@JsonManagedReference
