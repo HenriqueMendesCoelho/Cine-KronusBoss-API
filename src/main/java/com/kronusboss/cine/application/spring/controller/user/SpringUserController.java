@@ -40,9 +40,9 @@ public class SpringUserController {
 			UserTokenDto user = CredentialUtil.getUserFromToken(token);
 			return ResponseEntity.ok(controller.getUserById(id));
 		} catch (JsonMappingException e) {
-			return ResponseEntity.status(412).body(Map.of("message", "error to recover token"));
+			return ResponseEntity.status(412).body(Map.of("error", true, "status", 412, "message", "error to recover token"));
 		} catch (JsonProcessingException e) {
-			return ResponseEntity.status(412).body(Map.of("message", "error to recover token"));
+			return ResponseEntity.status(412).body(Map.of("error", true, "status", 412, "message", "error to recover token"));
 		} catch (UserNotFoundException e) {
 			return ResponseEntity.noContent().build();
 		}
@@ -55,7 +55,7 @@ public class SpringUserController {
 			response = controller.createUser(user);
 			return ResponseEntity.ok(response);
 		} catch (DuplicatedUserException e) {
-			return ResponseEntity.badRequest().body(Map.of("message", "email already taken"));
+			return ResponseEntity.badRequest().body(Map.of("error", true, "status", 400, "message", "email already taken"));
 		}
 		
 	}
