@@ -1,0 +1,11 @@
+version: '2'
+services:
+    backlog:
+        build:
+            context: .
+            args:
+               DB_PASS: ${DB_PASS}
+               DB_USER: ${DB_USER}
+               DB_URL: ${BACKLOG_DB_URL}
+               JWT_SECRET: ${JWT_SECRET}
+            dockerfile: Dockerfile
