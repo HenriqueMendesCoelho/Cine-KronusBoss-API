@@ -13,7 +13,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Entity
-@Table(name = "account_config")
+@Table(name = "user_preferences")
 @Data
 @Builder
 public class Preferences {

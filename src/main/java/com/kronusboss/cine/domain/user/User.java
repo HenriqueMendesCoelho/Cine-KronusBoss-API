@@ -34,7 +34,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "user")
+@Table(name="\"user\"")
 @Data
 public class User {
 	
@@ -58,7 +58,7 @@ public class User {
 	@Getter(value = AccessLevel.NONE)
 	@Setter(value = AccessLevel.NONE)
 	@ElementCollection(fetch=FetchType.EAGER)
-	@CollectionTable(name="roles")
+	@CollectionTable(name="user_roles")
 	private Set<Integer> roles = new HashSet<>();
 	
 	@OneToOne(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
@@ -86,12 +86,11 @@ public class User {
 	}
 	
 	@Builder
-	public User(String name, String email, String password, Set<Integer> roles,
+	public User(String name, String email, String password,
 			Preferences preferences, Statistics statistics, List<MovieNote> notes) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.roles = roles;
 		this.preferences = preferences;
 		this.statistics = statistics;
 		this.notes = notes;

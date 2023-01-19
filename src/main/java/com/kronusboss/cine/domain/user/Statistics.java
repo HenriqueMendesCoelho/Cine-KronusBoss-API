@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name="account_stats")
+@Table(name="user_statistics")
 public class Statistics {
 	
 	@Id
