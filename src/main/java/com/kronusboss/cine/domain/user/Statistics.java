@@ -1,22 +1,24 @@
 package com.kronusboss.cine.domain.user;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.hibernate.annotations.UpdateTimestamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @Table(name="user_statistics")
+@NoArgsConstructor
+@Data
 public class Statistics {
 	
 	@Id
@@ -24,18 +26,22 @@ public class Statistics {
 	private UUID id;
 	
 	@Column
-	private int ratingsGiven = 0;
+	private int ratingsGiven;
 	
 	@Column
-	private int registeredMovies = 0;
+	private int registeredMovies;
 	
+	@JsonIgnore
 	@OneToOne
 	@MapsId
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
-
 	
-	@UpdateTimestamp
-	@Column
-	private LocalDateTime updatedAt;
+	@Builder
+	public Statistics(int ratingsGiven, int registeredMovies, User user) {
+		this.ratingsGiven = ratingsGiven;
+		this.registeredMovies = registeredMovies;
+		this.user = user;
+	}
+	
 }
