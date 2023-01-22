@@ -1,5 +1,9 @@
 package com.kronusboss.cine.usecase.user;
 
-public interface DeleteUserUseCase {
+import java.util.UUID;
 
+public interface DeleteUserUseCase {
+	
+	void deleteUser(UUID id);
+	
 }

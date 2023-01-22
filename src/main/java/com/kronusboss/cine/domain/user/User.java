@@ -1,8 +1,10 @@
 package com.kronusboss.cine.domain.user;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -10,55 +12,51 @@ import java.util.stream.Collectors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kronusboss.cine.domain.movie.MovieNote;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="\"user\"")
-@Data
-public class User {
-	
+//@Table(name="\"user\"")
+@Table(name="user_cine")
+@Getter
+@Setter
+public class User implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
 	private UUID id;
 	
-	@NotBlank
 	@Column(length = 100, nullable = false)
 	private String name;
 	
-	@NotBlank
 	@Column(unique=true, length = 100, nullable = false)
 	private String email;
 	
-	@NotBlank
 	@Column(length = 70, nullable = false)
 	private String password;
 	
-	@Getter(value = AccessLevel.NONE)
-	@Setter(value = AccessLevel.NONE)
-	@ElementCollection(fetch=FetchType.EAGER)
-	@CollectionTable(name="user_roles")
+	@CollectionTable
+	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<Integer> roles = new HashSet<>();
 	
 	@OneToOne(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
@@ -69,8 +67,8 @@ public class User {
 	@PrimaryKeyJoinColumn
 	private Statistics statistics;
 	
-	@JsonManagedReference
-	@OneToMany(mappedBy = "user")
+	@JsonIgnore
+	@OneToMany(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<MovieNote> notes;
 	
 	@CreationTimestamp
@@ -88,6 +86,7 @@ public class User {
 	@Builder
 	public User(String name, String email, String password,
 			Preferences preferences, Statistics statistics, List<MovieNote> notes) {
+		super();
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -109,4 +108,19 @@ public class User {
 		roles.remove(role.getCode());
 	}
 
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return Objects.equals(id, other.id);
+	}
+
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+	
 }
