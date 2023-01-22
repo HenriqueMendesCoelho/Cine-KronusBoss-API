@@ -1,5 +1,7 @@
 package com.kronusboss.cine.adapter.controller.core.dto;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
@@ -13,6 +15,8 @@ public class UserTokenDto {
 	private Long expiracao;
 	@JsonProperty("aud")
 	private String audiencia;
-	@JsonProperty("email")
-	private String email;
+	@JsonProperty("name")
+	private String name;
+	@JsonProperty("roles")
+	private Set<String> roles;
 }

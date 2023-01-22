@@ -18,7 +18,7 @@ public class CredentialUtil {
 		
 		UserTokenDto user = mapper.readValue(payload, UserTokenDto.class);
 		
-		if(user.getLogin() == null || user.getAudiencia() == null || user.getExpiracao() == null || user.getEmail() == null) {
+		if(user.getLogin() == null || user.getAudiencia() == null || user.getExpiracao() == null || user.getName() == null) {
 			throw new IllegalArgumentException();
 		}
 		
