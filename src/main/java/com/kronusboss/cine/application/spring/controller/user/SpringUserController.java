@@ -1,5 +1,6 @@
 package com.kronusboss.cine.application.spring.controller.user;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kronusboss.cine.adapter.controller.core.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.controller.user.UserController;
+import com.kronusboss.cine.adapter.controller.user.dto.InviteResponseDto;
 import com.kronusboss.cine.adapter.controller.user.dto.UserRequestDto;
 import com.kronusboss.cine.adapter.controller.user.dto.UserResponseDto;
 import com.kronusboss.cine.adapter.util.CredentialUtil;
@@ -35,7 +37,6 @@ public class SpringUserController {
 	@Autowired
 	private UserController controller;
 	
-	
 	@GetMapping("/{email}")
 	public ResponseEntity<?> getUser(@PathVariable String email,
 			@RequestHeader("Authorization") String token) {
@@ -51,6 +52,11 @@ public class SpringUserController {
 		} catch (UserNotAuthorizedException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "status", 400, "message", e.getMessage()));
 		}
+	}
+	
+	@GetMapping("/invite")
+	public ResponseEntity<List<InviteResponseDto>> listAllInvites() {
+		return ResponseEntity.ok(controller.getAllInvites());
 	}
 
 	@PostMapping
@@ -85,5 +91,10 @@ public class SpringUserController {
 	public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
 		controller.delete(id);
 		return ResponseEntity.ok().build();
+	}
+	
+	@PostMapping("/invite")
+	public ResponseEntity<InviteResponseDto> createInvite() {
+		return ResponseEntity.ok(controller.createUserInvite());
 	}
 }

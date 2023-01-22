@@ -9,11 +9,15 @@ import org.springframework.stereotype.Controller;
 
 import com.kronusboss.cine.adapter.controller.core.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.controller.user.UserController;
+import com.kronusboss.cine.adapter.controller.user.dto.InviteResponseDto;
 import com.kronusboss.cine.adapter.controller.user.dto.UserRequestDto;
 import com.kronusboss.cine.adapter.controller.user.dto.UserResponseDto;
+import com.kronusboss.cine.domain.user.Invite;
 import com.kronusboss.cine.domain.user.User;
+import com.kronusboss.cine.usecase.user.CreateInviteUseCase;
 import com.kronusboss.cine.usecase.user.CreateUserUseCase;
 import com.kronusboss.cine.usecase.user.DeleteUserUseCase;
+import com.kronusboss.cine.usecase.user.SearchInviteUseCase;
 import com.kronusboss.cine.usecase.user.SearchUserUseCase;
 import com.kronusboss.cine.usecase.user.UpdateUserUseCase;
 import com.kronusboss.cine.usecase.user.exception.DuplicatedUserException;
@@ -31,10 +35,16 @@ public class UserControllerImpl implements UserController {
 	private SearchUserUseCase searchUserUseCase;
 
 	@Autowired
-	UpdateUserUseCase updateUserUseCase;
+	private UpdateUserUseCase updateUserUseCase;
 
 	@Autowired
-	DeleteUserUseCase deleteUserUseCase;
+	private DeleteUserUseCase deleteUserUseCase;
+	
+	@Autowired
+	private SearchInviteUseCase searchInviteUseCase;
+	
+	@Autowired
+	private CreateInviteUseCase createInviteUseCase;
 
 	@Override
 	public List<UserResponseDto> getAllUsers() throws UserNotFoundException {
@@ -64,6 +74,18 @@ public class UserControllerImpl implements UserController {
 	@Override
 	public void delete(UUID id) {
 		deleteUserUseCase.deleteUser(id);
+	}
+
+	@Override
+	public InviteResponseDto createUserInvite() {
+		Invite response = createInviteUseCase.create();
+		return new InviteResponseDto(response);
+	}
+
+	@Override
+	public List<InviteResponseDto> getAllInvites() {
+		List<Invite> response = searchInviteUseCase.list();
+		return response.stream().map(InviteResponseDto::new).collect(Collectors.toList());
 	}
 
 }

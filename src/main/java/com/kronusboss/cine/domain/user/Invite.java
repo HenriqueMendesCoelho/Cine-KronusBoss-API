@@ -1,5 +1,6 @@
 package com.kronusboss.cine.domain.user;
 
+import java.io.Serializable;
 import java.util.Random;
 
 import javax.persistence.Column;
@@ -7,27 +8,47 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import lombok.Data;
+import javax.persistence.Table; 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "user_invites")
-@Data
-public class Invite {
+@Getter
+@Setter
+@EqualsAndHashCode
+public class Invite implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column
 	private Long id;
 	
 	@Column(nullable = false, unique = true)
 	private String code;
 
 	public Invite() {
+		super();
+		this.code = createRandomInvite();
+	}
+	
+	private String createRandomInvite() {
 		Random r = new Random();
 		int minimum = 10000000;
 		int maximum = 999999999;
 		int result = r.nextInt(maximum-minimum) + minimum;
 		
-		code = String.format("KB-%s", result);
+		return String.format("KB-%s", result);
+	}
+
+
+
+	public Invite(Long id, String code) {
+		super();
+		this.id = id;
+		this.code = code;
 	}
 }

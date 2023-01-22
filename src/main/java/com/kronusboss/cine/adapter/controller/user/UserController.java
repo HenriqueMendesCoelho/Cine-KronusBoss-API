@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.kronusboss.cine.adapter.controller.core.dto.UserTokenDto;
+import com.kronusboss.cine.adapter.controller.user.dto.InviteResponseDto;
 import com.kronusboss.cine.adapter.controller.user.dto.UserRequestDto;
 import com.kronusboss.cine.adapter.controller.user.dto.UserResponseDto;
 import com.kronusboss.cine.usecase.user.exception.DuplicatedUserException;
@@ -22,4 +23,8 @@ public interface UserController {
 	UserResponseDto update(UserRequestDto user, UUID id, UserTokenDto userLoged) throws UserNotFoundException, UserNotAuthorizedException;
 	
 	void delete(UUID id);
+	
+	List<InviteResponseDto> getAllInvites();
+	
+	InviteResponseDto createUserInvite();
 }
