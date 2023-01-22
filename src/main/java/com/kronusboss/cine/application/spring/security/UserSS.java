@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.kronusboss.cine.domain.user.Roles;
+import com.kronusboss.cine.domain.user.Role;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +29,7 @@ public class UserSS implements UserDetails {
 	private Set<String> roles;
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserSS(UUID userid, String name, String email, String password, Set<Roles> roles) {
+	public UserSS(UUID userid, String name, String email, String password, Set<Role> roles) {
 		super();
 		this.userid = userid;
 		this.name = name;

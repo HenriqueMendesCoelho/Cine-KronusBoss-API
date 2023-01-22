@@ -8,7 +8,7 @@ import com.kronusboss.cine.adapter.repository.jpa.user.InviteRepository;
 import com.kronusboss.cine.adapter.repository.jpa.user.UserRepository;
 import com.kronusboss.cine.domain.user.Invite;
 import com.kronusboss.cine.domain.user.Preferences;
-import com.kronusboss.cine.domain.user.Roles;
+import com.kronusboss.cine.domain.user.Role;
 import com.kronusboss.cine.domain.user.Statistics;
 import com.kronusboss.cine.domain.user.User;
 import com.kronusboss.cine.usecase.user.CreateUserUseCase;
@@ -39,7 +39,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
 
 			inviteRepository.delete(invite);
 		} else {
-			user.addRole(Roles.ADM);
+			user.addRole(Role.ADM);
 		}
 
 		if (repository.findByEmail(user.getEmail()) != null) {

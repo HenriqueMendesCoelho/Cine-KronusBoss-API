@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.kronusboss.cine.adapter.repository.jpa.user.UserRepository;
-import com.kronusboss.cine.domain.user.Roles;
+import com.kronusboss.cine.domain.user.Role;
 import com.kronusboss.cine.domain.user.User;
 import com.kronusboss.cine.usecase.user.SearchUserUseCase;
 import com.kronusboss.cine.usecase.user.exception.UserNotAuthorizedException;
@@ -24,7 +24,7 @@ public class SearchUserUseCaseImpl implements SearchUserUseCase {
 		User userLoged = repository.findByEmail(emailUserLoged);
 		User user = repository.findByEmail(emailUserToFind);
 		
-		if(!emailUserToFind.equals(emailUserLoged) && !userLoged.getRoles().contains(Roles.ADM)) {
+		if(!emailUserToFind.equals(emailUserLoged) && !userLoged.getRoles().contains(Role.ADM)) {
 			throw new UserNotAuthorizedException();
 		}
 		

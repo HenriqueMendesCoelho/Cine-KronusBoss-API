@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kronusboss.cine.adapter.repository.jpa.user.UserRepository;
-import com.kronusboss.cine.domain.user.Roles;
+import com.kronusboss.cine.domain.user.Role;
 import com.kronusboss.cine.domain.user.User;
 import com.kronusboss.cine.usecase.user.UpdateUserUseCase;
 import com.kronusboss.cine.usecase.user.exception.UserNotAuthorizedException;
@@ -23,7 +23,7 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
 		User userLoged = repository.findByEmail(emailUserLoged);
 		User userToUpdate = repository.getReferenceById(id);
 		
-		if(userLoged.getId() != id && !userLoged.getRoles().contains(Roles.ADM)) {
+		if(userLoged.getId() != id && !userLoged.getRoles().contains(Role.ADM)) {
 			throw new UserNotAuthorizedException();
 		}
 		

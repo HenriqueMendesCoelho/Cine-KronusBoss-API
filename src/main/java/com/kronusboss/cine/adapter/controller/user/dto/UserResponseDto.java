@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import com.kronusboss.cine.domain.user.Roles;
+import com.kronusboss.cine.domain.user.Role;
 import com.kronusboss.cine.domain.user.User;
 
 import lombok.Data;
@@ -35,7 +35,7 @@ public class UserResponseDto {
 		updatedAt = user.getUpdatedAt();
 	}
 	
-	private void addRole(Roles role) {
+	private void addRole(Role role) {
 		roles.add(role.getDescription().split("_")[1]);
 	}
 }

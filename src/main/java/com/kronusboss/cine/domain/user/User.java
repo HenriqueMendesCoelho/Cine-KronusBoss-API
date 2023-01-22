@@ -33,8 +33,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-//@Table(name="\"user\"")
-@Table(name="user_cine")
+@Table(name="\"user\"")
 @Getter
 @Setter
 public class User implements Serializable {
@@ -80,7 +79,7 @@ public class User implements Serializable {
 	private LocalDateTime updatedAt;
 	
 	public User() {
-		addRole(Roles.USER);
+		addRole(Role.USER);
 	}
 	
 	@Builder
@@ -93,18 +92,18 @@ public class User implements Serializable {
 		this.preferences = preferences;
 		this.statistics = statistics;
 		this.notes = notes;
-		addRole(Roles.USER);
+		addRole(Role.USER);
 	}
 	
-	public Set<Roles> getRoles(){
-		return roles.stream().map(i -> Roles.toEnum(i)).collect(Collectors.toSet());
+	public Set<Role> getRoles(){
+		return roles.stream().map(i -> Role.toEnum(i)).collect(Collectors.toSet());
 	}
 	
-	public void addRole(Roles role) {
+	public void addRole(Role role) {
 		roles.add(role.getCode());
 	}
 	
-	public void removeRole(Roles role) {
+	public void removeRole(Role role) {
 		roles.remove(role.getCode());
 	}
 
