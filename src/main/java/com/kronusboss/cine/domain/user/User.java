@@ -55,7 +55,7 @@ public class User implements Serializable {
 	private String password;
 	
 	@CollectionTable
-	@ElementCollection(fetch = FetchType.EAGER)
+	@ElementCollection(fetch = FetchType.LAZY)
 	private Set<Integer> roles = new HashSet<>();
 	
 	@OneToOne(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
