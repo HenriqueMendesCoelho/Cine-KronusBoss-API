@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,8 +39,8 @@ public class SpringUserController {
 	@Autowired
 	private UserController controller;
 	
-	@GetMapping("/{email}")
-	public ResponseEntity<?> getUser(@PathVariable String email,
+	@GetMapping
+	public ResponseEntity<?> getUser(@RequestParam String email,
 			@RequestHeader("Authorization") String token) {
 		try {
 			UserTokenDto user = CredentialUtil.getUserFromToken(token);
@@ -51,6 +53,17 @@ public class SpringUserController {
 					.body(Map.of("error", true, "status", 412, "message", "error to recover token"));
 		} catch (UserNotAuthorizedException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "status", 400, "message", e.getMessage()));
+		}
+	}
+	
+	@GetMapping("/list")
+	@PreAuthorize("hasRole('ADM')")
+	public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+		try {
+			List<UserResponseDto> response = controller.getAllUsers();
+			return ResponseEntity.ok(response);
+		} catch (UserNotFoundException e) {
+			return ResponseEntity.noContent().build();
 		}
 	}
 	
