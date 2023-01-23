@@ -8,6 +8,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,6 +24,7 @@ import com.kronusboss.cine.application.spring.security.util.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Secured(value = { "ROLE_USER, ROLE_ADM" })
 public class SecurityConfig {
 	
@@ -37,7 +39,6 @@ public class SecurityConfig {
 	
 	private static final String[] PUBLIC_MATCHERS = {
 			"/api/auth/forgot",
-			"/api/user/**",
 	};
 	
 	@Bean
