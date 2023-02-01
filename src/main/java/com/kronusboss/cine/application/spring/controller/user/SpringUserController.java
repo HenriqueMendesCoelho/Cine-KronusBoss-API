@@ -30,7 +30,7 @@ import com.kronusboss.cine.usecase.user.exception.InviteNotValidException;
 import com.kronusboss.cine.usecase.user.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.usecase.user.exception.UserNotFoundException;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/user")
@@ -107,6 +107,7 @@ public class SpringUserController {
 	}
 	
 	@PostMapping("/invite")
+	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<InviteResponseDto> createInvite() {
 		return ResponseEntity.ok(controller.createUserInvite());
 	}

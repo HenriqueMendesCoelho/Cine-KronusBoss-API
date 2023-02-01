@@ -5,8 +5,8 @@ import org.hibernate.validator.constraints.Length;
 import com.kronusboss.cine.domain.user.Preferences;
 import com.kronusboss.cine.domain.user.User;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data

@@ -2,33 +2,32 @@ package com.kronusboss.cine.domain.user;
 
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user_preferences")
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(of = "id")
 public class Preferences {
 	
 	@Id
-	@Column(name = "user_id")
+    @Column
 	private UUID id;
 	
 	@Column
 	private boolean notify;
 	
-	@JsonIgnore
 	@OneToOne
 	@MapsId
 	@JoinColumn(name = "user_id", referencedColumnName = "id")

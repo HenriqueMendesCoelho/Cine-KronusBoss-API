@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,8 +23,7 @@ import com.kronusboss.cine.application.spring.security.util.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@Secured(value = { "ROLE_USER, ROLE_ADM" })
+@EnableMethodSecurity
 public class SecurityConfig {
 	
 	@Autowired
@@ -51,9 +49,9 @@ public class SecurityConfig {
 		http.cors().and().csrf().disable();
         http
             .authorizeHttpRequests()
-            .antMatchers(PUBLIC_MATCHERS).permitAll()
-            .antMatchers(HttpMethod.POST, "/api/user").permitAll()
-            .antMatchers(HttpMethod.GET, "/actuator/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers(PUBLIC_MATCHERS).permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
+            .requestMatchers(HttpMethod.GET, "/actuator/**").hasAuthority("ROLE_ADMIN")
     		.anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil));
         http.addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration), jwtUtil, userDetailsService));
