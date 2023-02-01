@@ -23,18 +23,22 @@ public class UserSS implements UserDetails {
 	private UUID userid;
 	@Getter
 	private String name;
-	private String email;
-	private String password;
+	@Getter
+	private int consecutiveFailedLoginAttempts;
 	@Getter
 	private Set<String> roles;
+	
+	private String email;
+	private String password;
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserSS(UUID userid, String name, String email, String password, Set<Role> roles) {
+	public UserSS(UUID userid, String name, String email, String password, int consecutiveFailedLoginAttempts, Set<Role> roles) {
 		super();
 		this.userid = userid;
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		this.consecutiveFailedLoginAttempts = consecutiveFailedLoginAttempts;
 		this.authorities = roles.stream().map(i -> new SimpleGrantedAuthority(i.getDescription())).collect(Collectors.toList());
 		this.roles = roles.stream().map(r -> r.getDescription()).collect(Collectors.toSet());
 	}
@@ -61,6 +65,9 @@ public class UserSS implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
+		if(consecutiveFailedLoginAttempts >= 10) {
+			return false;
+		}
 		return true;
 	}
 

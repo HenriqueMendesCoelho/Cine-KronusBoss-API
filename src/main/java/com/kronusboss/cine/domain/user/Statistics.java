@@ -31,6 +31,9 @@ public class Statistics {
 	@Column
 	private int registeredMovies;
 	
+	@Column
+	private int consecutiveFailedLoginAttempts;
+	
 	@JsonIgnore
 	@OneToOne
 	@MapsId
@@ -41,6 +44,7 @@ public class Statistics {
 	public Statistics(int ratingsGiven, int registeredMovies, User user) {
 		this.ratingsGiven = ratingsGiven;
 		this.registeredMovies = registeredMovies;
+		this.consecutiveFailedLoginAttempts = 0;
 		this.user = user;
 	}
 	
