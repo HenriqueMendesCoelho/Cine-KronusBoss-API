@@ -33,7 +33,6 @@ public class AuthenticationFailureListener implements ApplicationListener<Authen
 		}
 		
 		int ConsecutiveFailedLoginAttempts = user.getStatistics().getConsecutiveFailedLoginAttempts();
-		//System.out.println(user.getStatistics().getConsecutiveFailedLoginAttempts());
 		user.getStatistics().setConsecutiveFailedLoginAttempts(ConsecutiveFailedLoginAttempts + 1);
 		
 		repository.saveAndFlush(user);
