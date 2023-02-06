@@ -1,5 +1,9 @@
 package com.kronusboss.cine.usecase.movie;
 
-public interface DeleteMovieUseCase {
+import java.util.UUID;
 
+public interface DeleteMovieUseCase {
+	
+	void delete(UUID id);
+	
 }
