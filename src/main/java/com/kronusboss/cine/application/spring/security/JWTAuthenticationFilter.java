@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kronusboss.cine.adapter.controller.core.dto.UserLoginDto;
+import com.kronusboss.cine.adapter.core.controller.dto.UserLoginDto;
 import com.kronusboss.cine.application.spring.security.util.JWTUtil;
 
 import jakarta.servlet.FilterChain;

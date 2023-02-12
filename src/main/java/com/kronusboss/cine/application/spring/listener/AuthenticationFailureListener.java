@@ -5,8 +5,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.adapter.repository.jpa.user.UserRepository;
-import com.kronusboss.cine.domain.user.User;
+import com.kronusboss.cine.adapter.user.repository.jpa.UserRepository;
+import com.kronusboss.cine.user.domain.User;
 
 @Component
 public class AuthenticationFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {

@@ -19,16 +19,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.kronusboss.cine.adapter.controller.core.dto.UserTokenDto;
-import com.kronusboss.cine.adapter.controller.user.UserController;
-import com.kronusboss.cine.adapter.controller.user.dto.InviteResponseDto;
-import com.kronusboss.cine.adapter.controller.user.dto.UserRequestDto;
-import com.kronusboss.cine.adapter.controller.user.dto.UserResponseDto;
+import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
+import com.kronusboss.cine.adapter.user.controller.UserController;
+import com.kronusboss.cine.adapter.user.controller.dto.InviteResponseDto;
+import com.kronusboss.cine.adapter.user.controller.dto.UserRequestDto;
+import com.kronusboss.cine.adapter.user.controller.dto.UserResponseDto;
 import com.kronusboss.cine.adapter.util.CredentialUtil;
-import com.kronusboss.cine.usecase.user.exception.DuplicatedUserException;
-import com.kronusboss.cine.usecase.user.exception.InviteNotValidException;
-import com.kronusboss.cine.usecase.user.exception.UserNotAuthorizedException;
-import com.kronusboss.cine.usecase.user.exception.UserNotFoundException;
+import com.kronusboss.cine.user.usecase.exception.DuplicatedUserException;
+import com.kronusboss.cine.user.usecase.exception.InviteNotValidException;
+import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
+import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
 
 import jakarta.validation.Valid;
 
