@@ -1,5 +1,6 @@
 package com.kronusboss.cine.adapter.movie.controller.dto;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -25,7 +26,7 @@ public class MovieResponseDto {
 	private String portugueseUrlTrailer;
 	private String englishUrlTrailer;
 	private String description;
-	private int year;
+	private LocalDate releaseDate;
 	private Long tmdbId;
 	List<MovieNoteResponseDto> notes;
 
@@ -38,7 +39,7 @@ public class MovieResponseDto {
 		portugueseUrlTrailer = movie.getPortugueseUrlTrailer();
 		englishUrlTrailer = movie.getEnglishUrlTrailer();
 		description = movie.getDescription();
-		year = movie.getYear();
+		releaseDate = movie.getReleaseDate();
 		tmdbId = movie.getTmdbId();
 		notes = movie.getNotes() != null ? movie.getNotes().stream().map(n -> new MovieNoteResponseDto(n)).collect(Collectors.toList()) : null;
 	}

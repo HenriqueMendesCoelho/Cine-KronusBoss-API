@@ -1,5 +1,6 @@
 package com.kronusboss.cine.movie.domain;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +33,9 @@ public class Movie {
 
 	@Column(length=150, nullable = false)
 	private String portugueseTitle;
+	
+	@Column(length=150, nullable = false)
+	private String englishTitle;
 
 	@Column(length=150, nullable = false)
 	private String originalTitle;
@@ -51,8 +55,8 @@ public class Movie {
 	@Column(columnDefinition = "text")
 	private String description;
 	
-	@Column(columnDefinition = "numeric(4)")
-	private int year;
+	@Column
+	private LocalDate releaseDate;
 	
 	@Column(nullable = true, unique = true)
 	private Long tmdbId;

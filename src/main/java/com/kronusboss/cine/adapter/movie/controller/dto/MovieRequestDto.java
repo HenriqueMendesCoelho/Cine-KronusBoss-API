@@ -1,5 +1,7 @@
 package com.kronusboss.cine.adapter.movie.controller.dto;
 
+import java.time.LocalDate;
+
 import com.kronusboss.cine.movie.domain.Movie;
 
 import io.micrometer.common.lang.Nullable;
@@ -19,6 +21,8 @@ public class MovieRequestDto {
 	private String portugueseTitle;
 	
 	@NotBlank
+	private String englishTitle;
+	
 	private String originalTitle;
 	
 	@NotBlank
@@ -35,9 +39,8 @@ public class MovieRequestDto {
 	
 	@NotBlank
 	private String description;
-	
-	@NotBlank
-	private int year;
+
+	private LocalDate releaseDate;
 	
 	@Nullable
 	private Long tmdbId;
@@ -52,7 +55,7 @@ public class MovieRequestDto {
 				.portugueseUrlTrailer(portugueseUrlTrailer)
 				.englishUrlTrailer(englishUrlTrailer)
 				.description(description)
-				.year(year)
+				.releaseDate(releaseDate)
 				.tmdbId(tmdbId)
 				.build();
 	}

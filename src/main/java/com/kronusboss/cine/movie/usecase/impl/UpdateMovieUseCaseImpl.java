@@ -33,7 +33,7 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 		movieToUpdate.setPortugueseUrlTrailer(movie.getPortugueseUrlTrailer());
 		movieToUpdate.setTmdbId(movie.getTmdbId());
 		movieToUpdate.setUrlImage(movie.getUrlImage());
-		movieToUpdate.setYear(movie.getYear());
+		movieToUpdate.setReleaseDate(movie.getReleaseDate());
 		
 		return repository.saveAndFlush(movieToUpdate);
 	}
