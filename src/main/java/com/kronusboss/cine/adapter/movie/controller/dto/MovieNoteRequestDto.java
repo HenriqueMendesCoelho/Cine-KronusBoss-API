@@ -1,6 +1,8 @@
 package com.kronusboss.cine.adapter.movie.controller.dto;
 
-import com.kronusboss.cine.user.domain.User;
+import java.util.UUID;
+
+import org.hibernate.validator.constraints.Range;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,11 +13,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieNoteUserResponseDto {
+public class MovieNoteRequestDto {
 
-	private String name;
+	private UUID movieId;
 
-	public MovieNoteUserResponseDto(User user) {
-		name = user.getName();
-	}
+	@Range(min = 0, max = 10)
+	private Integer note;
 }

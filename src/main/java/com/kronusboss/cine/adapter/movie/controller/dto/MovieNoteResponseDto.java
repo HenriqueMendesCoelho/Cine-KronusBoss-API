@@ -1,7 +1,6 @@
 package com.kronusboss.cine.adapter.movie.controller.dto;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import com.kronusboss.cine.movie.domain.MovieNote;
 
@@ -15,19 +14,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovieNoteResponseDto {
-	
-	private UUID id;
-	private int note;
+
+	private Integer note;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private MovieNoteUserResponseDto user;
-	
+
 	public MovieNoteResponseDto(MovieNote movieNote) {
-		id = movieNote.getId();
 		note = movieNote.getNote();
 		createdAt = movieNote.getCreatedAt();
 		updatedAt = movieNote.getUpdatedAt();
 		user = new MovieNoteUserResponseDto(movieNote.getUser());
 	}
-	
+
 }

@@ -49,6 +49,7 @@ public class MovieRequestDto {
 		return Movie
 				.builder()
 				.portugueseTitle(portugueseTitle)
+				.englishTitle(englishTitle)
 				.originalTitle(originalTitle)
 				.director(director)
 				.urlImage(urlImage)
