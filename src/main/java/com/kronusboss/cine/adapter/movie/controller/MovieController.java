@@ -14,6 +14,7 @@ import com.kronusboss.cine.adapter.movie.controller.dto.MovieResponseDto;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieException;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieNoteException;
 import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
+import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 
 public interface MovieController {
 
@@ -25,7 +26,8 @@ public interface MovieController {
 
 	MovieResponseDto save(MovieRequestDto movie) throws DuplicatedMovieException;
 
-	MovieResponseDto update(MovieRequestDto movie, UUID id) throws MovieNotFoundException;
+	MovieResponseDto update(MovieRequestDto movie, UUID id, UserTokenDto user)
+			throws MovieNotFoundException, UserNotAuthorizedException;
 
 	void delete(UUID id);
 

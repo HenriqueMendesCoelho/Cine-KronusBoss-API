@@ -26,6 +26,7 @@ import com.kronusboss.cine.movie.usecase.UpdateMovieUseCase;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieException;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieNoteException;
 import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
+import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 
 @Controller
 public class MovieControllerImpl implements MovieController {
@@ -73,8 +74,9 @@ public class MovieControllerImpl implements MovieController {
 	}
 
 	@Override
-	public MovieResponseDto update(MovieRequestDto movie, UUID id) throws MovieNotFoundException {
-		Movie response = updateMovieUseCase.update(movie.toDomain(), id);
+	public MovieResponseDto update(MovieRequestDto movie, UUID id, UserTokenDto user)
+			throws MovieNotFoundException, UserNotAuthorizedException {
+		Movie response = updateMovieUseCase.update(movie.toDomain(), id, user.getLogin());
 		return new MovieResponseDto(response);
 	}
 
