@@ -1,5 +1,6 @@
 package com.kronusboss.cine.application.spring.configuration;
 
+import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import org.springframework.context.annotation.Bean;
@@ -25,17 +26,17 @@ public class SpringConfig {
 		return new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 				.setSerializationInclusion(Include.NON_NULL)
 				.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
-				.registerModule(module)
+				.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX")).registerModule(module)
 				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 	}
-	
-	 @Bean
-	 @Primary
-	  public LocaleResolver localeResolver() {
-	      SessionLocaleResolver slr = new SessionLocaleResolver();
-	      slr.setDefaultLocale(Locale.US);
-	      slr.setLocaleAttributeName("session.current.locale");
-	      slr.setTimeZoneAttributeName("session.current.timezone");
-	      return slr;
-	  }
+
+	@Bean
+	@Primary
+	public LocaleResolver localeResolver() {
+		SessionLocaleResolver slr = new SessionLocaleResolver();
+		slr.setDefaultLocale(Locale.US);
+		slr.setLocaleAttributeName("session.current.locale");
+		slr.setTimeZoneAttributeName("session.current.timezone");
+		return slr;
+	}
 }
