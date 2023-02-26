@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.domain.MovieNote;
 
 import jakarta.persistence.CascadeType;
@@ -32,7 +33,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="\"user\"")
+@Table(name = "\"user\"")
 @Getter
 @Setter
 public class User implements Serializable {
@@ -43,46 +44,49 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
 	private UUID id;
-	
+
 	@Column(length = 100, nullable = false)
 	private String name;
-	
-	@Column(unique=true, length = 100, nullable = false)
+
+	@Column(unique = true, length = 100, nullable = false)
 	private String email;
-	
+
 	@Column(length = 70, nullable = false)
 	private String password;
-	
+
 	@CollectionTable
 	@ElementCollection(fetch = FetchType.LAZY)
 	private Set<Integer> roles = new HashSet<>();
-	
-	@OneToOne(mappedBy = "user", cascade=CascadeType.ALL)
+
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	private Preferences preferences;
-	
-	@OneToOne(mappedBy = "user", cascade=CascadeType.ALL)
+
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	private Statistics statistics;
-	
-	@OneToMany(mappedBy = "user", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<MovieNote> notes;
-	
+
+	@OneToMany(mappedBy = "user")
+	private List<Movie> movies;
+
 	@CreationTimestamp
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
-	
+
 	@UpdateTimestamp
 	@Column
 	private LocalDateTime updatedAt;
-	
+
 	public User() {
 		addRole(Role.USER);
 	}
-	
+
 	@Builder
-	public User(String name, String email, String password,
-			Preferences preferences, Statistics statistics, List<MovieNote> notes) {
+	public User(String name, String email, String password, Preferences preferences, Statistics statistics,
+			List<MovieNote> notes) {
 		super();
 		this.name = name;
 		this.email = email;
@@ -92,15 +96,15 @@ public class User implements Serializable {
 		this.notes = notes;
 		addRole(Role.USER);
 	}
-	
-	public Set<Role> getRoles(){
+
+	public Set<Role> getRoles() {
 		return roles.stream().map(i -> Role.toEnum(i)).collect(Collectors.toSet());
 	}
-	
+
 	public void addRole(Role role) {
 		roles.add(role.getCode());
 	}
-	
+
 	public void removeRole(Role role) {
 		roles.remove(role.getCode());
 	}
@@ -119,5 +123,5 @@ public class User implements Serializable {
 	public int hashCode() {
 		return Objects.hash(id);
 	}
-	
+
 }

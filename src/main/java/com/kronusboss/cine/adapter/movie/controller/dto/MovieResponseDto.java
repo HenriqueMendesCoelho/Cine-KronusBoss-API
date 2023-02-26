@@ -29,6 +29,7 @@ public class MovieResponseDto {
 	private LocalDate releaseDate;
 	private Long tmdbId;
 	List<MovieNoteResponseDto> notes;
+	List<MovieGenreResponseDto> genres;
 
 	public MovieResponseDto(Movie movie) {
 		id = movie.getId();
@@ -41,6 +42,8 @@ public class MovieResponseDto {
 		description = movie.getDescription();
 		releaseDate = movie.getReleaseDate();
 		tmdbId = movie.getTmdbId();
-		notes = movie.getNotes() != null ? movie.getNotes().stream().map(n -> new MovieNoteResponseDto(n)).collect(Collectors.toList()) : null;
+		if (movie.getNotes() != null)
+			notes = movie.getNotes().stream().map(MovieNoteResponseDto::new).collect(Collectors.toList());
+		genres = movie.getGenres().stream().map(MovieGenreResponseDto::new).collect(Collectors.toList());
 	}
 }
