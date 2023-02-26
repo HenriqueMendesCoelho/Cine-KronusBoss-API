@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ import com.kronusboss.cine.adapter.util.CredentialUtil;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieException;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieNoteException;
 import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
+import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 
 import jakarta.validation.Valid;
 
@@ -90,8 +92,25 @@ public class SpringMovieController {
 		} catch (MovieNotFoundException | DuplicatedMovieNoteException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
 		} catch (JsonProcessingException e) {
-			return ResponseEntity.badRequest()
-					.body(Map.of("error", true, "code", 500, "message", "Internal Server error"));
+			return ResponseEntity.internalServerError()
+					.body(Map.of("error", true, "code", 500, "message", "Internal server error"));
+		}
+	}
+
+	@PutMapping("{movieId}/update")
+	public ResponseEntity<?> updateMovie(@RequestBody @Valid MovieRequestDto request, @PathVariable UUID movieId,
+			@RequestHeader("Authorization") String token) {
+		try {
+			UserTokenDto user = CredentialUtil.getUserFromToken(token);
+			MovieResponseDto response = controller.update(request, movieId, user);
+			return ResponseEntity.ok(response);
+		} catch (MovieNotFoundException e) {
+			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
+		} catch (UserNotAuthorizedException e) {
+			return ResponseEntity.status(403).body(Map.of("error", true, "code", 403, "message", e.getMessage()));
+		} catch (JsonProcessingException e) {
+			return ResponseEntity.internalServerError()
+					.body(Map.of("error", true, "code", 500, "message", "Internal server error"));
 		}
 	}
 }
