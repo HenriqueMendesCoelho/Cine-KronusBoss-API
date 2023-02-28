@@ -16,30 +16,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="user_statistics")
+@Table(name = "user_statistics")
 @NoArgsConstructor
 @Data
 public class Statistics {
-	
+
 	@Id
 	@Column(name = "user_id")
 	private UUID id;
-	
+
 	@Column
 	private int ratingsGiven;
-	
+
 	@Column
 	private int registeredMovies;
-	
+
 	@Column
 	private int consecutiveFailedLoginAttempts;
-	
+
 	@JsonIgnore
 	@OneToOne
 	@MapsId
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
-	
+
 	@Builder
 	public Statistics(int ratingsGiven, int registeredMovies, User user) {
 		this.ratingsGiven = ratingsGiven;
@@ -47,5 +47,5 @@ public class Statistics {
 		this.consecutiveFailedLoginAttempts = 0;
 		this.user = user;
 	}
-	
+
 }

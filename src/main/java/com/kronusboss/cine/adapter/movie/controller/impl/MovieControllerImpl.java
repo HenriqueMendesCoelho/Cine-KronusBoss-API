@@ -87,7 +87,9 @@ public class MovieControllerImpl implements MovieController {
 
 	@Override
 	public List<MovieNoteResponseDto> listMoveiNotes(UUID movieId) throws MovieNotFoundException {
-		return searchMovieNoteUseCase.list(movieId).stream().map(MovieNoteResponseDto::new)
+		return searchMovieNoteUseCase.list(movieId)
+				.stream()
+				.map(MovieNoteResponseDto::new)
 				.collect(Collectors.toList());
 	}
 

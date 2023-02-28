@@ -10,30 +10,30 @@ import com.kronusboss.cine.user.domain.User;
 
 @Component
 public class AuthenticationSuccessEventListener implements ApplicationListener<AuthenticationSuccessEvent> {
-	
+
 	@Autowired
 	private UserRepository repository;
-	
+
 	@Override
 	public void onApplicationEvent(AuthenticationSuccessEvent event) {
 		String email = (String) event.getAuthentication().getName();
-		
-		if(email.isBlank()) {
+
+		if (email.isBlank()) {
 			return;
 		}
-		
+
 		resetFailedLoginAttempts(email);
 	}
 
 	private void resetFailedLoginAttempts(String email) {
 		User user = repository.findByEmail(email);
-		
-		if(user == null) {
+
+		if (user == null) {
 			return;
 		}
-		
+
 		user.getStatistics().setConsecutiveFailedLoginAttempts(0);
-		
+
 		repository.saveAndFlush(user);
 	}
 

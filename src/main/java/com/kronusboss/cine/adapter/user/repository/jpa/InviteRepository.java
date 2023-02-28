@@ -8,7 +8,7 @@ import com.kronusboss.cine.user.domain.Invite;
 
 @Repository
 public interface InviteRepository extends JpaRepository<Invite, Long> {
-	
+
 	@Transactional(readOnly = true)
 	Invite findByCode(String code);
 }

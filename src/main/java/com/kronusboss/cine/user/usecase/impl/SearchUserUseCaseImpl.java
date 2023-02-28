@@ -15,34 +15,35 @@ import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
 
 @Service
 public class SearchUserUseCaseImpl implements SearchUserUseCase {
-	
+
 	@Autowired
 	UserRepository repository;
-	
+
 	@Override
-	public User getUserByEmail(String emailUserToFind, String emailUserLoged) throws UserNotFoundException, UserNotAuthorizedException {
+	public User getUserByEmail(String emailUserToFind, String emailUserLoged)
+			throws UserNotFoundException, UserNotAuthorizedException {
 		User userLoged = repository.findByEmail(emailUserLoged);
 		User user = repository.findByEmail(emailUserToFind);
-		
-		if(!emailUserToFind.equals(emailUserLoged) && !userLoged.getRoles().contains(Role.ADM)) {
+
+		if (!emailUserToFind.equals(emailUserLoged) && !userLoged.getRoles().contains(Role.ADM)) {
 			throw new UserNotAuthorizedException();
 		}
-		
-		if(user == null) {
+
+		if (user == null) {
 			throw new UserNotFoundException();
 		}
-		
+
 		return user;
 	}
 
 	@Override
 	public List<User> getAllUsers() throws UserNotFoundException {
 		List<User> users = repository.findAll();
-		
-		if(CollectionUtils.isEmpty(users)) {
+
+		if (CollectionUtils.isEmpty(users)) {
 			throw new UserNotFoundException();
 		}
-		
+
 		return users;
 	}
 

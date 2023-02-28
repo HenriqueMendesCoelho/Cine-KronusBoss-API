@@ -11,21 +11,21 @@ import com.kronusboss.cine.user.usecase.DeleteUserUseCase;
 
 @Service
 public class DeleteUserUseCaseImpl implements DeleteUserUseCase {
-	
+
 	@Autowired
 	UserRepository repository;
 
 	@Override
 	public void deleteUser(UUID id) {
-		
+
 		User userToDelete = repository.getReferenceById(id);
-		
-		if(userToDelete == null) {
+
+		if (userToDelete == null) {
 			return;
 		}
-		
+
 		repository.delete(userToDelete);
-		
+
 	}
 
 }

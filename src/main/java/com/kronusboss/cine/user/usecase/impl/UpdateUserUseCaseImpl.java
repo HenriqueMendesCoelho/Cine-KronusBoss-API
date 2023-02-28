@@ -14,27 +14,28 @@ import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
 
 @Service
 public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
-	
+
 	@Autowired
 	UserRepository repository;
-	
+
 	@Override
-	public User update(User user, UUID id, String emailUserLoged) throws UserNotFoundException, UserNotAuthorizedException {
+	public User update(User user, UUID id, String emailUserLoged)
+			throws UserNotFoundException, UserNotAuthorizedException {
 		User userLoged = repository.findByEmail(emailUserLoged);
 		User userToUpdate = repository.getReferenceById(id);
-		
-		if(userLoged.getId() != id && !userLoged.getRoles().contains(Role.ADM)) {
+
+		if (userLoged.getId() != id && !userLoged.getRoles().contains(Role.ADM)) {
 			throw new UserNotAuthorizedException();
 		}
-		
-		if(userToUpdate == null) {
+
+		if (userToUpdate == null) {
 			throw new UserNotFoundException();
 		}
-		
+
 		userToUpdate.setEmail(user.getEmail());
 		userToUpdate.setName(user.getName());
 		userToUpdate.getPreferences().setNotify(user.getPreferences().isNotify());
-		
+
 		return repository.save(userToUpdate);
 	}
 

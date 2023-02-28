@@ -25,60 +25,60 @@ import com.kronusboss.cine.application.spring.security.util.JWTUtil;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-	
+
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private AuthenticationConfiguration authenticationConfiguration;
-	
+
 	@Autowired
 	private JWTUtil jwtUtil;
-	
-	private static final String[] PUBLIC_MATCHERS = {
-			"/api/auth/forgot",
-	};
-	
+
+	private static final String[] PUBLIC_MATCHERS = { "/api/auth/forgot", };
+
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+			throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
-	
+
 	@Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {	
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable();
-        http
-            .authorizeHttpRequests()
-            .requestMatchers(PUBLIC_MATCHERS).permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
-            .requestMatchers(HttpMethod.GET, "/actuator/**").hasAuthority("ROLE_ADMIN")
-    		.anyRequest().authenticated();
-        http.addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil));
-        http.addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration), jwtUtil, userDetailsService));
-        http.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        return http.build();
-    }
-	
+		http.authorizeHttpRequests()
+				.requestMatchers(PUBLIC_MATCHERS)
+				.permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/user")
+				.permitAll()
+				.requestMatchers(HttpMethod.GET, "/actuator/**")
+				.hasAuthority("ROLE_ADMIN")
+				.anyRequest()
+				.authenticated();
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration), jwtUtil,
+				userDetailsService));
+		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		return http.build();
+	}
+
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Autowired
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
 	}
-	
+
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-				.allowedOrigins("*")
-				.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE");
-				
+				registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE");
+
 			}
 		};
 	}

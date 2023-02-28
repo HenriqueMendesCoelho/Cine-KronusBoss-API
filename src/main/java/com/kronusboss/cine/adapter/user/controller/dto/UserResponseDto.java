@@ -10,10 +10,9 @@ import com.kronusboss.cine.user.domain.User;
 
 import lombok.Data;
 
-
 @Data
 public class UserResponseDto {
-	
+
 	private UUID id;
 	private String name;
 	private String email;
@@ -22,9 +21,9 @@ public class UserResponseDto {
 	private StatisticsResponseDto statistics;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
-	
+
 	public UserResponseDto(User user) {
-		
+
 		id = user.getId();
 		name = user.getName();
 		email = user.getEmail();
@@ -34,7 +33,7 @@ public class UserResponseDto {
 		createdAt = user.getCreatedAt();
 		updatedAt = user.getUpdatedAt();
 	}
-	
+
 	private void addRole(Role role) {
 		roles.add(role.getDescription().split("_")[1]);
 	}

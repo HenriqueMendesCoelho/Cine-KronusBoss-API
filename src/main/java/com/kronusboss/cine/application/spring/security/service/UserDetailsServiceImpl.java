@@ -12,19 +12,20 @@ import com.kronusboss.cine.user.domain.User;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-	
+
 	@Autowired
 	private UserRepository repository;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		User user = repository.findByEmail(email);
-		
-		if(user == null) {
+
+		if (user == null) {
 			throw new UsernameNotFoundException(email);
 		}
-		
-		return new UserSS(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getStatistics().getConsecutiveFailedLoginAttempts(), user.getRoles());
+
+		return new UserSS(user.getId(), user.getName(), user.getEmail(), user.getPassword(),
+				user.getStatistics().getConsecutiveFailedLoginAttempts(), user.getRoles());
 	}
 
 }

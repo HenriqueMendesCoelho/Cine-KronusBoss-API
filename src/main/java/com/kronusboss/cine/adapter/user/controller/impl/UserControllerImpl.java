@@ -39,10 +39,10 @@ public class UserControllerImpl implements UserController {
 
 	@Autowired
 	private DeleteUserUseCase deleteUserUseCase;
-	
+
 	@Autowired
 	private SearchInviteUseCase searchInviteUseCase;
-	
+
 	@Autowired
 	private CreateInviteUseCase createInviteUseCase;
 

@@ -11,7 +11,7 @@ import com.kronusboss.cine.user.usecase.SearchInviteUseCase;
 
 @Service
 public class SearchInviteUseCaseImpl implements SearchInviteUseCase {
-	
+
 	@Autowired
 	private InviteRepository repository;
 

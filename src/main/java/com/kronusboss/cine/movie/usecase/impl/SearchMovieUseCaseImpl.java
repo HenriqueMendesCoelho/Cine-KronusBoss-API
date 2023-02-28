@@ -13,7 +13,7 @@ import com.kronusboss.cine.movie.usecase.SearchMovieUseCase;
 
 @Component
 public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
-	
+
 	@Autowired
 	private MovieRepository repository;
 
@@ -30,11 +30,11 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 	@Override
 	public Movie getById(UUID id) {
 		Movie movie = repository.findById(id).get();
-		
-		if(movie == null) {
+
+		if (movie == null) {
 			return null;
 		}
-		
+
 		return movie;
 	}
 

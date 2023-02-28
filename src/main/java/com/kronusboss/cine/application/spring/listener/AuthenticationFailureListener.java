@@ -10,31 +10,31 @@ import com.kronusboss.cine.user.domain.User;
 
 @Component
 public class AuthenticationFailureListener implements ApplicationListener<AuthenticationFailureBadCredentialsEvent> {
-	
+
 	@Autowired
 	private UserRepository repository;
-	
+
 	@Override
 	public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {
 		String email = (String) event.getAuthentication().getPrincipal();
-		
-		if(email.isBlank()) {
+
+		if (email.isBlank()) {
 			return;
 		}
-		
+
 		failedLoginAttempts(email);
 	}
-	
+
 	private void failedLoginAttempts(String email) {
 		User user = repository.findByEmail(email);
-		
-		if(user == null) {
+
+		if (user == null) {
 			return;
 		}
-		
+
 		int ConsecutiveFailedLoginAttempts = user.getStatistics().getConsecutiveFailedLoginAttempts();
 		user.getStatistics().setConsecutiveFailedLoginAttempts(ConsecutiveFailedLoginAttempts + 1);
-		
+
 		repository.saveAndFlush(user);
 	}
 }

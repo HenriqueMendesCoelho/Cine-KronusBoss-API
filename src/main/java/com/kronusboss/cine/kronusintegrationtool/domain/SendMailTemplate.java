@@ -25,21 +25,33 @@ public class SendMailTemplate {
 	private String username;
 
 	public static SendMailTemplate welcomeMail(String to, String username) {
-		return SendMailTemplate.builder().from(FROM).to(to)
-				.subject(String.format("%s, bem-vindo ao Cineminha!", username)).username(username)
-				.templateId(WELCOME_TEMPLATEID).build();
+		return SendMailTemplate.builder()
+				.from(FROM)
+				.to(to)
+				.subject(String.format("%s, bem-vindo ao Cineminha!", username))
+				.username(username)
+				.templateId(WELCOME_TEMPLATEID)
+				.build();
 	}
 
 	public static SendMailTemplate forgotPasswordMail(String to, String username) {
-		return SendMailTemplate.builder().from(FROM).to(to)
-				.subject(String.format("%s, sua solicitação de nova senha!", username)).username(username)
-				.templateId(FORGOT_PASSWORD_TEMPLATEID).build();
+		return SendMailTemplate.builder()
+				.from(FROM)
+				.to(to)
+				.subject(String.format("%s, sua solicitação de nova senha!", username))
+				.username(username)
+				.templateId(FORGOT_PASSWORD_TEMPLATEID)
+				.build();
 	}
 
 	public static SendMailTemplate accountBloquedMail(String to, String username) {
-		return SendMailTemplate.builder().from(FROM).to(to)
-				.subject(String.format("%s, sua conta foi bloqueada!", username)).username(username)
-				.templateId(BLOQUED_ACCOUNT_TEMPLATEID).build();
+		return SendMailTemplate.builder()
+				.from(FROM)
+				.to(to)
+				.subject(String.format("%s, sua conta foi bloqueada!", username))
+				.username(username)
+				.templateId(BLOQUED_ACCOUNT_TEMPLATEID)
+				.build();
 	}
 
 }

@@ -11,9 +11,9 @@ import com.kronusboss.cine.user.domain.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-	
+
 	@Transactional(readOnly = true)
-	@EntityGraph(attributePaths = {"roles", "statistics"})
+	@EntityGraph(attributePaths = { "roles", "statistics" })
 	User findByEmail(String email);
-	
+
 }

@@ -36,10 +36,19 @@ public class MovieSummaryEntity {
 	private LocalDate releaseDate;
 
 	public MovieSummary toDomain() {
-		return MovieSummary.builder().tmdbId(tmdbId).imdbId(imdbId).portugueseTitle(portugueseTitle)
-				.englishTitle(englishTitle).originalTitle(originalTitle).director(director)
-				.urlImageEnglish(urlImagePortuguese).portugueseUrlTrailer(portugueseUrlTrailer)
-				.englishUrlTrailer(englishUrlTrailer).genres(genres).description(description).releaseDate(releaseDate)
+		return MovieSummary.builder()
+				.tmdbId(tmdbId)
+				.imdbId(imdbId)
+				.portugueseTitle(portugueseTitle)
+				.englishTitle(englishTitle)
+				.originalTitle(originalTitle)
+				.director(director)
+				.urlImageEnglish(urlImagePortuguese)
+				.portugueseUrlTrailer(portugueseUrlTrailer)
+				.englishUrlTrailer(englishUrlTrailer)
+				.genres(genres)
+				.description(description)
+				.releaseDate(releaseDate)
 				.build();
 	}
 }

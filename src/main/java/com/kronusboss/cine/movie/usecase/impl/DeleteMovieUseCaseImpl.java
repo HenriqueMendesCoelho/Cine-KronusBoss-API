@@ -11,18 +11,18 @@ import com.kronusboss.cine.movie.usecase.DeleteMovieUseCase;
 
 @Component
 public class DeleteMovieUseCaseImpl implements DeleteMovieUseCase {
-	
+
 	@Autowired
 	private MovieRepository repository;
-	
+
 	@Override
 	public void delete(UUID id) {
 		Movie movie = repository.findById(id).get();
-		
-		if(movie == null) {
+
+		if (movie == null) {
 			return;
 		}
-		
+
 		repository.delete(movie);
 	}
 

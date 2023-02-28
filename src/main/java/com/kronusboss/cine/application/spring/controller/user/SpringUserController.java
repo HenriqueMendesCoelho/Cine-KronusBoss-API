@@ -38,24 +38,23 @@ public class SpringUserController {
 
 	@Autowired
 	private UserController controller;
-	
+
 	@GetMapping
-	public ResponseEntity<?> getUser(@RequestParam String email,
-			@RequestHeader("Authorization") String token) {
+	public ResponseEntity<?> getUser(@RequestParam String email, @RequestHeader("Authorization") String token) {
 		try {
 			UserTokenDto user = CredentialUtil.getUserFromToken(token);
 			UserResponseDto response = controller.getUserByEmail(user, email);
 			return ResponseEntity.ok(response);
 		} catch (UserNotFoundException e) {
 			return ResponseEntity.noContent().build();
-		} catch ( JsonProcessingException e) {
+		} catch (JsonProcessingException e) {
 			return ResponseEntity.status(412)
 					.body(Map.of("error", true, "status", 412, "message", "error to recover token"));
 		} catch (UserNotAuthorizedException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "status", 400, "message", e.getMessage()));
 		}
 	}
-	
+
 	@GetMapping("/list")
 	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<List<UserResponseDto>> getAllUsers() {
@@ -66,7 +65,7 @@ public class SpringUserController {
 			return ResponseEntity.noContent().build();
 		}
 	}
-	
+
 	@GetMapping("/invite")
 	public ResponseEntity<List<InviteResponseDto>> listAllInvites() {
 		return ResponseEntity.ok(controller.getAllInvites());
@@ -99,13 +98,13 @@ public class SpringUserController {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "status", 400, "message", e.getMessage()));
 		}
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
 		controller.delete(id);
 		return ResponseEntity.ok().build();
 	}
-	
+
 	@PostMapping("/invite")
 	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<InviteResponseDto> createInvite() {

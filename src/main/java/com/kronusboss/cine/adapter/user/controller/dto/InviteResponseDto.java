@@ -6,11 +6,11 @@ import lombok.Data;
 
 @Data
 public class InviteResponseDto {
-	
+
 	private String code;
-	
+
 	public InviteResponseDto(Invite invite) {
 		code = invite.getCode();
 	}
-	
+
 }

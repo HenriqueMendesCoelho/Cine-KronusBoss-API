@@ -25,16 +25,16 @@ public class SpringControllerAdviceHandler {
 		response.put("status", 400);
 		response.put("error", "Bad Request");
 		response.put("path", request.getRequestURI());
-		
+
 		Map<String, Object> errors = new LinkedHashMap<>();
-	    ex.getBindingResult().getAllErrors().forEach((error) -> {
-	        String fieldName = ((FieldError) error).getField();
-	        String errorMessage = error.getDefaultMessage();
-	        errors.put(fieldName, errorMessage);
-	    });
-	    
-	    response.put("errors", errors);
-		
+		ex.getBindingResult().getAllErrors().forEach((error) -> {
+			String fieldName = ((FieldError) error).getField();
+			String errorMessage = error.getDefaultMessage();
+			errors.put(fieldName, errorMessage);
+		});
+
+		response.put("errors", errors);
+
 		return response;
 	}
 }

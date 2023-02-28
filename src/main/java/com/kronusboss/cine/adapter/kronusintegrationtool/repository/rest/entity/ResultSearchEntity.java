@@ -37,10 +37,22 @@ public class ResultSearchEntity {
 	private Integer voteCount;
 
 	public ResultSearch toDomain() {
-		return ResultSearch.builder().adult(adult).backdropPath(backdropPath).genreIds(genreIds).id(id)
-				.originalLanguage(originalLanguage).originalTitle(originalTitle).overview(overview)
-				.popularity(popularity).posterPath(posterPath).releaseDate(releaseDate).title(title).video(video)
-				.voteAverage(voteAverage).voteCount(voteCount).build();
+		return ResultSearch.builder()
+				.adult(adult)
+				.backdropPath(backdropPath)
+				.genreIds(genreIds)
+				.id(id)
+				.originalLanguage(originalLanguage)
+				.originalTitle(originalTitle)
+				.overview(overview)
+				.popularity(popularity)
+				.posterPath(posterPath)
+				.releaseDate(releaseDate)
+				.title(title)
+				.video(video)
+				.voteAverage(voteAverage)
+				.voteCount(voteCount)
+				.build();
 	}
 
 }

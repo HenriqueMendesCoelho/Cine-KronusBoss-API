@@ -10,17 +10,17 @@ import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieException;
 
 @Component
 public class CreateMovieUseCaseImpl implements CreateMovieUseCase {
-	
+
 	@Autowired
 	private MovieRepository repository;
 
 	@Override
 	public Movie save(Movie movie) throws DuplicatedMovieException {
-		
-		if(repository.findByTmdbId(movie.getTmdbId()) != null) {
+
+		if (repository.findByTmdbId(movie.getTmdbId()) != null) {
 			throw new DuplicatedMovieException("This tmdb id is already registered");
 		}
-		
+
 		return repository.saveAndFlush(movie);
 	}
 

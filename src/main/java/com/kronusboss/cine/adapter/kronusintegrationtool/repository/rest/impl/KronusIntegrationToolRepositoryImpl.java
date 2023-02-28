@@ -108,7 +108,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	private String createUri(String path) {
 		String[] schemeHost = URL_KIT.split("://");
-		UriComponents uri = UriComponentsBuilder.newInstance().scheme(schemeHost[0]).host(schemeHost[1]).path(path)
+		UriComponents uri = UriComponentsBuilder.newInstance()
+				.scheme(schemeHost[0])
+				.host(schemeHost[1])
+				.path(path)
 				.build();
 		return uri.toString();
 	}

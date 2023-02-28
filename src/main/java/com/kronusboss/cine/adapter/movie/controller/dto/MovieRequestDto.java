@@ -53,9 +53,17 @@ public class MovieRequestDto {
 	private Long tmdbId;
 
 	public Movie toDomain() {
-		return Movie.builder().portugueseTitle(portugueseTitle).englishTitle(englishTitle).originalTitle(originalTitle)
-				.director(director).urlImage(urlImage).portugueseUrlTrailer(portugueseUrlTrailer)
-				.englishUrlTrailer(englishUrlTrailer).description(description).releaseDate(releaseDate).tmdbId(tmdbId)
+		return Movie.builder()
+				.portugueseTitle(portugueseTitle)
+				.englishTitle(englishTitle)
+				.originalTitle(originalTitle)
+				.director(director)
+				.urlImage(urlImage)
+				.portugueseUrlTrailer(portugueseUrlTrailer)
+				.englishUrlTrailer(englishUrlTrailer)
+				.description(description)
+				.releaseDate(releaseDate)
+				.tmdbId(tmdbId)
 				.genres(genres.stream().map(g -> MovieGenre.builder().id(g).build()).collect(Collectors.toList()))
 				.build();
 	}

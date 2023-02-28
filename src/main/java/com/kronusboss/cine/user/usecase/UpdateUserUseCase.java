@@ -9,5 +9,5 @@ import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
 public interface UpdateUserUseCase {
 
 	User update(User user, UUID id, String emailUserLoged) throws UserNotFoundException, UserNotAuthorizedException;
-	
+
 }

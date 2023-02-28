@@ -20,19 +20,19 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(of = "id")
 public class Preferences {
-	
+
 	@Id
-    @Column
+	@Column
 	private UUID id;
-	
+
 	@Column
 	private boolean notify;
-	
+
 	@OneToOne
 	@MapsId
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
-	
+
 	@Builder
 	public Preferences(boolean notify, User user) {
 		this.notify = notify;

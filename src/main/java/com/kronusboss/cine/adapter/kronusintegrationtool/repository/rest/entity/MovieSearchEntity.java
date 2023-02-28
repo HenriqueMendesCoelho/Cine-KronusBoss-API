@@ -27,9 +27,12 @@ public class MovieSearchEntity {
 	private Integer totalResults;
 
 	public MovieSearch toDomain() {
-		return MovieSearch.builder().page(page)
+		return MovieSearch.builder()
+				.page(page)
 				.results(this.results.stream().map(ResultSearchEntity::toDomain).collect(Collectors.toList()))
-				.totalPages(totalPages).totalResults(totalResults).build();
+				.totalPages(totalPages)
+				.totalResults(totalResults)
+				.build();
 	}
 
 }

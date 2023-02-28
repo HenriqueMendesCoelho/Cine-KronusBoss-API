@@ -13,18 +13,20 @@ import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
 
 public interface UserController {
-	
+
 	List<UserResponseDto> getAllUsers() throws UserNotFoundException;
-	
-	UserResponseDto getUserByEmail(UserTokenDto user, String email) throws UserNotFoundException, UserNotAuthorizedException;
-	
+
+	UserResponseDto getUserByEmail(UserTokenDto user, String email)
+			throws UserNotFoundException, UserNotAuthorizedException;
+
 	UserResponseDto createUser(UserRequestDto user) throws DuplicatedUserException, InviteNotValidException;
-	
-	UserResponseDto update(UserRequestDto user, UUID id, UserTokenDto userLoged) throws UserNotFoundException, UserNotAuthorizedException;
-	
+
+	UserResponseDto update(UserRequestDto user, UUID id, UserTokenDto userLoged)
+			throws UserNotFoundException, UserNotAuthorizedException;
+
 	void delete(UUID id);
-	
+
 	List<InviteResponseDto> getAllInvites();
-	
+
 	InviteResponseDto createUserInvite();
 }
