@@ -38,23 +38,24 @@ public class SecurityConfig {
 	private static final String[] PUBLIC_MATCHERS = { "/api/auth/forgot", };
 
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
 			throws Exception {
 		return authenticationConfiguration.getAuthenticationManager();
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable();
-		http.authorizeHttpRequests()
-				.requestMatchers(PUBLIC_MATCHERS)
+
+		http.authorizeHttpRequests((authz) -> authz.requestMatchers(PUBLIC_MATCHERS)
 				.permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/user")
 				.permitAll()
 				.requestMatchers(HttpMethod.GET, "/actuator/**")
 				.hasAuthority("ROLE_ADMIN")
 				.anyRequest()
-				.authenticated();
+				.authenticated());
+
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil));
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration), jwtUtil,
 				userDetailsService));
@@ -63,7 +64,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+	BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
@@ -73,7 +74,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public WebMvcConfigurer corsConfigurer() {
+	WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
