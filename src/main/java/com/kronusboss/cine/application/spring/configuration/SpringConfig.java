@@ -21,7 +21,7 @@ public class SpringConfig {
 
 	@Bean
 	@Primary
-	public ObjectMapper objectMapper() {
+	ObjectMapper objectMapper() {
 		JavaTimeModule module = new JavaTimeModule();
 		return new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 				.setSerializationInclusion(Include.NON_NULL)
@@ -33,7 +33,7 @@ public class SpringConfig {
 
 	@Bean
 	@Primary
-	public LocaleResolver localeResolver() {
+	LocaleResolver localeResolver() {
 		SessionLocaleResolver slr = new SessionLocaleResolver();
 		slr.setDefaultLocale(Locale.US);
 		slr.setLocaleAttributeName("session.current.locale");

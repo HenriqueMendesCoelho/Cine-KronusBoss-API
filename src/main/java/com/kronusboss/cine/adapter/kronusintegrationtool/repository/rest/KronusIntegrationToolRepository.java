@@ -1,8 +1,11 @@
 package com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest;
 
+import java.util.List;
+
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
 import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
+import com.kronusboss.cine.movie.domain.MovieGenre;
 
 public interface KronusIntegrationToolRepository {
 
@@ -11,4 +14,6 @@ public interface KronusIntegrationToolRepository {
 	MovieSearch searchByName(String name, String language, boolean includeAdult);
 
 	void sendMailTemplate(SendMailTemplate request);
+
+	List<MovieGenre> listGenres();
 }

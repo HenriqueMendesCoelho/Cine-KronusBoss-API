@@ -1,5 +1,8 @@
 package com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -15,12 +18,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.KronusIntegrationToolRepository;
+import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.entity.MovieGenreEntity;
+import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.entity.MovieGenresEntity;
 import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.entity.MovieSearchEntity;
 import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.entity.MovieSummaryEntity;
 import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.entity.SendMailTemplateRequestEntity;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
 import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
+import com.kronusboss.cine.movie.domain.MovieGenre;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -104,6 +110,25 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 			throw new RequestRejectedException(e.getMessage());
 		}
 
+	}
+
+	@Override
+	public List<MovieGenre> listGenres() {
+		RestTemplate template = getRestTemplate();
+		String uri = createUri("/api/v1/genre/movie/list");
+
+		try {
+			ResponseEntity<MovieGenresEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieGenresEntity.class);
+
+			MovieGenresEntity response = responseEntity.getBody();
+			List<MovieGenreEntity> genres = response.getGenres();
+
+			return genres.stream().map(MovieGenreEntity::toDomain).collect(Collectors.toList());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new RequestRejectedException(e.getMessage());
+		}
 	}
 
 	private String createUri(String path) {
