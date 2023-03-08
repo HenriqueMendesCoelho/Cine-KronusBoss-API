@@ -16,7 +16,7 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
 	@Transactional(readOnly = true)
 	Movie findByTmdbId(Long tmdbId);
 
-	@Query(value = "select * from movies where portuguese_title ILIKE CONCAT('%', :title, '%')"
+	@Query(value = "select * from movie where portuguese_title ILIKE CONCAT('%', :title, '%')"
 			+ " or original_title ILIKE CONCAT('%', :title, '%') or english_title ILIKE CONCAT('%', :title, '%')", nativeQuery = true)
 	Page<Movie> findMovieByTitleCustom(@Param("title") String title, Pageable pageable);
 
