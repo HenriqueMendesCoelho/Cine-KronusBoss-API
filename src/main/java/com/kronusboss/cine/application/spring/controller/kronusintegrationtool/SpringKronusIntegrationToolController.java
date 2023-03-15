@@ -32,9 +32,10 @@ public class SpringKronusIntegrationToolController {
 	}
 
 	@GetMapping("/movie/tmdb")
-	public ResponseEntity<?> createMovieNote(@RequestParam(required = true) String query,
+	public ResponseEntity<?> searchByName(@RequestParam(required = true) String query,
+			@RequestParam(required = false, defaultValue = "1") Integer page,
 			@RequestParam(required = false, defaultValue = "pt-Br") String language) {
-		MovieSearchResponseDto response = controller.movieSearchByName(query, language);
+		MovieSearchResponseDto response = controller.movieSearchByName(query, page, language);
 
 		return ResponseEntity.ok(response);
 

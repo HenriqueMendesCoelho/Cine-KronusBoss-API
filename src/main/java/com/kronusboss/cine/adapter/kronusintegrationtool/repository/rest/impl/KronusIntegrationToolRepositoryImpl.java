@@ -67,10 +67,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	}
 
 	@Override
-	public MovieSearch searchByName(String name, String language, boolean includeAdult) {
+	public MovieSearch searchByName(String name, Integer page, String language, boolean includeAdult) {
 		RestTemplate template = getRestTemplate();
-		String uri = createUri(
-				String.format("/api/v1/movie?query=%s&language=%s&include_adult=%s", name, language, includeAdult));
+		String uri = createUri(String.format("/api/v1/movie?query=%s&page=%s&language=%s&include_adult=%s", name, page,
+				language, includeAdult));
 
 		try {
 			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,

@@ -7,5 +7,5 @@ public interface KronusIntegrationToolController {
 
 	MovieSummaryResponseDto movieSummary(Long tmdbId);
 
-	MovieSearchResponseDto movieSearchByName(String name, String language);
+	MovieSearchResponseDto movieSearchByName(String name, Integer page, String language);
 }

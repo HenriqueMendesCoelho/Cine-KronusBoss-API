@@ -27,8 +27,8 @@ public class KronusIntegrationToolControllerImpl implements KronusIntegrationToo
 	}
 
 	@Override
-	public MovieSearchResponseDto movieSearchByName(String name, String language) {
-		MovieSearch response = searchMovieTmdbUseCase.searchByName(name, language);
+	public MovieSearchResponseDto movieSearchByName(String name, Integer page, String language) {
+		MovieSearch response = searchMovieTmdbUseCase.searchByName(name, page, language);
 		return new MovieSearchResponseDto(response);
 	}
 

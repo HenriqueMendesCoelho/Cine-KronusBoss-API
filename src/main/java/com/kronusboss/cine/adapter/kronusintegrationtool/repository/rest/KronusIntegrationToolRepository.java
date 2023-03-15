@@ -11,7 +11,7 @@ public interface KronusIntegrationToolRepository {
 
 	MovieSummary movieSummary(Long tmdbId);
 
-	MovieSearch searchByName(String name, String language, boolean includeAdult);
+	MovieSearch searchByName(String name, Integer page, String language, boolean includeAdult);
 
 	void sendMailTemplate(SendMailTemplate request);
 
