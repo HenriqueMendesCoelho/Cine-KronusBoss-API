@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,8 +64,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
 		String username = ((UserSS) auth.getPrincipal()).getUsername();
 		String name = ((UserSS) auth.getPrincipal()).getName();
+		UUID userId = ((UserSS) auth.getPrincipal()).getUserid();
 		Set<String> roles = ((UserSS) auth.getPrincipal()).getRoles();
-		String token = jwtUtil.generateToken(username, name, roles);
+		String token = jwtUtil.generateToken(userId, username, name, roles);
 
 		response.setContentType("application/json");
 		response.getWriter().append(new LoginResponseDto(token, jwtUtil.expiration).toJson());

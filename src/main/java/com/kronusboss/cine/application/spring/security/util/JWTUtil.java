@@ -3,6 +3,7 @@ package com.kronusboss.cine.application.spring.security.util;
 import java.security.Key;
 import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -26,12 +27,13 @@ public class JWTUtil {
 		return new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS512.getJcaName());
 	}
 
-	public String generateToken(String username, String name, Set<String> roles) {
+	public String generateToken(UUID userId, String username, String name, Set<String> roles) {
 		return Jwts.builder()
 				.setSubject(username)
 				.setExpiration(new Date(System.currentTimeMillis() + expiration))
 				.signWith(getKey())
 				.setAudience(username)
+				.claim("id", userId)
 				.claim("name", name)
 				.claim("roles", roles)
 				.compact();
