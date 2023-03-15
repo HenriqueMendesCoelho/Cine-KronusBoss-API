@@ -14,8 +14,8 @@ public class SearchMovieTmdbUseCaseImpl implements SearchMovieTmdbUseCase {
 	private KronusIntegrationToolRepository repository;
 
 	@Override
-	public MovieSearch searchByName(String name, String language) {
-		return repository.searchByName(name, language, false);
+	public MovieSearch searchByName(String name, Integer page, String language) {
+		return repository.searchByName(name, page, language, false);
 	}
 
 }

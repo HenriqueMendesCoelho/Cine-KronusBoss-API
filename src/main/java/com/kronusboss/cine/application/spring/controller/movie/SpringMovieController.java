@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.movie.controller.MovieController;
+import com.kronusboss.cine.adapter.movie.controller.dto.MovieGenreResponseDto;
 import com.kronusboss.cine.adapter.movie.controller.dto.MovieNoteRequestDto;
 import com.kronusboss.cine.adapter.movie.controller.dto.MovieNoteResponseDto;
 import com.kronusboss.cine.adapter.movie.controller.dto.MovieRequestDto;
@@ -62,14 +63,38 @@ public class SpringMovieController {
 		return ResponseEntity.ok(response);
 	}
 
+	@GetMapping("/{movieId}")
+	public ResponseEntity<?> getMovieById(@PathVariable UUID movieId) {
+		MovieResponseDto response = controller.getById(movieId);
+
+		if (response == null) {
+			return ResponseEntity.noContent().build();
+		}
+
+		return ResponseEntity.ok(response);
+	}
+
 	@GetMapping("/note/{movieId}")
-	public ResponseEntity<?> createMovieNote(@PathVariable @Valid UUID movieId) {
+	public ResponseEntity<?> createMovieNote(@PathVariable UUID movieId) {
 		try {
 			List<MovieNoteResponseDto> response = controller.listMoveiNotes(movieId);
 			return ResponseEntity.ok(response);
 		} catch (MovieNotFoundException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
 		}
+	}
+
+	@GetMapping("/genre")
+	public ResponseEntity<?> listMovieGenres() {
+
+		List<MovieGenreResponseDto> response = controller.listGenres();
+
+		if (response.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+
+		return ResponseEntity.ok(response);
+
 	}
 
 	@PostMapping

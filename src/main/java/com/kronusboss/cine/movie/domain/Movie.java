@@ -42,7 +42,7 @@ public class Movie {
 	@Column(length = 150, nullable = false)
 	private String englishTitle;
 
-	@Column(length = 150, nullable = false)
+	@Column(length = 150, nullable = true)
 	private String originalTitle;
 
 	@Column(length = 150, nullable = false)
@@ -57,7 +57,7 @@ public class Movie {
 	@Column(columnDefinition = "text")
 	private String englishUrlTrailer;
 
-	@Column(columnDefinition = "text")
+	@Column(columnDefinition = "text", nullable = false)
 	private String description;
 
 	@Column
@@ -65,6 +65,9 @@ public class Movie {
 
 	@Column(nullable = true, unique = true)
 	private Long tmdbId;
+
+	@Column(nullable = true, unique = true)
+	private String imdbId;
 
 	@JsonManagedReference
 	@OneToMany(mappedBy = "movie")

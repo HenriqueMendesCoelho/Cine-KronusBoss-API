@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
+import com.kronusboss.cine.adapter.movie.controller.dto.MovieGenreResponseDto;
 import com.kronusboss.cine.adapter.movie.controller.dto.MovieNoteRequestDto;
 import com.kronusboss.cine.adapter.movie.controller.dto.MovieNoteResponseDto;
 import com.kronusboss.cine.adapter.movie.controller.dto.MovieRequestDto;
@@ -35,5 +36,7 @@ public interface MovieController {
 
 	MovieNoteResponseDto createMovieNote(MovieNoteRequestDto request, UserTokenDto user)
 			throws MovieNotFoundException, DuplicatedMovieNoteException;
+
+	List<MovieGenreResponseDto> listGenres();
 
 }
