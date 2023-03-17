@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.domain.MovieGenre;
 
-import io.micrometer.common.lang.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -35,10 +34,8 @@ public class MovieRequestDto {
 	@NotBlank
 	private String urlImage;
 
-	@NotBlank
 	private String portugueseUrlTrailer;
 
-	@NotBlank
 	private String englishUrlTrailer;
 
 	@NotBlank
@@ -49,8 +46,9 @@ public class MovieRequestDto {
 
 	private LocalDate releaseDate;
 
-	@Nullable
 	private Long tmdbId;
+
+	private String imdbId;
 
 	public Movie toDomain() {
 		return Movie.builder()
@@ -64,6 +62,7 @@ public class MovieRequestDto {
 				.description(description)
 				.releaseDate(releaseDate)
 				.tmdbId(tmdbId)
+				.imdbId(imdbId)
 				.genres(genres.stream().map(g -> MovieGenre.builder().id(g).build()).collect(Collectors.toList()))
 				.build();
 	}

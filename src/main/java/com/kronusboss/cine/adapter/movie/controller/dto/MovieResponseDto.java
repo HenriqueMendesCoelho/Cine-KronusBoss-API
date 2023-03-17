@@ -20,6 +20,7 @@ public class MovieResponseDto {
 
 	private UUID id;
 	private String portugueseTitle;
+	private String englishTitle;
 	private String originalTitle;
 	private String director;
 	private String urlImage;
@@ -28,12 +29,14 @@ public class MovieResponseDto {
 	private String description;
 	private LocalDate releaseDate;
 	private Long tmdbId;
+	private String imdbId;
 	List<MovieNoteResponseDto> notes;
 	List<MovieGenreResponseDto> genres;
 
 	public MovieResponseDto(Movie movie) {
 		id = movie.getId();
 		portugueseTitle = movie.getPortugueseTitle();
+		englishTitle = movie.getEnglishTitle();
 		originalTitle = movie.getOriginalTitle();
 		director = movie.getDirector();
 		urlImage = movie.getUrlImage();
@@ -45,5 +48,6 @@ public class MovieResponseDto {
 		if (movie.getNotes() != null)
 			notes = movie.getNotes().stream().map(MovieNoteResponseDto::new).collect(Collectors.toList());
 		genres = movie.getGenres().stream().map(MovieGenreResponseDto::new).collect(Collectors.toList());
+		imdbId = movie.getImdbId();
 	}
 }
