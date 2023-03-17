@@ -1,6 +1,7 @@
 package com.kronusboss.cine.adapter.core.controller.dto;
 
 import java.util.Set;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -19,4 +20,6 @@ public class UserTokenDto {
 	private String name;
 	@JsonProperty("roles")
 	private Set<String> roles;
+	@JsonProperty("id")
+	private UUID id;
 }
