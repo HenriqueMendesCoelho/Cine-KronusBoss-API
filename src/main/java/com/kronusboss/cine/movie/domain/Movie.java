@@ -78,6 +78,6 @@ public class Movie {
 	private List<MovieGenre> genres;
 
 	@ManyToOne
-	@JoinColumn(name = "movie_id")
+	@JoinColumn(name = "user_id")
 	private User user;
 }
