@@ -29,7 +29,7 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 
 	@Override
 	public Movie getById(UUID id) {
-		Movie movie = repository.findById(id).get();
+		Movie movie = repository.findById(id).orElse(null);
 
 		if (movie == null) {
 			return null;
