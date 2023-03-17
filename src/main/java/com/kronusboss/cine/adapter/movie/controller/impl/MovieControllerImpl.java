@@ -21,14 +21,17 @@ import com.kronusboss.cine.movie.domain.MovieGenre;
 import com.kronusboss.cine.movie.domain.MovieNote;
 import com.kronusboss.cine.movie.usecase.CreateMovieNoteUseCase;
 import com.kronusboss.cine.movie.usecase.CreateMovieUseCase;
+import com.kronusboss.cine.movie.usecase.DeleteMovieNoteUseCase;
 import com.kronusboss.cine.movie.usecase.DeleteMovieUseCase;
 import com.kronusboss.cine.movie.usecase.SearchMovieGenreUseCase;
 import com.kronusboss.cine.movie.usecase.SearchMovieNoteUseCase;
 import com.kronusboss.cine.movie.usecase.SearchMovieUseCase;
+import com.kronusboss.cine.movie.usecase.UpdateMovieNoteUseCase;
 import com.kronusboss.cine.movie.usecase.UpdateMovieUseCase;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieException;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieNoteException;
 import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
+import com.kronusboss.cine.movie.usecase.exception.MovieNoteNotFoundException;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 
 @Controller
@@ -51,6 +54,12 @@ public class MovieControllerImpl implements MovieController {
 
 	@Autowired
 	private SearchMovieNoteUseCase searchMovieNoteUseCase;
+
+	@Autowired
+	private UpdateMovieNoteUseCase updateMovieNoteUseCase;
+
+	@Autowired
+	private DeleteMovieNoteUseCase deleteMovieNoteUseCase;
 
 	@Autowired
 	private SearchMovieGenreUseCase searchMovieGenreUseCase;
@@ -104,6 +113,18 @@ public class MovieControllerImpl implements MovieController {
 			throws MovieNotFoundException, DuplicatedMovieNoteException {
 		MovieNote response = createMovieNoteUseCase.create(request.getMovieId(), request.getNote(), user.getLogin());
 		return new MovieNoteResponseDto(response);
+	}
+
+	@Override
+	public MovieNoteResponseDto updateMovieNote(UUID movieId, MovieNoteRequestDto request, UserTokenDto user)
+			throws MovieNoteNotFoundException {
+		MovieNote response = updateMovieNoteUseCase.update(user.getId(), movieId, request.getNote());
+		return new MovieNoteResponseDto(response);
+	}
+
+	@Override
+	public void deleteMovieNote(UUID movieId, UserTokenDto user) {
+		deleteMovieNoteUseCase.delete(user.getId(), movieId);
 	}
 
 	@Override

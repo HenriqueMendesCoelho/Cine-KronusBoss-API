@@ -15,6 +15,7 @@ import com.kronusboss.cine.adapter.movie.controller.dto.MovieResponseDto;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieException;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieNoteException;
 import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
+import com.kronusboss.cine.movie.usecase.exception.MovieNoteNotFoundException;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 
 public interface MovieController {
@@ -36,6 +37,11 @@ public interface MovieController {
 
 	MovieNoteResponseDto createMovieNote(MovieNoteRequestDto request, UserTokenDto user)
 			throws MovieNotFoundException, DuplicatedMovieNoteException;
+
+	MovieNoteResponseDto updateMovieNote(UUID movieId, MovieNoteRequestDto request, UserTokenDto user)
+			throws MovieNoteNotFoundException;
+
+	void deleteMovieNote(UUID movieId, UserTokenDto user);
 
 	List<MovieGenreResponseDto> listGenres();
 
