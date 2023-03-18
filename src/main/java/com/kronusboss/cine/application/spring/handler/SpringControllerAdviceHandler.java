@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.kronusboss.cine.adapter.util.exception.TokenInvalidException;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
@@ -34,6 +36,19 @@ public class SpringControllerAdviceHandler {
 		});
 
 		response.put("errors", errors);
+
+		return response;
+	}
+
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ExceptionHandler(TokenInvalidException.class)
+	public Map<String, Object> handleValidationExceptions(TokenInvalidException ex, HttpServletRequest request) {
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("timestamp", new Date(System.currentTimeMillis()).toString());
+		response.put("status", HttpStatus.UNAUTHORIZED.value());
+		response.put("error", "Unauthorized");
+		response.put("message", ex.getMessage());
+		response.put("path", request.getRequestURI());
 
 		return response;
 	}

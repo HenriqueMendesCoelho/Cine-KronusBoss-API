@@ -96,8 +96,8 @@ public class MovieControllerImpl implements MovieController {
 	}
 
 	@Override
-	public void delete(UUID id) {
-		deleteMovieUseCase.delete(id);
+	public void delete(UUID id, UserTokenDto user) throws UserNotAuthorizedException {
+		deleteMovieUseCase.delete(id, user.getId());
 	}
 
 	@Override

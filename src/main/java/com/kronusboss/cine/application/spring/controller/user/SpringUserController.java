@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.user.controller.UserController;
 import com.kronusboss.cine.adapter.user.controller.dto.InviteResponseDto;
@@ -47,9 +46,6 @@ public class SpringUserController {
 			return ResponseEntity.ok(response);
 		} catch (UserNotFoundException e) {
 			return ResponseEntity.noContent().build();
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.status(412)
-					.body(Map.of("error", true, "status", 412, "message", "error to recover token"));
 		} catch (UserNotAuthorizedException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "status", 400, "message", e.getMessage()));
 		}
@@ -91,9 +87,6 @@ public class SpringUserController {
 			UserTokenDto user = CredentialUtil.getUserFromToken(token);
 			UserResponseDto response = controller.update(request, id, user);
 			return ResponseEntity.ok(response);
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.status(412)
-					.body(Map.of("error", true, "status", 412, "message", "error to recover token"));
 		} catch (UserNotFoundException | UserNotAuthorizedException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "status", 400, "message", e.getMessage()));
 		}

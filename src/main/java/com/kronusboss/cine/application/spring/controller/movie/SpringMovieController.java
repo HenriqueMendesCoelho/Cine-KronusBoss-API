@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.movie.controller.MovieController;
 import com.kronusboss.cine.adapter.movie.controller.dto.MovieGenreResponseDto;
@@ -77,13 +76,39 @@ public class SpringMovieController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/note/{movieId}")
-	public ResponseEntity<?> createMovieNote(@PathVariable UUID movieId) {
+	@PostMapping
+	public ResponseEntity<?> createMovie(@RequestBody @Valid MovieRequestDto request) {
 		try {
-			List<MovieNoteResponseDto> response = controller.listMoveiNotes(movieId);
+			MovieResponseDto response = controller.save(request);
+			return ResponseEntity.ok(response);
+		} catch (DuplicatedMovieException e) {
+			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
+		}
+	}
+
+	@PutMapping("/{movieId}/update")
+	public ResponseEntity<?> updateMovie(@RequestBody @Valid MovieRequestDto request, @PathVariable UUID movieId,
+			@RequestHeader("Authorization") String token) {
+
+		try {
+			UserTokenDto user = CredentialUtil.getUserFromToken(token);
+			MovieResponseDto response = controller.update(request, movieId, user);
 			return ResponseEntity.ok(response);
 		} catch (MovieNotFoundException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
+		} catch (UserNotAuthorizedException e) {
+			return ResponseEntity.status(403).body(Map.of("error", true, "code", 403, "message", e.getMessage()));
+		}
+	}
+
+	@DeleteMapping("/{movieId}/delete")
+	public ResponseEntity<?> updateMovie(@PathVariable UUID movieId, @RequestHeader("Authorization") String token) {
+		try {
+			UserTokenDto user = CredentialUtil.getUserFromToken(token);
+			controller.delete(movieId, user);
+			return ResponseEntity.ok().build();
+		} catch (UserNotAuthorizedException e) {
+			return ResponseEntity.status(403).body(Map.of("error", true, "code", 403, "message", e.getMessage()));
 		}
 	}
 
@@ -100,12 +125,12 @@ public class SpringMovieController {
 
 	}
 
-	@PostMapping
-	public ResponseEntity<?> createMovie(@RequestBody @Valid MovieRequestDto request) {
+	@GetMapping("/note/{movieId}")
+	public ResponseEntity<?> getMovieNote(@PathVariable UUID movieId) {
 		try {
-			MovieResponseDto response = controller.save(request);
+			List<MovieNoteResponseDto> response = controller.listMoveiNotes(movieId);
 			return ResponseEntity.ok(response);
-		} catch (DuplicatedMovieException e) {
+		} catch (MovieNotFoundException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
 		}
 	}
@@ -119,26 +144,6 @@ public class SpringMovieController {
 			return ResponseEntity.ok(response);
 		} catch (MovieNotFoundException | DuplicatedMovieNoteException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.internalServerError()
-					.body(Map.of("error", true, "code", 500, "message", "Internal server error"));
-		}
-	}
-
-	@PutMapping("/{movieId}/update")
-	public ResponseEntity<?> updateMovie(@RequestBody @Valid MovieRequestDto request, @PathVariable UUID movieId,
-			@RequestHeader("Authorization") String token) {
-		try {
-			UserTokenDto user = CredentialUtil.getUserFromToken(token);
-			MovieResponseDto response = controller.update(request, movieId, user);
-			return ResponseEntity.ok(response);
-		} catch (MovieNotFoundException e) {
-			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
-		} catch (UserNotAuthorizedException e) {
-			return ResponseEntity.status(403).body(Map.of("error", true, "code", 403, "message", e.getMessage()));
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.internalServerError()
-					.body(Map.of("error", true, "code", 500, "message", "Internal server error"));
 		}
 	}
 
@@ -151,9 +156,6 @@ public class SpringMovieController {
 			return ResponseEntity.ok(response);
 		} catch (MovieNoteNotFoundException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.internalServerError()
-					.body(Map.of("error", true, "code", 500, "message", "Internal server error"));
 		}
 	}
 
@@ -161,14 +163,9 @@ public class SpringMovieController {
 	public ResponseEntity<?> deleteMovieNote(@PathVariable UUID movieId, @RequestHeader("Authorization") String token) {
 
 		UserTokenDto user;
-		try {
-			user = CredentialUtil.getUserFromToken(token);
-			controller.deleteMovieNote(movieId, user);
-			return ResponseEntity.ok().build();
-		} catch (JsonProcessingException e) {
-			return ResponseEntity.internalServerError()
-					.body(Map.of("error", true, "code", 500, "message", "Internal server error"));
-		}
+		user = CredentialUtil.getUserFromToken(token);
+		controller.deleteMovieNote(movieId, user);
+		return ResponseEntity.ok().build();
 
 	}
 }

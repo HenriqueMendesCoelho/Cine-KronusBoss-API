@@ -31,7 +31,7 @@ public interface MovieController {
 	MovieResponseDto update(MovieRequestDto movie, UUID id, UserTokenDto user)
 			throws MovieNotFoundException, UserNotAuthorizedException;
 
-	void delete(UUID id);
+	void delete(UUID id, UserTokenDto user) throws UserNotAuthorizedException;
 
 	List<MovieNoteResponseDto> listMoveiNotes(UUID movieId) throws MovieNotFoundException;
 
