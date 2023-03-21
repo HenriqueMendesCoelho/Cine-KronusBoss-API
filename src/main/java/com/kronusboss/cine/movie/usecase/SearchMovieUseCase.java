@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.kronusboss.cine.movie.domain.Movie;
+import com.kronusboss.cine.movie.usecase.exception.MovieNoteNotFoundException;
 
 public interface SearchMovieUseCase {
 
@@ -13,6 +14,6 @@ public interface SearchMovieUseCase {
 
 	Page<Movie> listMoviesByTitle(String title, Pageable pageable);
 
-	Movie getById(UUID id);
+	Movie getById(UUID id) throws MovieNoteNotFoundException;
 
 }

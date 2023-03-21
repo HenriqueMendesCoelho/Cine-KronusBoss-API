@@ -77,21 +77,21 @@ public class MovieControllerImpl implements MovieController {
 	}
 
 	@Override
-	public MovieResponseDto getById(UUID id) {
+	public MovieResponseDto getById(UUID id) throws MovieNoteNotFoundException {
 		Movie response = searchMovieUseCase.getById(id);
 		return new MovieResponseDto(response);
 	}
 
 	@Override
-	public MovieResponseDto save(MovieRequestDto movie) throws DuplicatedMovieException {
-		Movie response = createMovieUseCase.save(movie.toDomain());
+	public MovieResponseDto save(MovieRequestDto movie, UserTokenDto user) throws DuplicatedMovieException {
+		Movie response = createMovieUseCase.save(movie.toDomain(), user.getId());
 		return new MovieResponseDto(response);
 	}
 
 	@Override
-	public MovieResponseDto update(MovieRequestDto movie, UUID id, UserTokenDto user)
+	public MovieResponseDto update(MovieRequestDto movie, UUID movieId, UserTokenDto user)
 			throws MovieNotFoundException, UserNotAuthorizedException {
-		Movie response = updateMovieUseCase.update(movie.toDomain(), id, user.getLogin());
+		Movie response = updateMovieUseCase.update(movie.toDomain(), movieId, user.getLogin());
 		return new MovieResponseDto(response);
 	}
 

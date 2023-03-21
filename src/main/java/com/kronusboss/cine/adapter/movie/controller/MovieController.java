@@ -24,9 +24,9 @@ public interface MovieController {
 
 	Page<MovieResponseDto> listMoviesByTitle(String title, Pageable pageable);
 
-	MovieResponseDto getById(UUID id);
+	MovieResponseDto getById(UUID id) throws MovieNoteNotFoundException;
 
-	MovieResponseDto save(MovieRequestDto movie) throws DuplicatedMovieException;
+	MovieResponseDto save(MovieRequestDto movie, UserTokenDto user) throws DuplicatedMovieException;
 
 	MovieResponseDto update(MovieRequestDto movie, UUID id, UserTokenDto user)
 			throws MovieNotFoundException, UserNotAuthorizedException;

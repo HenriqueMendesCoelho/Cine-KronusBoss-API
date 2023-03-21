@@ -67,9 +67,10 @@ public class SpringMovieController {
 
 	@GetMapping("/{movieId}")
 	public ResponseEntity<?> getMovieById(@PathVariable UUID movieId) {
-		MovieResponseDto response = controller.getById(movieId);
-
-		if (response == null) {
+		MovieResponseDto response;
+		try {
+			response = controller.getById(movieId);
+		} catch (MovieNoteNotFoundException e) {
 			return ResponseEntity.noContent().build();
 		}
 
@@ -77,9 +78,11 @@ public class SpringMovieController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> createMovie(@RequestBody @Valid MovieRequestDto request) {
+	public ResponseEntity<?> createMovie(@RequestBody @Valid MovieRequestDto request,
+			@RequestHeader("Authorization") String token) {
 		try {
-			MovieResponseDto response = controller.save(request);
+			UserTokenDto user = CredentialUtil.getUserFromToken(token);
+			MovieResponseDto response = controller.save(request, user);
 			return ResponseEntity.ok(response);
 		} catch (DuplicatedMovieException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));

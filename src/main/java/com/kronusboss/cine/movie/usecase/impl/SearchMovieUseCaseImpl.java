@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.kronusboss.cine.adapter.movie.repository.jpa.MovieRepository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.usecase.SearchMovieUseCase;
+import com.kronusboss.cine.movie.usecase.exception.MovieNoteNotFoundException;
 
 @Component
 public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
@@ -28,11 +29,11 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 	}
 
 	@Override
-	public Movie getById(UUID id) {
+	public Movie getById(UUID id) throws MovieNoteNotFoundException {
 		Movie movie = repository.findById(id).orElse(null);
 
 		if (movie == null) {
-			return null;
+			throw new MovieNoteNotFoundException();
 		}
 
 		return movie;
