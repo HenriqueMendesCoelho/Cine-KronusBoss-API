@@ -11,6 +11,7 @@ import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.user.controller.UserController;
 import com.kronusboss.cine.adapter.user.controller.dto.InviteResponseDto;
 import com.kronusboss.cine.adapter.user.controller.dto.UserRequestDto;
+import com.kronusboss.cine.adapter.user.controller.dto.UserResponseAdmDto;
 import com.kronusboss.cine.adapter.user.controller.dto.UserResponseDto;
 import com.kronusboss.cine.user.domain.Invite;
 import com.kronusboss.cine.user.domain.User;
@@ -47,11 +48,6 @@ public class UserControllerImpl implements UserController {
 	private CreateInviteUseCase createInviteUseCase;
 
 	@Override
-	public List<UserResponseDto> getAllUsers() throws UserNotFoundException {
-		return searchUserUseCase.getAllUsers().stream().map(UserResponseDto::new).collect(Collectors.toList());
-	}
-
-	@Override
 	public UserResponseDto getUserByEmail(UserTokenDto request, String email)
 			throws UserNotFoundException, UserNotAuthorizedException {
 		User user = searchUserUseCase.getUserByEmail(email, request.getLogin());
@@ -69,6 +65,18 @@ public class UserControllerImpl implements UserController {
 			throws UserNotFoundException, UserNotAuthorizedException {
 		User response = updateUserUseCase.update(request.toDomain(), id, userLoged.getLogin());
 		return new UserResponseDto(response);
+	}
+
+	@Override
+	public UserResponseAdmDto getUserByEmailAdm(UserTokenDto request, String email)
+			throws UserNotFoundException, UserNotAuthorizedException {
+		User user = searchUserUseCase.getUserByEmail(email, request.getLogin());
+		return new UserResponseAdmDto(user);
+	}
+
+	@Override
+	public List<UserResponseDto> getAllUsers() throws UserNotFoundException {
+		return searchUserUseCase.getAllUsers().stream().map(UserResponseDto::new).collect(Collectors.toList());
 	}
 
 	@Override

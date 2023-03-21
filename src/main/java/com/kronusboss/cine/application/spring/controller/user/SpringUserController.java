@@ -22,6 +22,7 @@ import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.user.controller.UserController;
 import com.kronusboss.cine.adapter.user.controller.dto.InviteResponseDto;
 import com.kronusboss.cine.adapter.user.controller.dto.UserRequestDto;
+import com.kronusboss.cine.adapter.user.controller.dto.UserResponseAdmDto;
 import com.kronusboss.cine.adapter.user.controller.dto.UserResponseDto;
 import com.kronusboss.cine.adapter.util.CredentialUtil;
 import com.kronusboss.cine.user.usecase.exception.DuplicatedUserException;
@@ -39,32 +40,16 @@ public class SpringUserController {
 	private UserController controller;
 
 	@GetMapping
-	public ResponseEntity<?> getUser(@RequestParam String email, @RequestHeader("Authorization") String token) {
+	public ResponseEntity<?> getUser(@RequestHeader("Authorization") String token) {
 		try {
 			UserTokenDto user = CredentialUtil.getUserFromToken(token);
-			UserResponseDto response = controller.getUserByEmail(user, email);
+			UserResponseDto response = controller.getUserByEmail(user, user.getLogin());
 			return ResponseEntity.ok(response);
 		} catch (UserNotFoundException e) {
 			return ResponseEntity.noContent().build();
 		} catch (UserNotAuthorizedException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "status", 400, "message", e.getMessage()));
 		}
-	}
-
-	@GetMapping("/list")
-	@PreAuthorize("hasRole('ADM')")
-	public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-		try {
-			List<UserResponseDto> response = controller.getAllUsers();
-			return ResponseEntity.ok(response);
-		} catch (UserNotFoundException e) {
-			return ResponseEntity.noContent().build();
-		}
-	}
-
-	@GetMapping("/invite")
-	public ResponseEntity<List<InviteResponseDto>> listAllInvites() {
-		return ResponseEntity.ok(controller.getAllInvites());
 	}
 
 	@PostMapping
@@ -92,10 +77,50 @@ public class SpringUserController {
 		}
 	}
 
+	@GetMapping("/adm")
+	@PreAuthorize("hasRole('ADM')")
+	public ResponseEntity<?> getUserAdm(@RequestParam(required = true) @Valid String email,
+			@RequestHeader("Authorization") String token) {
+		try {
+			UserTokenDto user = CredentialUtil.getUserFromToken(token);
+			UserResponseAdmDto response = controller.getUserByEmailAdm(user, email);
+			return ResponseEntity.ok(response);
+		} catch (UserNotFoundException e) {
+			return ResponseEntity.noContent().build();
+		} catch (UserNotAuthorizedException e) {
+			return ResponseEntity.badRequest().body(Map.of("error", true, "status", 400, "message", e.getMessage()));
+		}
+	}
+
+	@GetMapping("/list")
+	@PreAuthorize("hasRole('ADM')")
+	public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+		try {
+			List<UserResponseDto> response = controller.getAllUsers();
+			return ResponseEntity.ok(response);
+		} catch (UserNotFoundException e) {
+			return ResponseEntity.noContent().build();
+		}
+	}
+
+	@PostMapping("/{id}")
+	@PreAuthorize("hasRole('ADM')")
+	public ResponseEntity<?> blockUserAdm(@PathVariable UUID id) {
+		controller.delete(id);
+		return ResponseEntity.ok().build();
+	}
+
 	@DeleteMapping("/{id}")
+	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
 		controller.delete(id);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/invite")
+	@PreAuthorize("hasRole('ADM')")
+	public ResponseEntity<List<InviteResponseDto>> listAllInvites() {
+		return ResponseEntity.ok(controller.getAllInvites());
 	}
 
 	@PostMapping("/invite")

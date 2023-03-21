@@ -11,27 +11,26 @@ import com.kronusboss.cine.user.domain.User;
 import lombok.Data;
 
 @Data
-public class UserResponseDto {
+public class UserResponseAdmDto {
 
 	private UUID id;
 	private String name;
 	private String email;
 	private Set<String> roles = new HashSet<>();
 	private PreferencesResponseDto preferences;
-	private StatisticsResponseDto statistics;
+	private StatisticsResponseAdmDto statistics;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
-	public UserResponseDto(User user) {
+	public UserResponseAdmDto(User user) {
 
 		id = user.getId();
 		name = user.getName();
 		email = user.getEmail();
 		roles = user.getRoles().stream().map(r -> r.getDescription().split("_")[1]).collect(Collectors.toSet());
 		preferences = new PreferencesResponseDto(user.getPreferences());
-		statistics = new StatisticsResponseDto(user.getStatistics());
+		statistics = new StatisticsResponseAdmDto(user.getStatistics());
 		createdAt = user.getCreatedAt();
 		updatedAt = user.getUpdatedAt();
 	}
-
 }
