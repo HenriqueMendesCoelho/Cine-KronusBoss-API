@@ -1,8 +1,12 @@
 package com.kronusboss.cine.movie.domain;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kronusboss.cine.user.domain.User;
@@ -78,6 +82,14 @@ public class Movie {
 	private List<MovieGenre> genres;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
+
+	@CreationTimestamp
+	@Column(nullable = false)
+	private LocalDateTime createdAt;
+
+	@UpdateTimestamp
+	@Column
+	private LocalDateTime updatedAt;
 }
