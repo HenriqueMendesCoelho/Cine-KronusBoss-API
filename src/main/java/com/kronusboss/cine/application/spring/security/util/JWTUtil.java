@@ -4,6 +4,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -35,7 +36,7 @@ public class JWTUtil {
 				.setAudience(username)
 				.claim("id", userId)
 				.claim("name", name)
-				.claim("roles", roles)
+				.claim("roles", roles.stream().map(s -> s.split("_")[1]).collect(Collectors.toSet()))
 				.compact();
 	}
 
