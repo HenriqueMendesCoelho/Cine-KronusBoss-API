@@ -46,8 +46,7 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable();
-
-		http.authorizeHttpRequests((authz) -> authz.requestMatchers(PUBLIC_MATCHERS)
+		http.authorizeHttpRequests(authz -> authz.requestMatchers(PUBLIC_MATCHERS)
 				.permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/user")
 				.permitAll()
@@ -55,11 +54,11 @@ public class SecurityConfig {
 				.hasAuthority("ROLE_ADMIN")
 				.anyRequest()
 				.authenticated());
-
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil));
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration), jwtUtil,
 				userDetailsService));
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
 		return http.build();
 	}
 
@@ -78,7 +77,10 @@ public class SecurityConfig {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE");
+				registry.addMapping("/**")
+						// .allowedOrigins("https://*.kronusboss.com")
+						.allowedOrigins("*")
+						.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE");
 
 			}
 		};
