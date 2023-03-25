@@ -50,6 +50,6 @@ public class MovieResponseDto {
 			notes = movie.getNotes().stream().map(MovieNoteResponseDto::new).collect(Collectors.toList());
 		genres = movie.getGenres().stream().map(MovieGenreResponseDto::new).collect(Collectors.toList());
 		imdbId = movie.getImdbId();
-		userId = movie.getUser().getId();
+		userId = movie.getUser() != null ? movie.getUser().getId() : null;
 	}
 }
