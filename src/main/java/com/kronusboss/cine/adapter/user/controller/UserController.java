@@ -25,13 +25,27 @@ public interface UserController {
 	UserResponseDto update(UserRequestDto user, UUID id, UserTokenDto userLoged)
 			throws UserNotFoundException, UserNotAuthorizedException;
 
+	UserResponseDto updateUserProfile(UUID userId, String name, String email, boolean notify)
+			throws UserNotFoundException;
+
+	UserResponseDto updateUserPassoword(UUID userId, String password, String newPassword)
+			throws UserNotFoundException, UserNotAuthorizedException;
+
 	UserResponseAdmDto getUserByEmailAdm(UserTokenDto request, String email)
 			throws UserNotFoundException, UserNotAuthorizedException;
+
+	UserResponseAdmDto promoteUserToAdmin(UUID userId) throws UserNotFoundException;
+
+	UserResponseAdmDto demoteUserToAdmin(UUID userId) throws UserNotFoundException;
+
+	UserResponseAdmDto blockUser(UUID userId) throws UserNotFoundException;
 
 	void delete(UUID id);
 
 	List<InviteResponseDto> getAllInvites();
 
 	InviteResponseDto createUserInvite();
+
+	void deleteInvite(String code);
 
 }

@@ -7,14 +7,14 @@ import com.kronusboss.cine.user.domain.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
 public class UserRequestDto {
 
 	@NotBlank
-	@Length(max = 100)
-	@Length(min = 3)
+	@Length(min = 3, max = 100)
 	private String name;
 
 	@NotBlank
@@ -22,7 +22,8 @@ public class UserRequestDto {
 	private String email;
 
 	@NotBlank
-	@Length(min = 8)
+	@Length(min = 8, max = 70)
+	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,70}$", message = "password is to weak")
 	private String password;
 
 	private boolean notify;

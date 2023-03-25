@@ -17,6 +17,7 @@ import com.kronusboss.cine.user.domain.Invite;
 import com.kronusboss.cine.user.domain.User;
 import com.kronusboss.cine.user.usecase.CreateInviteUseCase;
 import com.kronusboss.cine.user.usecase.CreateUserUseCase;
+import com.kronusboss.cine.user.usecase.DeleteInviteUseCase;
 import com.kronusboss.cine.user.usecase.DeleteUserUseCase;
 import com.kronusboss.cine.user.usecase.SearchInviteUseCase;
 import com.kronusboss.cine.user.usecase.SearchUserUseCase;
@@ -47,6 +48,9 @@ public class UserControllerImpl implements UserController {
 	@Autowired
 	private CreateInviteUseCase createInviteUseCase;
 
+	@Autowired
+	private DeleteInviteUseCase deleteInviteUseCase;
+
 	@Override
 	public UserResponseDto getUserByEmail(UserTokenDto request, String email)
 			throws UserNotFoundException, UserNotAuthorizedException {
@@ -68,10 +72,42 @@ public class UserControllerImpl implements UserController {
 	}
 
 	@Override
+	public UserResponseDto updateUserProfile(UUID userId, String name, String email, boolean notify)
+			throws UserNotFoundException {
+		User response = updateUserUseCase.updateUserProfile(userId, name, email, notify);
+		return new UserResponseDto(response);
+	}
+
+	@Override
+	public UserResponseDto updateUserPassoword(UUID userId, String password, String newPassword)
+			throws UserNotFoundException, UserNotAuthorizedException {
+		User response = updateUserUseCase.updateUserPassoword(userId, password, newPassword);
+		return new UserResponseDto(response);
+	}
+
+	@Override
 	public UserResponseAdmDto getUserByEmailAdm(UserTokenDto request, String email)
 			throws UserNotFoundException, UserNotAuthorizedException {
-		User user = searchUserUseCase.getUserByEmail(email, request.getLogin());
-		return new UserResponseAdmDto(user);
+		User response = searchUserUseCase.getUserByEmail(email, request.getLogin());
+		return new UserResponseAdmDto(response);
+	}
+
+	@Override
+	public UserResponseAdmDto promoteUserToAdmin(UUID userId) throws UserNotFoundException {
+		User response = updateUserUseCase.promoteUserToAdmin(userId);
+		return new UserResponseAdmDto(response);
+	}
+
+	@Override
+	public UserResponseAdmDto demoteUserToAdmin(UUID userId) throws UserNotFoundException {
+		User response = updateUserUseCase.demoteUserToAdmin(userId);
+		return new UserResponseAdmDto(response);
+	}
+
+	@Override
+	public UserResponseAdmDto blockUser(UUID userId) throws UserNotFoundException {
+		User response = updateUserUseCase.blockUser(userId);
+		return new UserResponseAdmDto(response);
 	}
 
 	@Override
@@ -94,6 +130,11 @@ public class UserControllerImpl implements UserController {
 	public List<InviteResponseDto> getAllInvites() {
 		List<Invite> response = searchInviteUseCase.list();
 		return response.stream().map(InviteResponseDto::new).collect(Collectors.toList());
+	}
+
+	@Override
+	public void deleteInvite(String code) {
+		deleteInviteUseCase.delete(code);
 	}
 
 }
