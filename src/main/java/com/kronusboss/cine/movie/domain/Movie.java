@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kronusboss.cine.user.domain.User;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -74,15 +75,15 @@ public class Movie {
 	private String imdbId;
 
 	@JsonManagedReference
-	@OneToMany(mappedBy = "movie")
+	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
 	private List<MovieNote> notes;
 
 	@ManyToMany
 	@JoinTable(name = "movies_genres", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
 	private List<MovieGenre> genres;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
 	private User user;
 
 	@CreationTimestamp
