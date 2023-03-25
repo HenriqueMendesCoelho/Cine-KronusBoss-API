@@ -100,7 +100,7 @@ public class SpringMovieController {
 		} catch (MovieNotFoundException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
 		} catch (UserNotAuthorizedException e) {
-			return ResponseEntity.status(403).body(Map.of("error", true, "code", 403, "message", e.getMessage()));
+			return ResponseEntity.status(403).body(Map.of("error", true, "code", 400, "message", e.getMessage()));
 		}
 	}
 
