@@ -69,7 +69,7 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<MovieNote> notes;
 
-	@OneToMany
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Movie> movies;
 
 	@CreationTimestamp
