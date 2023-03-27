@@ -45,7 +45,6 @@ public class CreateMovieNoteUseCaseImpl implements CreateMovieNoteUseCase {
 		}
 
 		MovieNote movieNote = MovieNote.builder().movie(movie).note(note).user(user).build();
-		user.getStatistics().setRatingsGiven(user.getStatistics().getRatingsGiven() + 1);
 
 		userRepository.saveAndFlush(user);
 

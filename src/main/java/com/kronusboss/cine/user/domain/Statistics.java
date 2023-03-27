@@ -11,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,10 +26,10 @@ public class Statistics {
 	@Column(name = "user_id")
 	private UUID id;
 
-	@Column
+	@Transient
 	private int ratingsGiven;
 
-	@Column
+	@Transient
 	private int registeredMovies;
 
 	@Column
@@ -46,6 +47,14 @@ public class Statistics {
 		this.registeredMovies = registeredMovies;
 		this.consecutiveFailedLoginAttempts = 0;
 		this.user = user;
+	}
+
+	public int getRatingsGiven() {
+		return this.user.getNotes().size();
+	}
+
+	public int getRegisteredMovies() {
+		return this.user.getMovies().size();
 	}
 
 }

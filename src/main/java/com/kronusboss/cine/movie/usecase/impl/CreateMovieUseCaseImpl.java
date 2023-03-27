@@ -29,7 +29,6 @@ public class CreateMovieUseCaseImpl implements CreateMovieUseCase {
 		}
 		User user = userRepository.findById(userId).orElse(null);
 		movie.setUser(user);
-		user.getStatistics().setRegisteredMovies(user.getStatistics().getRegisteredMovies() + 1);
 
 		userRepository.saveAndFlush(user);
 
