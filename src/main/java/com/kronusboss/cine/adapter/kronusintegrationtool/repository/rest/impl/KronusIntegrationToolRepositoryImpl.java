@@ -3,7 +3,6 @@ package com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
@@ -16,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.KronusIntegrationToolRepository;
 import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.entity.MovieGenreEntity;
 import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.entity.MovieGenresEntity;
@@ -42,9 +40,6 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Value("${send.mail}")
 	private boolean sendMail;
-
-	@Autowired
-	ObjectMapper mapper;
 
 	@Override
 	public MovieSummary movieSummary(Long tmdbId) {
@@ -105,7 +100,6 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 				log.error(String.format("Request returns status code: %s", response.getStatusCode()));
 			}
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
 			log.error(e.getMessage());
 			throw new RequestRejectedException(e.getMessage());
 		}

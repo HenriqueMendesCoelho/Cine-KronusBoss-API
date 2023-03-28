@@ -1,5 +1,7 @@
 package com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.entity;
 
+import java.util.LinkedHashMap;
+
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
@@ -22,13 +24,13 @@ public class SendMailTemplateRequestEntity {
 	private String to;
 	private String templateId;
 	private String subject;
-	private String username;
+	private LinkedHashMap<String, String> params;
 
 	public SendMailTemplateRequestEntity(SendMailTemplate sendMailTemplate) {
 		from = sendMailTemplate.getFrom();
 		to = sendMailTemplate.getTo();
 		templateId = sendMailTemplate.getTemplateId();
 		subject = sendMailTemplate.getSubject();
-		username = sendMailTemplate.getUsername();
+		params = sendMailTemplate.getParams();
 	}
 }
