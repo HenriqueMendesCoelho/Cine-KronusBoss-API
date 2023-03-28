@@ -33,7 +33,7 @@ public class SendMailTemplate {
 
 	public static SendMailTemplate welcomeMail(String to, String username) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
-		map.put("username", username);
+		map.put("user", username);
 		map.put("cine_url", FRONTEND_URL);
 		return SendMailTemplate.builder()
 				.from(FROM)
@@ -47,7 +47,7 @@ public class SendMailTemplate {
 
 	public static SendMailTemplate forgotPasswordMail(String to, String username, String recoverLink) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
-		map.put("username", username);
+		map.put("user", username);
 		map.put("link", recoverLink);
 		return SendMailTemplate.builder()
 				.from(FROM)
@@ -61,7 +61,7 @@ public class SendMailTemplate {
 
 	public static SendMailTemplate accountBlockedMail(String to, String username) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
-		map.put("username", username);
+		map.put("user", username);
 		return SendMailTemplate.builder()
 				.from(FROM)
 				.to(to)
