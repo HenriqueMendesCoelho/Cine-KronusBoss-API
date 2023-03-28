@@ -1,4 +1,4 @@
-FROM arm64v8/maven:3.8.6-eclipse-temurin-19
+FROM arm64v8/maven:3.9.0-amazoncorretto-19
 
 ENV TZ=America/Sao_Paulo
 
