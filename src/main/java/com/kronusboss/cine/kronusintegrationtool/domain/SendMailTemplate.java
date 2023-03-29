@@ -1,8 +1,7 @@
 package com.kronusboss.cine.kronusintegrationtool.domain;
 
 import java.util.LinkedHashMap;
-
-import org.springframework.beans.factory.annotation.Value;
+import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,16 +12,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 public class SendMailTemplate {
-
-	private static String FRONTEND_URL;
 
 	private static final String WELCOME_TEMPLATEID = "d-c1f102718d3c4a5da8ea81e418676469";
 	private static final String FORGOT_PASSWORD_TEMPLATEID = "d-c7f944c5af3d413d9acfa82be63222a0";
 	private static final String BLOCKED_ACCOUNT_TEMPLATEID = "d-0a10cc53f5df49a6822321c209ad6b69";
 	private static final String FROM = "noreply-cine@kronusboss.com";
+	private static final String[] CINE_FRONTEND_URL = Stream.of("cine_url", "https://www.cine.kronusboss.com/")
+			.toArray(String[]::new);;
 
 	private String from;
 	private String to;
@@ -34,7 +33,7 @@ public class SendMailTemplate {
 	public static SendMailTemplate welcomeMail(String to, String username) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		map.put("user", username);
-		map.put("cine_url", FRONTEND_URL);
+		map.put(CINE_FRONTEND_URL[0], CINE_FRONTEND_URL[1]);
 		return SendMailTemplate.builder()
 				.from(FROM)
 				.to(to)
@@ -72,8 +71,4 @@ public class SendMailTemplate {
 				.build();
 	}
 
-	@Value("${url.front}")
-	public static void setFRONTEND_URL(String fRONTEND_URL) {
-		FRONTEND_URL = fRONTEND_URL;
-	}
 }
