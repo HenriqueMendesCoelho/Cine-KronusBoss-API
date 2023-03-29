@@ -50,11 +50,11 @@ public class Statistics {
 	}
 
 	public int getRatingsGiven() {
-		return this.user.getNotes().size();
+		return user.getNotes() != null ? user.getNotes().size() : 0;
 	}
 
 	public int getRegisteredMovies() {
-		return this.user.getMovies().size();
+		return user.getMovies() != null ? user.getMovies().size() : 0;
 	}
 
 }
