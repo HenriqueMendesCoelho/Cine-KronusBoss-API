@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,6 +28,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,6 +36,7 @@ import lombok.Setter;
 @Table(name = "\"user\"")
 @Getter
 @Setter
+@EqualsAndHashCode(of = "id")
 public class User implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -87,7 +88,6 @@ public class User implements Serializable {
 	@Builder
 	public User(String name, String email, String password, Preferences preferences, Statistics statistics,
 			List<MovieNote> notes) {
-		super();
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -107,21 +107,6 @@ public class User implements Serializable {
 
 	public void removeRole(Role role) {
 		roles.remove(role.getCode());
-	}
-
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		return Objects.equals(id, other.id);
-	}
-
-	public int hashCode() {
-		return Objects.hash(id);
 	}
 
 }
