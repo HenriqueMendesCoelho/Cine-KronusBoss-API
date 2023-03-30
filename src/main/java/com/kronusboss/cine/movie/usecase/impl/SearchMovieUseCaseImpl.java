@@ -25,7 +25,14 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 
 	@Override
 	public Page<Movie> listMoviesByTitle(String title, Pageable pageable) {
-		return repository.findMovieByTitleCustom(title, pageable);
+		String[] titleSplitBySpace = title.split(" ");
+
+		String[] params = new String[titleSplitBySpace.length];
+		for (int i = 0; i < params.length; i++) {
+			params[i] = "%" + titleSplitBySpace[i] + "%";
+		}
+
+		return repository.findMovieByTitleIlikeAny(params, pageable);
 	}
 
 	@Override
