@@ -50,6 +50,7 @@ public class MovieRequestDto {
 
 	private String imdbId;
 
+	@NotNull
 	private Integer runtime;
 
 	public Movie toDomain() {

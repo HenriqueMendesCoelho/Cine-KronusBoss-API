@@ -53,6 +53,7 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 		movieToUpdate.setReleaseDate(movie.getReleaseDate());
 		movieToUpdate.setImdbId(movie.getImdbId());
 		movieToUpdate.setGenres(movie.getGenres());
+		movieToUpdate.setRuntime(movie.getRuntime());
 
 		return repository.saveAndFlush(movieToUpdate);
 	}
