@@ -74,6 +74,9 @@ public class Movie {
 	@Column(nullable = true, unique = true)
 	private String imdbId;
 
+	@Column(nullable = true)
+	private Integer runtime;
+
 	@JsonManagedReference
 	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
 	private List<MovieNote> notes;

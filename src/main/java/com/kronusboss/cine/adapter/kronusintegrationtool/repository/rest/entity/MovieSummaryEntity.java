@@ -34,6 +34,7 @@ public class MovieSummaryEntity {
 	private String description;
 	private List<String> genres;
 	private LocalDate releaseDate;
+	private Integer runtime;
 
 	public MovieSummary toDomain() {
 		return MovieSummary.builder()
@@ -49,6 +50,7 @@ public class MovieSummaryEntity {
 				.genres(genres)
 				.description(description)
 				.releaseDate(releaseDate)
+				.runtime(runtime)
 				.build();
 	}
 }

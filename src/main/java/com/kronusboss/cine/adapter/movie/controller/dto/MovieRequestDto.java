@@ -50,6 +50,8 @@ public class MovieRequestDto {
 
 	private String imdbId;
 
+	private Integer runtime;
+
 	public Movie toDomain() {
 		return Movie.builder()
 				.portugueseTitle(portugueseTitle)
@@ -63,6 +65,7 @@ public class MovieRequestDto {
 				.releaseDate(releaseDate)
 				.tmdbId(tmdbId)
 				.imdbId(imdbId)
+				.runtime(runtime)
 				.genres(genres.stream().map(g -> MovieGenre.builder().id(g).build()).collect(Collectors.toList()))
 				.build();
 	}

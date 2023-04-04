@@ -29,5 +29,6 @@ public class MovieSummary {
 	private String description;
 	private List<String> genres;
 	private LocalDate releaseDate;
+	private Integer runtime;
 
 }

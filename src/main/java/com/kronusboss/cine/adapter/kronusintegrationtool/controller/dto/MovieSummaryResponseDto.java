@@ -31,6 +31,7 @@ public class MovieSummaryResponseDto {
 	private String description;
 	private List<String> genres;
 	private LocalDate releaseDate;
+	private Integer runtime;
 
 	public MovieSummaryResponseDto(MovieSummary summary) {
 		tmdbId = summary.getTmdbId();
@@ -46,6 +47,7 @@ public class MovieSummaryResponseDto {
 		description = summary.getDescription();
 		genres = summary.getGenres();
 		releaseDate = summary.getReleaseDate();
+		runtime = summary.getRuntime();
 	}
 
 }
