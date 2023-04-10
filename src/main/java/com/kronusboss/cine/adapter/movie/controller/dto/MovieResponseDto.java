@@ -1,6 +1,7 @@
 package com.kronusboss.cine.adapter.movie.controller.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,6 +35,7 @@ public class MovieResponseDto {
 	private UUID userId;
 	List<MovieNoteResponseDto> notes;
 	List<MovieGenreResponseDto> genres;
+	private LocalDateTime createdAt;
 
 	public MovieResponseDto(Movie movie) {
 		id = movie.getId();
@@ -54,5 +56,6 @@ public class MovieResponseDto {
 		imdbId = movie.getImdbId();
 		userId = movie.getUser() != null ? movie.getUser().getId() : null;
 		runtime = movie.getRuntime();
+		createdAt = movie.getCreatedAt();
 	}
 }
