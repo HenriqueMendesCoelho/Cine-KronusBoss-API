@@ -33,9 +33,11 @@ public class MovieResponseDto {
 	private String imdbId;
 	private Integer runtime;
 	private UUID userId;
+	private String userName;
 	List<MovieNoteResponseDto> notes;
 	List<MovieGenreResponseDto> genres;
 	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 
 	public MovieResponseDto(Movie movie) {
 		id = movie.getId();
@@ -54,8 +56,13 @@ public class MovieResponseDto {
 		}
 		genres = movie.getGenres().stream().map(MovieGenreResponseDto::new).collect(Collectors.toList());
 		imdbId = movie.getImdbId();
-		userId = movie.getUser() != null ? movie.getUser().getId() : null;
+		if (movie.getUser() != null) {
+			userId = movie.getUser().getId();
+			userName = movie.getUser().getName();
+		}
+
 		runtime = movie.getRuntime();
 		createdAt = movie.getCreatedAt();
+		updatedAt = movie.getUpdatedAt();
 	}
 }
