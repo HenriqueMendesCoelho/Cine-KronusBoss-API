@@ -5,15 +5,15 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.adapter.movie.repository.jpa.MovieNoteRepository;
-import com.kronusboss.cine.adapter.movie.repository.jpa.MovieRepository;
-import com.kronusboss.cine.adapter.user.repository.jpa.UserRepository;
+import com.kronusboss.cine.movie.adapter.repository.jpa.MovieNoteRepository;
+import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.domain.MovieNote;
 import com.kronusboss.cine.movie.domain.MovieNoteKey;
 import com.kronusboss.cine.movie.usecase.CreateMovieNoteUseCase;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieNoteException;
 import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
+import com.kronusboss.cine.user.adapter.repository.jpa.UserRepository;
 import com.kronusboss.cine.user.domain.User;
 
 @Component

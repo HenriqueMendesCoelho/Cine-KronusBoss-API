@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.adapter.movie.repository.jpa.MovieNoteRepository;
+import com.kronusboss.cine.movie.adapter.repository.jpa.MovieNoteRepository;
 import com.kronusboss.cine.movie.domain.MovieNote;
 import com.kronusboss.cine.movie.domain.MovieNoteKey;
 import com.kronusboss.cine.movie.usecase.DeleteMovieNoteUseCase;

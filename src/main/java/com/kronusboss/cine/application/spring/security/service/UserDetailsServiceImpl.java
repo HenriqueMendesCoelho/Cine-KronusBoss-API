@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.kronusboss.cine.adapter.user.repository.jpa.UserRepository;
 import com.kronusboss.cine.application.spring.security.UserSS;
+import com.kronusboss.cine.user.adapter.repository.jpa.UserRepository;
 import com.kronusboss.cine.user.domain.User;
 
 @Service

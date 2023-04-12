@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.KronusIntegrationToolRepository;
-import com.kronusboss.cine.adapter.movie.repository.jpa.MovieGenreRepository;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
+import com.kronusboss.cine.movie.adapter.repository.jpa.MovieGenreRepository;
 import com.kronusboss.cine.movie.domain.MovieGenre;
 import com.kronusboss.cine.movie.usecase.CreateMovieGenreUseCase;
 

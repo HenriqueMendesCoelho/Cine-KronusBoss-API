@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.adapter.movie.repository.jpa.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.usecase.SearchMovieUseCase;
 import com.kronusboss.cine.movie.usecase.exception.MovieNoteNotFoundException;

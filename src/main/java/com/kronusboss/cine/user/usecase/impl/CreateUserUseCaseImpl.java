@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.adapter.kronusintegrationtool.repository.rest.KronusIntegrationToolRepository;
-import com.kronusboss.cine.adapter.user.repository.jpa.InviteRepository;
-import com.kronusboss.cine.adapter.user.repository.jpa.UserRepository;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
 import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
+import com.kronusboss.cine.user.adapter.repository.jpa.InviteRepository;
+import com.kronusboss.cine.user.adapter.repository.jpa.UserRepository;
 import com.kronusboss.cine.user.domain.Invite;
 import com.kronusboss.cine.user.domain.Preferences;
 import com.kronusboss.cine.user.domain.Role;

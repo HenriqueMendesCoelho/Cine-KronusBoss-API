@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.kronusboss.cine.adapter.user.repository.jpa.UserRepository;
+import com.kronusboss.cine.user.adapter.repository.jpa.UserRepository;
 import com.kronusboss.cine.user.domain.Role;
 import com.kronusboss.cine.user.domain.User;
 import com.kronusboss.cine.user.usecase.UpdateUserUseCase;
