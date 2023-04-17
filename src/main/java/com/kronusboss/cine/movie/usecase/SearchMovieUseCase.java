@@ -12,6 +12,8 @@ public interface SearchMovieUseCase {
 
 	Page<Movie> listMoviesAll(Pageable pageable);
 
+	Page<Movie> listAllMoviesOrderByNotesAvg(Pageable pageable);
+
 	Page<Movie> listMoviesByTitle(String title, Pageable pageable);
 
 	Movie getById(UUID id) throws MovieNoteNotFoundException;

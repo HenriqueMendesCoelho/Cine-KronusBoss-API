@@ -55,8 +55,10 @@ public class SpringMovieController {
 	}
 
 	@GetMapping("/list")
-	public ResponseEntity<?> getAllMovies(Pageable pageable) {
-		Page<MovieResponseDto> response = controller.listMoviesAll(pageable);
+	public ResponseEntity<?> getAllMovies(@RequestParam(required = false) String order, Pageable pageable) {
+		Page<MovieResponseDto> response = order != null && order.equalsIgnoreCase("notes")
+				? controller.listAllMoviesOrderByNotesAvg(pageable)
+				: controller.listMoviesAll(pageable);
 
 		if (response.isEmpty()) {
 			return ResponseEntity.noContent().build();

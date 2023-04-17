@@ -24,6 +24,11 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 	}
 
 	@Override
+	public Page<Movie> listAllMoviesOrderByNotesAvg(Pageable pageable) {
+		return repository.findMovieOrderByNoteAvg(pageable);
+	}
+
+	@Override
 	public Page<Movie> listMoviesByTitle(String title, Pageable pageable) {
 		String[] titleSplitBySpace = title.split(" ");
 
