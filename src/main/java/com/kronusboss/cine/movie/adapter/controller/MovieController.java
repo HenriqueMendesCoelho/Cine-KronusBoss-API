@@ -22,7 +22,7 @@ public interface MovieController {
 
 	Page<MovieResponseDto> listMoviesAll(Pageable pageable);
 
-	Page<MovieResponseDto> listAllMoviesOrderByNotesAvg(Pageable pageable);
+	Page<MovieResponseDto> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable);
 
 	Page<MovieResponseDto> listMoviesByTitle(String title, Pageable pageable);
 

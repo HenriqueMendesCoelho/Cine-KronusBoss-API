@@ -71,8 +71,8 @@ public class MovieControllerImpl implements MovieController {
 	}
 
 	@Override
-	public Page<MovieResponseDto> listAllMoviesOrderByNotesAvg(Pageable pageable) {
-		Page<Movie> response = searchMovieUseCase.listAllMoviesOrderByNotesAvg(pageable);
+	public Page<MovieResponseDto> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable) {
+		Page<Movie> response = searchMovieUseCase.listAllMoviesOrderByNotesAvg(sortJoin, pageable);
 		return response.map(MovieResponseDto::new);
 	}
 

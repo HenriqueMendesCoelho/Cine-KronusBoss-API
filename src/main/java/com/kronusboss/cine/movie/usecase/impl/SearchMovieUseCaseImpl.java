@@ -24,8 +24,18 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 	}
 
 	@Override
-	public Page<Movie> listAllMoviesOrderByNotesAvg(Pageable pageable) {
-		return repository.findMovieOrderByNoteAvg(pageable);
+	public Page<Movie> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable) {
+		String[] sortJoinParams = sortJoin.split(",");
+
+		String sortDirection = !sortJoinParams[sortJoinParams.length - 1].equalsIgnoreCase("asc")
+				&& !sortJoinParams[sortJoinParams.length - 1].equalsIgnoreCase("desc") ? "desc"
+						: sortJoinParams[sortJoinParams.length - 1];
+
+		if (sortDirection.equalsIgnoreCase("asc")) {
+			return repository.findMovieOrderByNoteAvgASC(pageable);
+		}
+
+		return repository.findMovieOrderByNoteAvgDESC(pageable);
 	}
 
 	@Override
