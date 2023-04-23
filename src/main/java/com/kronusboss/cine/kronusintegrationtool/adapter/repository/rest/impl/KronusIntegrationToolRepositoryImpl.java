@@ -108,8 +108,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public List<MovieGenre> listGenres() {
+		String language = "pt-Br";
+
 		RestTemplate template = getRestTemplate();
-		String uri = createUri("/api/v1/tmdb/genre/movie/list");
+		String uri = createUri(String.format("/api/v1/tmdb/genre/movie/list?language=%s", language));
 
 		try {
 			ResponseEntity<MovieGenresEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
