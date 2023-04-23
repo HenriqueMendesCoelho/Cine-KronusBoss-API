@@ -45,7 +45,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	public MovieSummary movieSummary(Long tmdbId) {
 
 		RestTemplate template = getRestTemplate();
-		String uri = createUri(String.format("/api/v1/movie/%s/summary", tmdbId));
+		String uri = createUri(String.format("/api/v1/tmdb/movie/%s/summary", tmdbId));
 
 		try {
 			ResponseEntity<MovieSummaryEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -64,8 +64,8 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	@Override
 	public MovieSearch searchByName(String name, Integer page, String language, boolean includeAdult) {
 		RestTemplate template = getRestTemplate();
-		String uri = createUri(String.format("/api/v1/movie?query=%s&page=%s&language=%s&include_adult=%s", name, page,
-				language, includeAdult));
+		String uri = createUri(String.format("/api/v1/tmdb/movie?query=%s&page=%s&language=%s&include_adult=%s", name,
+				page, language, includeAdult));
 
 		try {
 			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -109,7 +109,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	@Override
 	public List<MovieGenre> listGenres() {
 		RestTemplate template = getRestTemplate();
-		String uri = createUri("/api/v1/genre/movie/list");
+		String uri = createUri("/api/v1/tmdb/genre/movie/list");
 
 		try {
 			ResponseEntity<MovieGenresEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
