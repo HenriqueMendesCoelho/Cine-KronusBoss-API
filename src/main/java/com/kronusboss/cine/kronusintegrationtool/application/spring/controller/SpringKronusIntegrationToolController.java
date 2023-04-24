@@ -41,4 +41,51 @@ public class SpringKronusIntegrationToolController {
 
 	}
 
+	@GetMapping("/movie/tmdb/popular")
+	public ResponseEntity<?> moviesPopular(@RequestParam(required = false, defaultValue = "1") Integer page) {
+		MovieSearchResponseDto response = controller.moviesPopular(page);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/movie/tmdb/now-playing")
+	public ResponseEntity<?> moviesNowPlaying(@RequestParam(required = false, defaultValue = "1") Integer page) {
+		MovieSearchResponseDto response = controller.moviesNowPlaying(page);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/movie/tmdb/top-rated")
+	public ResponseEntity<?> moviesTopRated(@RequestParam(required = false, defaultValue = "1") Integer page) {
+		MovieSearchResponseDto response = controller.moviesTopRated(page);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/movie/tmdb/{movieId}/recommendations")
+	public ResponseEntity<?> moviesRecommendations(@PathVariable Long movieId,
+			@RequestParam(required = false, defaultValue = "1") Integer page) {
+		MovieSearchResponseDto response = controller.moviesRecommendations(movieId, page);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/movie/tmdb/{movieId}/similar")
+	public ResponseEntity<?> moviesSimilar(@PathVariable Long movieId,
+			@RequestParam(required = false, defaultValue = "1") Integer page) {
+		MovieSearchResponseDto response = controller.moviesSimilar(movieId, page);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/movie/tmdb/discover")
+	public ResponseEntity<?> discoverMovies(@RequestParam(required = false) String sort,
+			@RequestParam(required = false, defaultValue = "1") Integer page,
+			@RequestParam(required = false) Integer year, @RequestParam(required = false) String with_genres,
+			@RequestParam(required = false) String without_genres) {
+		MovieSearchResponseDto response = controller.discoverMovies(sort, page, year, with_genres, without_genres);
+
+		return ResponseEntity.ok(response);
+	}
+
 }

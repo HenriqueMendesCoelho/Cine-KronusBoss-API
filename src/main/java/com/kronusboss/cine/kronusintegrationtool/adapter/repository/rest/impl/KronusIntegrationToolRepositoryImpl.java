@@ -107,6 +107,139 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	}
 
 	@Override
+	public MovieSearch moviesPopular(Integer page) {
+		RestTemplate template = getRestTemplate();
+		String uri = createUri(
+				String.format("/api/v1/tmdb/movie/popular?page=%s&language=%s&region=&s", page, "pt-Br", "BR"));
+
+		try {
+			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchEntity.class);
+
+			MovieSearchEntity response = responseEntity.getBody();
+
+			return response.toDomain();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new RequestRejectedException(e.getMessage());
+		}
+	}
+
+	@Override
+	public MovieSearch moviesNowPlaying(Integer page) {
+		RestTemplate template = getRestTemplate();
+		String uri = createUri(
+				String.format("/api/v1/tmdb/movie/now_playing?page=%s&language=%s&region=&s", page, "pt-Br", "BR"));
+
+		try {
+			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchEntity.class);
+
+			MovieSearchEntity response = responseEntity.getBody();
+
+			return response.toDomain();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new RequestRejectedException(e.getMessage());
+		}
+	}
+
+	@Override
+	public MovieSearch moviesTopRated(Integer page) {
+		RestTemplate template = getRestTemplate();
+		String uri = createUri(
+				String.format("/api/v1/tmdb/movie/top_rated?page=%s&language=%s&region=&s", page, "pt-Br", "BR"));
+
+		try {
+			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchEntity.class);
+
+			MovieSearchEntity response = responseEntity.getBody();
+
+			return response.toDomain();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new RequestRejectedException(e.getMessage());
+		}
+	}
+
+	@Override
+	public MovieSearch moviesRecommendations(Long movieTmdbId, Integer page) {
+		RestTemplate template = getRestTemplate();
+		String uri = createUri(
+				String.format("/api/v1/tmdb/movie/%s/recommendations?page=%s&language=%s", movieTmdbId, page, "pt-Br"));
+
+		try {
+			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchEntity.class);
+
+			MovieSearchEntity response = responseEntity.getBody();
+
+			return response.toDomain();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new RequestRejectedException(e.getMessage());
+		}
+	}
+
+	@Override
+	public MovieSearch moviesSimilar(Long movieTmdbId, Integer page) {
+		RestTemplate template = getRestTemplate();
+		String uri = createUri(
+				String.format("/api/v1/tmdb/movie/%s/similar?page=%s&language=%s", movieTmdbId, page, "pt-Br"));
+
+		try {
+			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchEntity.class);
+
+			MovieSearchEntity response = responseEntity.getBody();
+
+			return response.toDomain();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new RequestRejectedException(e.getMessage());
+		}
+	}
+
+	@Override
+	public MovieSearch discoverMovies(String sortByParam, Integer page, Integer primaryReleaseYear, String withGenres,
+			String withoutGenres) {
+		RestTemplate template = getRestTemplate();
+		StringBuilder uriBuilder = new StringBuilder(String
+				.format("/api/v1/tmdb/discover/movie?page=%s&language=%s&include_adult=", page, "pt-Br", "false"));
+
+		if (sortByParam != null) {
+			uriBuilder.append(String.format("&sort_by=%s", sortByParam));
+		}
+
+		if (primaryReleaseYear != null) {
+			uriBuilder.append(String.format("&primary_release_year=%s", primaryReleaseYear));
+		}
+
+		if (withGenres != null) {
+			uriBuilder.append(String.format("&with_genres=%s", withGenres));
+		}
+
+		if (withoutGenres != null) {
+			uriBuilder.append(String.format("&without_genres=%s", withoutGenres));
+		}
+
+		String uri = createUri(uriBuilder.toString());
+
+		try {
+			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchEntity.class);
+
+			MovieSearchEntity response = responseEntity.getBody();
+
+			return response.toDomain();
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new RequestRejectedException(e.getMessage());
+		}
+	}
+
+	@Override
 	public List<MovieGenre> listGenres() {
 		String language = "pt-Br";
 

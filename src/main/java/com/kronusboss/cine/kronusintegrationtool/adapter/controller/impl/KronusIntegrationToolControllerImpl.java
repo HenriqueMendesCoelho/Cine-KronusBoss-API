@@ -32,4 +32,42 @@ public class KronusIntegrationToolControllerImpl implements KronusIntegrationToo
 		return new MovieSearchResponseDto(response);
 	}
 
+	@Override
+	public MovieSearchResponseDto moviesPopular(Integer page) {
+		MovieSearch response = searchMovieTmdbUseCase.moviesPopular(page);
+		return new MovieSearchResponseDto(response);
+	}
+
+	@Override
+	public MovieSearchResponseDto moviesNowPlaying(Integer page) {
+		MovieSearch response = searchMovieTmdbUseCase.moviesNowPlaying(page);
+		return new MovieSearchResponseDto(response);
+	}
+
+	@Override
+	public MovieSearchResponseDto moviesTopRated(Integer page) {
+		MovieSearch response = searchMovieTmdbUseCase.moviesTopRated(page);
+		return new MovieSearchResponseDto(response);
+	}
+
+	@Override
+	public MovieSearchResponseDto moviesRecommendations(Long movieTmdbId, Integer page) {
+		MovieSearch response = searchMovieTmdbUseCase.moviesRecommendations(movieTmdbId, page);
+		return new MovieSearchResponseDto(response);
+	}
+
+	@Override
+	public MovieSearchResponseDto moviesSimilar(Long movieTmdbId, Integer page) {
+		MovieSearch response = searchMovieTmdbUseCase.moviesSimilar(movieTmdbId, page);
+		return new MovieSearchResponseDto(response);
+	}
+
+	@Override
+	public MovieSearchResponseDto discoverMovies(String sortByParam, Integer page, Integer primaryReleaseYear,
+			String withGenres, String withoutGenres) {
+		MovieSearch response = searchMovieTmdbUseCase.discoverMovies(sortByParam, page, primaryReleaseYear, withGenres,
+				withoutGenres);
+		return new MovieSearchResponseDto(response);
+	}
+
 }

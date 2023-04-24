@@ -18,4 +18,35 @@ public class SearchMovieTmdbUseCaseImpl implements SearchMovieTmdbUseCase {
 		return repository.searchByName(name, page, language, false);
 	}
 
+	@Override
+	public MovieSearch moviesPopular(Integer page) {
+		return repository.moviesPopular(page);
+	}
+
+	@Override
+	public MovieSearch moviesNowPlaying(Integer page) {
+		return repository.moviesNowPlaying(page);
+	}
+
+	@Override
+	public MovieSearch moviesTopRated(Integer page) {
+		return repository.moviesTopRated(page);
+	}
+
+	@Override
+	public MovieSearch moviesRecommendations(Long movieTmdbId, Integer page) {
+		return repository.moviesRecommendations(movieTmdbId, page);
+	}
+
+	@Override
+	public MovieSearch moviesSimilar(Long movieTmdbId, Integer page) {
+		return repository.moviesSimilar(movieTmdbId, page);
+	}
+
+	@Override
+	public MovieSearch discoverMovies(String sortByParam, Integer page, Integer primaryReleaseYear, String withGenres,
+			String withoutGenres) {
+		return repository.discoverMovies(sortByParam, page, primaryReleaseYear, withGenres, withoutGenres);
+	}
+
 }

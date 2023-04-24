@@ -13,6 +13,19 @@ public interface KronusIntegrationToolRepository {
 
 	MovieSearch searchByName(String name, Integer page, String language, boolean includeAdult);
 
+	MovieSearch moviesPopular(Integer page);
+
+	MovieSearch moviesNowPlaying(Integer page);
+
+	MovieSearch moviesTopRated(Integer page);
+
+	MovieSearch moviesRecommendations(Long movieTmdbId, Integer page);
+
+	MovieSearch moviesSimilar(Long movieTmdbId, Integer page);
+
+	MovieSearch discoverMovies(String sortByParam, Integer page, Integer primaryReleaseYear, String with_genres,
+			String without_genres);
+
 	void sendMailTemplate(SendMailTemplate request);
 
 	List<MovieGenre> listGenres();
