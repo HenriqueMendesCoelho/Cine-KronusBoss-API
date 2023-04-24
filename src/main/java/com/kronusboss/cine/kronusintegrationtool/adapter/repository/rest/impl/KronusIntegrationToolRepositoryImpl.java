@@ -205,8 +205,9 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	public MovieSearch discoverMovies(String sortByParam, Integer page, Integer primaryReleaseYear, String withGenres,
 			String withoutGenres) {
 		RestTemplate template = getRestTemplate();
-		StringBuilder uriBuilder = new StringBuilder(String
-				.format("/api/v1/tmdb/discover/movie?page=%s&language=%s&include_adult=", page, "pt-Br", "false"));
+		StringBuilder uriBuilder = new StringBuilder(
+				String.format("/api/v1/tmdb/discover/movie?page=%s&language=%s&include_adult=false&vote_count.gte=300",
+						page, "pt-Br"));
 
 		if (sortByParam != null) {
 			uriBuilder.append(String.format("&sort_by=%s", sortByParam));
