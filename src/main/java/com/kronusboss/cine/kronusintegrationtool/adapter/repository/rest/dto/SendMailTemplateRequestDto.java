@@ -1,4 +1,4 @@
-package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.entity;
+package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto;
 
 import java.util.LinkedHashMap;
 
@@ -18,7 +18,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class SendMailTemplateRequestEntity {
+public class SendMailTemplateRequestDto {
 
 	private String from;
 	private String to;
@@ -26,7 +26,7 @@ public class SendMailTemplateRequestEntity {
 	private String subject;
 	private LinkedHashMap<String, String> params;
 
-	public SendMailTemplateRequestEntity(SendMailTemplate sendMailTemplate) {
+	public SendMailTemplateRequestDto(SendMailTemplate sendMailTemplate) {
 		from = sendMailTemplate.getFrom();
 		to = sendMailTemplate.getTo();
 		templateId = sendMailTemplate.getTemplateId();

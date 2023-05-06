@@ -1,4 +1,4 @@
-package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.entity;
+package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MovieSummaryEntity {
+public class MovieSummaryResponseDto {
 
 	private Long tmdbId;
 	private String imdbId;

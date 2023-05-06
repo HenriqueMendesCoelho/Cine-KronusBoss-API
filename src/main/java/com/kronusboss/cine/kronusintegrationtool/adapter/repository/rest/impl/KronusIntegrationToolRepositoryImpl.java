@@ -16,11 +16,11 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.entity.MovieGenreEntity;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.entity.MovieGenresEntity;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.entity.MovieSearchEntity;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.entity.MovieSummaryEntity;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.entity.SendMailTemplateRequestEntity;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenreResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenresResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSearchResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSummaryResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.SendMailTemplateRequestDto;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
 import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
@@ -48,10 +48,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 		String uri = createUri(String.format("/api/v1/tmdb/movie/%s/summary", tmdbId));
 
 		try {
-			ResponseEntity<MovieSummaryEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSummaryEntity.class);
+			ResponseEntity<MovieSummaryResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSummaryResponseDto.class);
 
-			MovieSummaryEntity response = responseEntity.getBody();
+			MovieSummaryResponseDto response = responseEntity.getBody();
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -68,10 +68,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 				name, page, language, includeAdult));
 
 		try {
-			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchEntity.class);
+			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchResponseDto.class);
 
-			MovieSearchEntity response = responseEntity.getBody();
+			MovieSearchResponseDto response = responseEntity.getBody();
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -87,11 +87,11 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 			return;
 		}
 
-		SendMailTemplateRequestEntity entity = new SendMailTemplateRequestEntity(request);
+		SendMailTemplateRequestDto entity = new SendMailTemplateRequestDto(request);
 		RestTemplate template = getRestTemplate();
 		String uri = createUri("/api/v1/sendgrid/template");
 
-		HttpEntity<SendMailTemplateRequestEntity> requestHttp = new HttpEntity<SendMailTemplateRequestEntity>(entity);
+		HttpEntity<SendMailTemplateRequestDto> requestHttp = new HttpEntity<SendMailTemplateRequestDto>(entity);
 
 		try {
 			ResponseEntity<Void> response = template.exchange(uri, HttpMethod.POST, requestHttp, Void.class);
@@ -113,10 +113,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 				String.format("/api/v1/tmdb/movie/popular?page=%s&language=%s&region=&s", page, "pt-Br", "BR"));
 
 		try {
-			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchEntity.class);
+			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchResponseDto.class);
 
-			MovieSearchEntity response = responseEntity.getBody();
+			MovieSearchResponseDto response = responseEntity.getBody();
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -132,10 +132,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 				String.format("/api/v1/tmdb/movie/now_playing?page=%s&language=%s&region=&s", page, "pt-Br", "BR"));
 
 		try {
-			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchEntity.class);
+			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchResponseDto.class);
 
-			MovieSearchEntity response = responseEntity.getBody();
+			MovieSearchResponseDto response = responseEntity.getBody();
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -151,10 +151,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 				String.format("/api/v1/tmdb/movie/top_rated?page=%s&language=%s&region=&s", page, "pt-Br", "BR"));
 
 		try {
-			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchEntity.class);
+			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchResponseDto.class);
 
-			MovieSearchEntity response = responseEntity.getBody();
+			MovieSearchResponseDto response = responseEntity.getBody();
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -170,10 +170,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 				String.format("/api/v1/tmdb/movie/%s/recommendations?page=%s&language=%s", movieTmdbId, page, "pt-Br"));
 
 		try {
-			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchEntity.class);
+			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchResponseDto.class);
 
-			MovieSearchEntity response = responseEntity.getBody();
+			MovieSearchResponseDto response = responseEntity.getBody();
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -189,10 +189,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 				String.format("/api/v1/tmdb/movie/%s/similar?page=%s&language=%s", movieTmdbId, page, "pt-Br"));
 
 		try {
-			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchEntity.class);
+			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchResponseDto.class);
 
-			MovieSearchEntity response = responseEntity.getBody();
+			MovieSearchResponseDto response = responseEntity.getBody();
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -228,10 +228,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 		String uri = createUri(uriBuilder.toString());
 
 		try {
-			ResponseEntity<MovieSearchEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchEntity.class);
+			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieSearchResponseDto.class);
 
-			MovieSearchEntity response = responseEntity.getBody();
+			MovieSearchResponseDto response = responseEntity.getBody();
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -248,13 +248,13 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 		String uri = createUri(String.format("/api/v1/tmdb/genre/movie/list?language=%s", language));
 
 		try {
-			ResponseEntity<MovieGenresEntity> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieGenresEntity.class);
+			ResponseEntity<MovieGenresResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					MovieGenresResponseDto.class);
 
-			MovieGenresEntity response = responseEntity.getBody();
-			List<MovieGenreEntity> genres = response.getGenres();
+			MovieGenresResponseDto response = responseEntity.getBody();
+			List<MovieGenreResponseDto> genres = response.getGenres();
 
-			return genres.stream().map(MovieGenreEntity::toDomain).collect(Collectors.toList());
+			return genres.stream().map(MovieGenreResponseDto::toDomain).collect(Collectors.toList());
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			throw new RequestRejectedException(e.getMessage());

@@ -1,4 +1,4 @@
-package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.entity;
+package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto;
 
 import com.kronusboss.cine.movie.domain.MovieGenre;
 
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieGenreEntity {
+public class MovieGenreResponseDto {
 
 	private Long id;
 	private String name;

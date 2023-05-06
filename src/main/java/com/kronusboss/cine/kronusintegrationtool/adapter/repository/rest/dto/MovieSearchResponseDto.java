@@ -1,4 +1,4 @@
-package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.entity;
+package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,17 +19,17 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class MovieSearchEntity {
+public class MovieSearchResponseDto {
 
 	private Integer page;
-	private List<ResultSearchEntity> results;
+	private List<ResultSearchResponseDto> results;
 	private Integer totalPages;
 	private Integer totalResults;
 
 	public MovieSearch toDomain() {
 		return MovieSearch.builder()
 				.page(page)
-				.results(this.results.stream().map(ResultSearchEntity::toDomain).collect(Collectors.toList()))
+				.results(this.results.stream().map(ResultSearchResponseDto::toDomain).collect(Collectors.toList()))
 				.totalPages(totalPages)
 				.totalResults(totalResults)
 				.build();

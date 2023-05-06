@@ -1,4 +1,4 @@
-package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.entity;
+package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto;
 
 import java.util.List;
 
@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MovieGenresEntity {
+public class MovieGenresResponseDto {
 
-	List<MovieGenreEntity> genres;
+	List<MovieGenreResponseDto> genres;
 
 }
