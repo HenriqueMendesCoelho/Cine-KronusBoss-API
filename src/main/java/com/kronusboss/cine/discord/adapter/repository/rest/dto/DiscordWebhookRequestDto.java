@@ -21,7 +21,7 @@ public class DiscordWebhookRequestDto {
 	public List<EmbedRequestDto> embeds;
 
 	public DiscordWebhookRequestDto(Movie movie) {
-		content = "||@Cinéfilos||";
+		content = "@Cinéfilos";
 		embeds = List.of(new EmbedRequestDto(movie));
 	}
 
