@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
 import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.usecase.UpdateMovieUseCase;
@@ -22,6 +23,9 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private UpdateMessageWebhookUseCase updateMessageWebhookUseCase;
 
 	@Override
 	public Movie update(Movie movie, UUID id, String userEmail)
@@ -55,7 +59,10 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 		movieToUpdate.setGenres(movie.getGenres());
 		movieToUpdate.setRuntime(movie.getRuntime());
 
-		return repository.saveAndFlush(movieToUpdate);
+		Movie movieUpdated = repository.saveAndFlush(movieToUpdate);
+		updateMessageWebhookUseCase.updateMovieMessage(movieToUpdate.getId());
+
+		return movieUpdated;
 	}
 
 }

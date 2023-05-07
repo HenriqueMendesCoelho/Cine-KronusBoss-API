@@ -17,6 +17,6 @@ public class MovieGenreResponseDto {
 	private String name;
 
 	public MovieGenre toDomain() {
-		return MovieGenre.builder().id(id).name(name).build();
+		return MovieGenre.builder().id(id).name(name).tmdbId(id).build();
 	}
 }

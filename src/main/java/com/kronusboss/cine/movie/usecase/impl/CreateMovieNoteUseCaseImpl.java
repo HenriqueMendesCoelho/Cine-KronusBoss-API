@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
 import com.kronusboss.cine.movie.adapter.repository.jpa.MovieNoteRepository;
 import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
 import com.kronusboss.cine.movie.domain.Movie;
@@ -28,6 +29,9 @@ public class CreateMovieNoteUseCaseImpl implements CreateMovieNoteUseCase {
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private UpdateMessageWebhookUseCase updateMessageWebhookUseCase;
+
 	@Override
 	public MovieNote create(UUID movieId, Integer note, String emailUserLoged)
 			throws MovieNotFoundException, DuplicatedMovieNoteException {
@@ -48,7 +52,11 @@ public class CreateMovieNoteUseCaseImpl implements CreateMovieNoteUseCase {
 
 		userRepository.saveAndFlush(user);
 
-		return repository.saveAndFlush(movieNote);
+		MovieNote noteCreated = repository.saveAndFlush(movieNote);
+
+		updateMessageWebhookUseCase.updateMovieMessage(movie.getId());
+
+		return noteCreated;
 	}
 
 }

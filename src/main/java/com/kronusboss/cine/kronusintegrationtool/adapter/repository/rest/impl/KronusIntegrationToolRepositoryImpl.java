@@ -95,7 +95,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 		try {
 			ResponseEntity<Void> response = template.exchange(uri, HttpMethod.POST, requestHttp, Void.class);
-			if (response.getStatusCode().is4xxClientError() || response.getStatusCode().is4xxClientError()) {
+			if (response.getStatusCode().is4xxClientError() || response.getStatusCode().is5xxServerError()) {
 				log.error(String.format("Error to send mail to: %s", entity.toString()));
 				log.error(String.format("Request returns status code: %s", response.getStatusCode()));
 			}

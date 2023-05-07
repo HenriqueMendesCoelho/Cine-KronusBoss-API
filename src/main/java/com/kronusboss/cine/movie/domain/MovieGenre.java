@@ -32,6 +32,9 @@ public class MovieGenre {
 	@Column(nullable = false, unique = true)
 	private String name;
 
+	@Column(nullable = true, unique = true)
+	private Long tmdbId;
+
 	@ManyToMany
 	@JoinTable(name = "movies_genres", joinColumns = @JoinColumn(name = "genre_id"), inverseJoinColumns = @JoinColumn(name = "movie_id"))
 	private List<Movie> movies;

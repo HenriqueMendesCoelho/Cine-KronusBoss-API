@@ -22,6 +22,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -96,4 +98,8 @@ public class Movie {
 	@UpdateTimestamp
 	@Column
 	private LocalDateTime updatedAt;
+
+	@OneToOne(mappedBy = "movie", cascade = CascadeType.ALL)
+	@PrimaryKeyJoinColumn
+	private MovieDiscord movieDiscord;
 }
