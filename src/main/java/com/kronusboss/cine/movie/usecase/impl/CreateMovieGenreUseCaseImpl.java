@@ -42,19 +42,6 @@ public class CreateMovieGenreUseCaseImpl implements CreateMovieGenreUseCase {
 			repository.saveAndFlush(genre);
 		}
 
-		for (MovieGenre genre : genres) {
-			MovieGenre exists = repository.findByName(genre.getName());
-
-			if (exists == null) {
-				continue;
-			}
-			count++;
-
-			exists.setTmdbId(genre.getTmdbId());
-
-			repository.saveAndFlush(exists);
-		}
-
 		log.info(String.format("Completed integration with TMDB of film genres, %s new genres registered", count));
 	}
 
