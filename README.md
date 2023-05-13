@@ -6,7 +6,7 @@ This is a personal project aimed at creating a comprehensive movie rating portal
 
 Inspired by IMDB and TMDB.
 
-## Tecnologies
+## Technologies
 
 ```
 Java 20, Spring Boot, JPA, Spring Security, Lombok, Spring Validation, Actuator
