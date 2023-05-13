@@ -2,11 +2,9 @@
 
 ## Introduction
 
-```
 This is a personal project aimed at creating a comprehensive movie rating portal. Whether you're a movie buff or simply looking for a way to discover new films.
 
 Inspired by IMDB and TMDB.
-```
 
 ### Tecnologies
 
