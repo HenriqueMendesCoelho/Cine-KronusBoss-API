@@ -1,4 +1,4 @@
-FROM arm64v8/maven:3.9.1-amazoncorretto-20
+FROM arm64v8/maven:3.9.2-amazoncorretto-20
 
 ENV TZ=America/Sao_Paulo
 
