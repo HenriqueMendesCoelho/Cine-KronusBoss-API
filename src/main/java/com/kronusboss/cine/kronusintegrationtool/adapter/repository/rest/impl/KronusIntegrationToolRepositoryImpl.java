@@ -110,7 +110,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	public MovieSearch moviesPopular(Integer page) {
 		RestTemplate template = getRestTemplate();
 		String uri = createUri(
-				String.format("/api/v1/tmdb/movie/popular?page=%s&language=%s&region=&s", page, "pt-Br", "BR"));
+				String.format("/api/v1/tmdb/movie/popular?page=%s&language=%s&region=%s", page, "pt-Br", "BR"));
 
 		try {
 			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -129,7 +129,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	public MovieSearch moviesNowPlaying(Integer page) {
 		RestTemplate template = getRestTemplate();
 		String uri = createUri(
-				String.format("/api/v1/tmdb/movie/now_playing?page=%s&language=%s&region=&s", page, "pt-Br", "BR"));
+				String.format("/api/v1/tmdb/movie/now_playing?page=%s&language=%s&region=%s", page, "pt-Br", "BR"));
 
 		try {
 			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -148,7 +148,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	public MovieSearch moviesTopRated(Integer page) {
 		RestTemplate template = getRestTemplate();
 		String uri = createUri(
-				String.format("/api/v1/tmdb/movie/top_rated?page=%s&language=%s&region=&s", page, "pt-Br", "BR"));
+				String.format("/api/v1/tmdb/movie/top_rated?page=%s&language=%s&region=%s", page, "pt-Br", "BR"));
 
 		try {
 			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
