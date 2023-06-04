@@ -83,7 +83,7 @@ public class EmbedRequestDto {
 
 		List<Integer> notes = movie.getNotes().stream().map(n -> n.getNote()).collect(Collectors.toList());
 		double avgNote = notes.stream().mapToDouble(d -> d).average().orElse(0.0);
-		DECIMAL_FORMAT.setRoundingMode(RoundingMode.UP);
+		DECIMAL_FORMAT.setRoundingMode(RoundingMode.HALF_EVEN);
 
 		return Objects.toString(DECIMAL_FORMAT.format(avgNote), "0.0");
 	}
