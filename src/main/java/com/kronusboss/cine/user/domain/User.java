@@ -81,6 +81,12 @@ public class User implements Serializable {
 	@Column
 	private LocalDateTime updatedAt;
 
+	@Column(length = 200, nullable = true)
+	private String redefinePasswordKey;
+
+	@Column(nullable = true)
+	private LocalDateTime redefinePasswordKeyCreatedAt;
+
 	public User() {
 		addRole(Role.USER);
 	}

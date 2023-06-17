@@ -35,7 +35,8 @@ public class SecurityConfig {
 	@Autowired
 	private JWTUtil jwtUtil;
 
-	private static final String[] PUBLIC_MATCHERS = { "/api/auth/forgot", };
+	private static final String[] PUBLIC_MATCHERS = { "/api/auth/forgot", "/api/user/password/reset",
+			"/api/user/password/*/reset" };
 
 	@Bean
 	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
