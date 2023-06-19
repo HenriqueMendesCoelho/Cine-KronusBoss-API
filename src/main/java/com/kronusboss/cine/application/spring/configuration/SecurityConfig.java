@@ -38,6 +38,11 @@ public class SecurityConfig {
 	private static final String[] PUBLIC_MATCHERS = { "/api/auth/forgot", "/api/user/password/reset",
 			"/api/user/password/*/reset" };
 
+	@Autowired
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+	}
+
 	@Bean
 	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
 			throws Exception {
@@ -45,32 +50,8 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable();
-		http.authorizeHttpRequests(authz -> authz.requestMatchers(PUBLIC_MATCHERS)
-				.permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/user")
-				.permitAll()
-				.requestMatchers(HttpMethod.GET, "/actuator/**")
-				.hasAuthority("ROLE_ADMIN")
-				.anyRequest()
-				.authenticated());
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil));
-		http.addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration), jwtUtil,
-				userDetailsService));
-		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-		return http.build();
-	}
-
-	@Bean
 	BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
-	}
-
-	@Autowired
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
 	}
 
 	@Bean
@@ -85,4 +66,31 @@ public class SecurityConfig {
 			}
 		};
 	}
+
+	@Bean
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+		http.cors().and().csrf().disable();
+		http.authorizeHttpRequests(authz -> authz.requestMatchers(PUBLIC_MATCHERS)
+				.permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/user")
+				.permitAll()
+				.requestMatchers(HttpMethod.GET, "/actuator/**")
+				.hasAuthority("ROLE_ADMIN")
+				.anyRequest()
+				.authenticated());
+		http.addFilter(jwtAuthorizationFilter());
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration), jwtUtil,
+				userDetailsService));
+		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+		return http.build();
+	}
+
+	private JWTAuthenticationFilter jwtAuthorizationFilter() throws Exception {
+		JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(
+				authenticationManager(authenticationConfiguration), jwtUtil);
+		jwtAuthenticationFilter.setFilterProcessesUrl("/api/login");
+		return jwtAuthenticationFilter;
+	}
+
 }
