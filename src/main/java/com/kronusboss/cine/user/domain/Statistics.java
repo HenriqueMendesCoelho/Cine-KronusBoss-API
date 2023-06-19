@@ -32,6 +32,9 @@ public class Statistics {
 	@Transient
 	private int registeredMovies;
 
+	@Transient
+	private int theoreticalTotalMinutesWatched;
+
 	@Column
 	private int consecutiveFailedLoginAttempts;
 
@@ -55,6 +58,10 @@ public class Statistics {
 
 	public int getRegisteredMovies() {
 		return user.getMovies() != null ? user.getMovies().size() : 0;
+	}
+
+	public int getTheoreticalTotalMinutesWatched() {
+		return user.getNotes().stream().map(n -> n.getMovie().getRuntime()).mapToInt(m -> m).sum();
 	}
 
 }
