@@ -1,8 +1,13 @@
 package com.kronusboss.cine.application.spring.configuration;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,8 +19,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.kronusboss.cine.application.spring.security.JWTAuthenticationFilter;
 import com.kronusboss.cine.application.spring.security.JWTAuthorizationFilter;
@@ -55,21 +61,9 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-						// .allowedOrigins("https://*.kronusboss.com")
-						.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE");
-
-			}
-		};
-	}
-
-	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable();
+		http.cors(withDefaults());
+		http.csrf((csrf) -> csrf.disable());
 		http.authorizeHttpRequests(authz -> authz.requestMatchers(PUBLIC_MATCHERS)
 				.permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/user")
@@ -84,6 +78,17 @@ public class SecurityConfig {
 		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		return http.build();
+	}
+
+	@Bean
+	@Primary
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.applyPermitDefaultValues();
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 
 	private JWTAuthenticationFilter jwtAuthorizationFilter() throws Exception {
