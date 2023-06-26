@@ -14,14 +14,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.kronusboss.cine.adapter.util.exception.TokenInvalidException;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 @RestControllerAdvice
+@Slf4j
 public class SpringControllerAdviceHandler {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public Map<String, Object> handleValidationExceptions(MethodArgumentNotValidException ex,
 			HttpServletRequest request) {
+		log.error("Request: " + request.getRequestURL() + " raised " + ex);
+
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("timestamp", new Date(System.currentTimeMillis()).toString());
 		response.put("status", 400);
@@ -43,12 +47,29 @@ public class SpringControllerAdviceHandler {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(TokenInvalidException.class)
 	public Map<String, Object> handleValidationExceptions(TokenInvalidException ex, HttpServletRequest request) {
+		log.error("Request: " + request.getRequestURL() + " raised " + ex);
+
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("timestamp", new Date(System.currentTimeMillis()).toString());
 		response.put("status", HttpStatus.UNAUTHORIZED.value());
 		response.put("error", "Unauthorized");
 		response.put("message", ex.getMessage());
 		response.put("path", request.getRequestURI());
+
+		return response;
+	}
+
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(Exception.class)
+	public Map<String, Object> handleError(HttpServletRequest request, Exception ex) {
+		log.error("Request: " + request.getRequestURL() + " raised " + ex);
+
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("timestamp", new Date(System.currentTimeMillis()).toString());
+		response.put("status", "500");
+		response.put("error", "internal server error");
+		response.put("message", "contact the administrator");
+		response.put("path", request.getRequestURL());
 
 		return response;
 	}

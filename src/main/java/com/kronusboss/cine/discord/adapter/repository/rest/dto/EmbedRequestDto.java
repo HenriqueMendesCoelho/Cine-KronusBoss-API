@@ -38,11 +38,11 @@ public class EmbedRequestDto {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm:ss");
 		String date = movie.getCreatedAt().format(formatter);
 
-		title = String.format("%s | Nota: %s", movie.getPortugueseTitle(), getAvgNotes(movie));
+		title = "%s | Nota: %s".formatted(movie.getPortugueseTitle(), getAvgNotes(movie));
 		image = new Image(movie.getUrlImage());
 		color = 3447003;
 		url = String.format("%s/movie/%s", URL_REDIRECT, movie.getId());
-		footer = new Footer(String.format("Cadastrado por: %s - %s", movie.getUser().getName(), date));
+		footer = new Footer("Cadastrado por: %s - %s".formatted(movie.getUser().getName(), date));
 		fields = movie.getNotes() != null ? movie.getNotes().stream().map(Field::new).collect(Collectors.toList())
 				: new ArrayList<>();
 	}

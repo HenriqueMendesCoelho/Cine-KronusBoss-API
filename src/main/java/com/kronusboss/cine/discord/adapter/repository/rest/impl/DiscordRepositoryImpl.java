@@ -32,13 +32,16 @@ public class DiscordRepositoryImpl implements DiscordRepository {
 	@Value("${discord.webhook.update}")
 	private boolean update;
 
+	@Value("${discord.webhook.role.id}")
+	private String roleId;
+
 	@Override
 	public DiscordWebhookInfo execute(Movie movie) {
 		if (!execute) {
 			return null;
 		}
 
-		DiscordWebhookRequestDto entity = new DiscordWebhookRequestDto(movie);
+		DiscordWebhookRequestDto entity = new DiscordWebhookRequestDto(movie, roleId);
 		RestTemplate template = new RestTemplate();
 		String uri = createUri();
 
@@ -64,7 +67,7 @@ public class DiscordRepositoryImpl implements DiscordRepository {
 			return null;
 		}
 
-		DiscordWebhookRequestDto entity = new DiscordWebhookRequestDto(movie);
+		DiscordWebhookRequestDto entity = new DiscordWebhookRequestDto(movie, roleId);
 		RestTemplate template = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 		String uri = createUri(movie.getMovieDiscord().getMessageId());
 
