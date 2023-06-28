@@ -21,6 +21,9 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
 	@Query(value = "select * from movie where portuguese_title ilike any(:title) or english_title ilike any(:title) or original_title ilike any(:title)", nativeQuery = true)
 	Page<Movie> findMovieByTitleIlikeAny(@Param("title") String[] title, Pageable pageable);
 
+	@Query(value = "select * from movie where portuguese_title ilike all(:title) or english_title ilike all(:title) or original_title ilike all(:title)", nativeQuery = true)
+	Page<Movie> findMovieByTitleIlikeAll(@Param("title") String[] title, Pageable pageable);
+
 	@Query(value = "SELECT m.*, COALESCE(AVG(n.note), 0) AS average_notes FROM movie m "
 			+ " LEFT JOIN movie_note n ON m.id = n.movie_id GROUP BY m.id "
 			+ " ORDER BY average_notes ASC, m.portuguese_title ASC;", nativeQuery = true)
