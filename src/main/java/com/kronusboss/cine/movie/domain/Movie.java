@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kronusboss.cine.user.domain.User;
 
 import jakarta.persistence.CascadeType;
@@ -79,7 +78,6 @@ public class Movie {
 	@Column(nullable = true)
 	private Integer runtime;
 
-	@JsonManagedReference
 	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
 	private List<MovieNote> notes;
 
