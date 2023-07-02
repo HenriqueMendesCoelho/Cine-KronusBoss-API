@@ -27,16 +27,19 @@ public class Statistics {
 	private UUID id;
 
 	@Transient
-	private int ratingsGiven;
+	private Integer ratingsGiven;
 
 	@Transient
-	private int registeredMovies;
+	private Integer registeredMovies;
 
 	@Transient
-	private int theoreticalTotalMinutesWatched;
+	private Integer displayTime;
+
+	@Transient
+	private Double averageRatingMovies;
 
 	@Column
-	private int consecutiveFailedLoginAttempts;
+	private Integer consecutiveFailedLoginAttempts;
 
 	@JsonIgnore
 	@OneToOne
@@ -52,16 +55,21 @@ public class Statistics {
 		this.user = user;
 	}
 
-	public int getRatingsGiven() {
+	public Integer getRatingsGiven() {
 		return user.getNotes() != null ? user.getNotes().size() : 0;
 	}
 
-	public int getRegisteredMovies() {
+	public Integer getRegisteredMovies() {
 		return user.getMovies() != null ? user.getMovies().size() : 0;
 	}
 
-	public int getTheoreticalTotalMinutesWatched() {
+	public Integer getDisplayTime() {
 		return user.getNotes().stream().map(n -> n.getMovie().getRuntime()).mapToInt(m -> m).sum();
+	}
+
+	public Double getAverageRatingMovies() {
+
+		return user.getNotes().stream().map(n -> n.getNote()).mapToDouble(m -> m).average().orElse(0);
 	}
 
 }
