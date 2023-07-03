@@ -5,6 +5,7 @@ import java.util.List;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
 import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
+import com.kronusboss.cine.kronusintegrationtool.domain.WatchProviders;
 import com.kronusboss.cine.movie.domain.MovieGenre;
 
 public interface KronusIntegrationToolRepository {
@@ -22,6 +23,8 @@ public interface KronusIntegrationToolRepository {
 	MovieSearch moviesRecommendations(Long movieTmdbId, Integer page);
 
 	MovieSearch moviesSimilar(Long movieTmdbId, Integer page);
+
+	WatchProviders getWatchProviders(Long tmdbId);
 
 	MovieSearch discoverMovies(String sortByParam, Integer page, Integer primaryReleaseYear, String with_genres,
 			String without_genres);

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.KronusIntegrationToolController;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.WatchProvidersResponseDto;
 
 @RestController
 @RequestMapping("/api")
@@ -84,6 +85,13 @@ public class SpringKronusIntegrationToolController {
 			@RequestParam(required = false) Integer year, @RequestParam(required = false) String with_genres,
 			@RequestParam(required = false) String without_genres) {
 		MovieSearchResponseDto response = controller.discoverMovies(sort, page, year, with_genres, without_genres);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/movie/tmdb/{movieId}/watch-providers")
+	public ResponseEntity<?> getWatchProviders(@PathVariable Long movieId) {
+		WatchProvidersResponseDto response = controller.searchWatchProvidersByMovieId(movieId);
 
 		return ResponseEntity.ok(response);
 	}

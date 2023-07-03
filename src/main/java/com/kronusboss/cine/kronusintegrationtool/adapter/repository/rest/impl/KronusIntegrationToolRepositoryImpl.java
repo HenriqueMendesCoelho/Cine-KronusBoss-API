@@ -3,27 +3,32 @@ package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenreResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenresResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSummaryResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.SendMailTemplateRequestDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.WatchProvidersResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
 import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
+import com.kronusboss.cine.kronusintegrationtool.domain.WatchProviders;
 import com.kronusboss.cine.movie.domain.MovieGenre;
 
 import lombok.extern.log4j.Log4j2;
@@ -41,11 +46,14 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	@Value("${send.mail}")
 	private boolean sendMail;
 
+	@Autowired
+	private ObjectMapper mapper;
+
 	@Override
 	public MovieSummary movieSummary(Long tmdbId) {
 
 		RestTemplate template = getRestTemplate();
-		String uri = createUri(String.format("/api/v1/tmdb/movie/%s/summary", tmdbId));
+		String uri = createUri("/api/v1/tmdb/movie/%s/summary".formatted(tmdbId));
 
 		try {
 			ResponseEntity<MovieSummaryResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -64,8 +72,8 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	@Override
 	public MovieSearch searchByName(String name, Integer page, String language, boolean includeAdult) {
 		RestTemplate template = getRestTemplate();
-		String uri = createUri(String.format("/api/v1/tmdb/search/movie?query=%s&page=%s&language=%s&include_adult=%s",
-				name, page, language, includeAdult));
+		String uri = createUri("/api/v1/tmdb/search/movie?query=%s&page=%s&language=%s&include_adult=%s".formatted(name,
+				page, language, includeAdult));
 
 		try {
 			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -110,7 +118,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	public MovieSearch moviesPopular(Integer page) {
 		RestTemplate template = getRestTemplate();
 		String uri = createUri(
-				String.format("/api/v1/tmdb/movie/popular?page=%s&language=%s&region=%s", page, "pt-Br", "BR"));
+				"/api/v1/tmdb/movie/popular?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR"));
 
 		try {
 			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -129,7 +137,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	public MovieSearch moviesNowPlaying(Integer page) {
 		RestTemplate template = getRestTemplate();
 		String uri = createUri(
-				String.format("/api/v1/tmdb/movie/now_playing?page=%s&language=%s&region=%s", page, "pt-Br", "BR"));
+				"/api/v1/tmdb/movie/now_playing?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR"));
 
 		try {
 			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -148,7 +156,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	public MovieSearch moviesTopRated(Integer page) {
 		RestTemplate template = getRestTemplate();
 		String uri = createUri(
-				String.format("/api/v1/tmdb/movie/top_rated?page=%s&language=%s&region=%s", page, "pt-Br", "BR"));
+				"/api/v1/tmdb/movie/top_rated?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR"));
 
 		try {
 			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -167,7 +175,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	public MovieSearch moviesRecommendations(Long movieTmdbId, Integer page) {
 		RestTemplate template = getRestTemplate();
 		String uri = createUri(
-				String.format("/api/v1/tmdb/movie/%s/recommendations?page=%s&language=%s", movieTmdbId, page, "pt-Br"));
+				"/api/v1/tmdb/movie/%s/recommendations?page=%s&language=%s".formatted(movieTmdbId, page, "pt-Br"));
 
 		try {
 			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -186,7 +194,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	public MovieSearch moviesSimilar(Long movieTmdbId, Integer page) {
 		RestTemplate template = getRestTemplate();
 		String uri = createUri(
-				String.format("/api/v1/tmdb/movie/%s/similar?page=%s&language=%s", movieTmdbId, page, "pt-Br"));
+				"/api/v1/tmdb/movie/%s/similar?page=%s&language=%s".formatted(movieTmdbId, page, "pt-Br"));
 
 		try {
 			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -206,23 +214,23 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 			String withoutGenres) {
 		RestTemplate template = getRestTemplate();
 		StringBuilder uriBuilder = new StringBuilder(
-				String.format("/api/v1/tmdb/discover/movie?page=%s&language=%s&include_adult=false&vote_count.gte=300",
-						page, "pt-Br"));
+				"/api/v1/tmdb/discover/movie?page=%s&language=%s&include_adult=false&vote_count.gte=300".formatted(page,
+						"pt-Br"));
 
 		if (sortByParam != null) {
-			uriBuilder.append(String.format("&sort_by=%s", sortByParam));
+			uriBuilder.append("&sort_by=%s".formatted(sortByParam));
 		}
 
 		if (primaryReleaseYear != null) {
-			uriBuilder.append(String.format("&primary_release_year=%s", primaryReleaseYear));
+			uriBuilder.append("&primary_release_year=%s".formatted(primaryReleaseYear));
 		}
 
 		if (withGenres != null) {
-			uriBuilder.append(String.format("&with_genres=%s", withGenres));
+			uriBuilder.append("&with_genres=%s".formatted(withGenres));
 		}
 
 		if (withoutGenres != null) {
-			uriBuilder.append(String.format("&without_genres=%s", withoutGenres));
+			uriBuilder.append("&without_genres=%s".formatted(withoutGenres));
 		}
 
 		String uri = createUri(uriBuilder.toString());
@@ -245,7 +253,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 		String language = "pt-Br";
 
 		RestTemplate template = getRestTemplate();
-		String uri = createUri(String.format("/api/v1/tmdb/genre/movie/list?language=%s", language));
+		String uri = createUri("/api/v1/tmdb/genre/movie/list?language=%s".formatted(language));
 
 		try {
 			ResponseEntity<MovieGenresResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
@@ -255,6 +263,24 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 			List<MovieGenreResponseDto> genres = response.getGenres();
 
 			return genres.stream().map(MovieGenreResponseDto::toDomain).collect(Collectors.toList());
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			throw new RequestRejectedException(e.getMessage());
+		}
+	}
+
+	@Override
+	public WatchProviders getWatchProviders(Long tmdbId) {
+		RestTemplate template = getRestTemplate();
+		String uri = createUri("/api/v1/tmdb/movie/%s/watch/providers".formatted(tmdbId));
+
+		try {
+			ResponseEntity<WatchProvidersResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
+					WatchProvidersResponseDto.class);
+
+			WatchProvidersResponseDto response = responseEntity.getBody();
+
+			return response.toDomain();
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			throw new RequestRejectedException(e.getMessage());
@@ -277,7 +303,9 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 			return execution.execute(request, body);
 		};
 
-		RestTemplate restTemplate = new RestTemplateBuilder().interceptors(interceptor).build();
+		RestTemplate restTemplate = new RestTemplateBuilder().interceptors(interceptor)
+				.messageConverters(new MappingJackson2HttpMessageConverter(mapper))
+				.build();
 		return restTemplate;
 	}
 

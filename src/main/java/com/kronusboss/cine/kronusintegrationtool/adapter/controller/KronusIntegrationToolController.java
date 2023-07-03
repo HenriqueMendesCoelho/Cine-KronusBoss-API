@@ -2,12 +2,11 @@ package com.kronusboss.cine.kronusintegrationtool.adapter.controller;
 
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.WatchProvidersResponseDto;
 
 public interface KronusIntegrationToolController {
 
-	MovieSummaryResponseDto
-
-			movieSummary(Long tmdbId);
+	MovieSummaryResponseDto movieSummary(Long tmdbId);
 
 	MovieSearchResponseDto movieSearchByName(String name, Integer page, String language);
 
@@ -23,4 +22,7 @@ public interface KronusIntegrationToolController {
 
 	MovieSearchResponseDto discoverMovies(String sortByParam, Integer page, Integer primaryReleaseYear,
 			String withGenres, String withoutGenres);
+
+	WatchProvidersResponseDto searchWatchProvidersByMovieId(Long movieId);
+
 }
