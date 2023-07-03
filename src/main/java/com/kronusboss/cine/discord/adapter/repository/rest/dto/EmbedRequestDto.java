@@ -26,6 +26,7 @@ public class EmbedRequestDto {
 
 	private static final String URL_REDIRECT = "https://www.cine.kronusboss.com";
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.0", new DecimalFormatSymbols(Locale.US));
+	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm:ss");
 
 	public String title;
 	public Image image;
@@ -35,8 +36,8 @@ public class EmbedRequestDto {
 	public List<Field> fields;
 
 	public EmbedRequestDto(Movie movie) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm:ss");
-		String date = movie.getCreatedAt().format(formatter);
+
+		String date = movie.getCreatedAt().format(DATE_FORMATTER);
 
 		title = "%s | Nota: %s".formatted(movie.getPortugueseTitle(), getAvgNotes(movie));
 		image = new Image(movie.getUrlImage());
