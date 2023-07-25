@@ -51,6 +51,7 @@ public interface UserController {
 
 	void delete(UUID id);
 
+	// Invites
 	List<InviteResponseDto> getAllInvites();
 
 	InviteResponseDto createUserInvite();

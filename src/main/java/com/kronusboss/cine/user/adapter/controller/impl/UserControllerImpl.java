@@ -129,20 +129,9 @@ public class UserControllerImpl implements UserController {
 	}
 
 	@Override
-	public InviteResponseDto createUserInvite() {
-		Invite response = createInviteUseCase.create();
-		return new InviteResponseDto(response);
-	}
-
-	@Override
 	public List<InviteResponseDto> getAllInvites() {
 		List<Invite> response = searchInviteUseCase.list();
 		return response.stream().map(InviteResponseDto::new).collect(Collectors.toList());
-	}
-
-	@Override
-	public void deleteInvite(String code) {
-		deleteInviteUseCase.delete(code);
 	}
 
 	@Override
@@ -155,6 +144,18 @@ public class UserControllerImpl implements UserController {
 			throws UserRedefinePasswordKeyNotFound, UserRedefinePasswordKeyInvalid, UserNotAuthorizedException {
 		redefinePasswordUseCase.redefine(key, request.getEmail(), request.getPassword());
 
+	}
+
+	// Invites
+	@Override
+	public InviteResponseDto createUserInvite() {
+		Invite response = createInviteUseCase.create();
+		return new InviteResponseDto(response);
+	}
+
+	@Override
+	public void deleteInvite(String code) {
+		deleteInviteUseCase.delete(code);
 	}
 
 }
