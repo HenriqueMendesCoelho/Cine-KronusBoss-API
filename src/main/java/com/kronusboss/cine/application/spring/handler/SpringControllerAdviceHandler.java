@@ -24,7 +24,7 @@ public class SpringControllerAdviceHandler {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public Map<String, Object> handleValidationExceptions(MethodArgumentNotValidException ex,
 			HttpServletRequest request) {
-		log.error("Request: " + request.getRequestURL() + " raised " + ex);
+		log.error("Request: " + request.getRequestURI() + " raised " + ex);
 
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("timestamp", new Date(System.currentTimeMillis()).toString());
@@ -47,7 +47,7 @@ public class SpringControllerAdviceHandler {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(TokenInvalidException.class)
 	public Map<String, Object> handleValidationExceptions(TokenInvalidException ex, HttpServletRequest request) {
-		log.error("Request: " + request.getRequestURL() + " raised " + ex);
+		log.error("Request: " + request.getRequestURI() + " raised " + ex);
 
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("timestamp", new Date(System.currentTimeMillis()).toString());
@@ -62,14 +62,14 @@ public class SpringControllerAdviceHandler {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Exception.class)
 	public Map<String, Object> handleError(HttpServletRequest request, Exception ex) {
-		log.error("Request: " + request.getRequestURL() + " raised " + ex);
+		log.error("Request: " + request.getRequestURI() + " raised " + ex);
 
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("timestamp", new Date(System.currentTimeMillis()).toString());
 		response.put("status", "500");
 		response.put("error", "internal server error");
 		response.put("message", "contact the administrator");
-		response.put("path", request.getRequestURL());
+		response.put("path", request.getRequestURI());
 
 		return response;
 	}

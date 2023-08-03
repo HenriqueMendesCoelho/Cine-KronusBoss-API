@@ -13,6 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.domain.MovieNote;
+import com.kronusboss.cine.wishlist.domain.Wishlist;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
@@ -73,6 +74,9 @@ public class User implements Serializable {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Movie> movies;
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Wishlist> wishlists;
+
 	@CreationTimestamp
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
@@ -92,8 +96,9 @@ public class User implements Serializable {
 	}
 
 	@Builder
-	public User(String name, String email, String password, Preferences preferences, Statistics statistics,
+	public User(UUID id, String name, String email, String password, Preferences preferences, Statistics statistics,
 			List<MovieNote> notes) {
+		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.password = password;
