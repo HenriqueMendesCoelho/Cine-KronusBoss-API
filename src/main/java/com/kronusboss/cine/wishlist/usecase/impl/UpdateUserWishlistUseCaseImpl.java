@@ -1,5 +1,6 @@
 package com.kronusboss.cine.wishlist.usecase.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,6 +52,7 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 				.name(userWishlist.getName())
 				.moviesWishlists(userWishlist.getMoviesWishlists())
 				.shareable(userWishlist.isShareable())
+				.updatedAt(LocalDateTime.now())
 				.build();
 
 		try {
@@ -77,6 +79,7 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 		List<MovieWishlist> movies = createMovieWishlist(List.of(movieToAdd));
 
 		userWishlistToUpdate.getMoviesWishlists().addAll(movies);
+		userWishlistToUpdate.setUpdatedAt(LocalDateTime.now());
 
 		try {
 			return repository.save(userWishlistToUpdate);

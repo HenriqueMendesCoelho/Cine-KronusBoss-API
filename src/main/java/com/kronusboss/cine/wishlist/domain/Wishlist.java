@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import com.kronusboss.cine.user.domain.User;
 
@@ -62,7 +61,6 @@ public class Wishlist implements Serializable {
 	@Column
 	private LocalDateTime createdAt;
 
-	@UpdateTimestamp
 	@Column
 	private LocalDateTime updatedAt;
 
