@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
+import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.wishlist.adapter.repository.jpa.MovieWishlistRepository;
 import com.kronusboss.cine.wishlist.adapter.repository.jpa.WishlistRepository;
 import com.kronusboss.cine.wishlist.domain.MovieWishlist;
@@ -35,7 +36,7 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 
 	@Override
 	public Wishlist update(Wishlist userWishlist, UUID userId)
-			throws WishlistNotFoundException, WishlistMovieAlreadyExistsException {
+			throws WishlistNotFoundException, WishlistMovieAlreadyExistsException, UserNotAuthorizedException {
 		Wishlist userWishlistToUpdate = repository.findById(userWishlist.getId()).orElse(null);
 
 		if (userWishlistToUpdate == null) {
@@ -44,6 +45,10 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 
 		if (userWishlistToUpdate.getMoviesWishlists().size() > LIMIT) {
 			throw new WishlistNotFoundException();
+		}
+
+		if (userWishlistToUpdate.getUser().getId() != userId) {
+			throw new UserNotAuthorizedException();
 		}
 
 		createMovieWishlist(userWishlistToUpdate.getMoviesWishlists());

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
+import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.wishlist.adapter.controller.WishlistController;
 import com.kronusboss.cine.wishlist.adapter.controller.dto.WishlistRequestDto;
 import com.kronusboss.cine.wishlist.adapter.controller.dto.WishlistResponseDto;
@@ -57,7 +58,7 @@ public class WishlistControllerImpl implements WishlistController {
 
 	@Override
 	public WishlistResponseDto updateUserWishlist(WishlistRequestDto request, UserTokenDto user)
-			throws WishlistNotFoundException, WishlistMovieAlreadyExistsException {
+			throws WishlistNotFoundException, WishlistMovieAlreadyExistsException, UserNotAuthorizedException {
 		Wishlist response = updateUserWishlistUseCase.update(request.toDomain(), user.getId());
 		return new WishlistResponseDto(response);
 	}

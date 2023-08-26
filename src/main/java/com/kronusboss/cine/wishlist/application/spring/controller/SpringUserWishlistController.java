@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.util.CredentialUtil;
+import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.wishlist.adapter.controller.WishlistController;
 import com.kronusboss.cine.wishlist.adapter.controller.dto.WishlistRequestDto;
 import com.kronusboss.cine.wishlist.adapter.controller.dto.WishlistResponseDto;
@@ -85,10 +86,9 @@ public class SpringUserWishlistController {
 			@RequestBody @Valid WishlistRequestDto request) {
 		try {
 			UserTokenDto user = CredentialUtil.getUserFromToken(token);
-			request.setId(id);
 			WishlistResponseDto response = controller.updateUserWishlist(request, user);
 			return ResponseEntity.ok(response);
-		} catch (WishlistNotFoundException | WishlistMovieAlreadyExistsException e) {
+		} catch (WishlistNotFoundException | WishlistMovieAlreadyExistsException | UserNotAuthorizedException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "status", 400, "message", e.getMessage()));
 		}
 	}

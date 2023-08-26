@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
+import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.wishlist.adapter.controller.dto.WishlistRequestDto;
 import com.kronusboss.cine.wishlist.adapter.controller.dto.WishlistResponseDto;
 import com.kronusboss.cine.wishlist.usecase.exception.WishlistDuplicatedException;
@@ -23,7 +24,7 @@ public interface WishlistController {
 			throws WishlistDuplicatedException, WishlistUserReachedLimitException;
 
 	WishlistResponseDto updateUserWishlist(@Valid WishlistRequestDto request, UserTokenDto user)
-			throws WishlistNotFoundException, WishlistMovieAlreadyExistsException;
+			throws WishlistNotFoundException, WishlistMovieAlreadyExistsException, UserNotAuthorizedException;
 
 	WishlistResponseDto addMovieToWishlist(UUID wishlistId, UserTokenDto user, Long tmdbId)
 			throws WishlistNotFoundException, WishlistMovieAlreadyExistsException;
