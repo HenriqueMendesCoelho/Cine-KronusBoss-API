@@ -47,7 +47,7 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 			throw new WishlistNotFoundException();
 		}
 
-		if (userWishlistToUpdate.getUser().getId() != userId) {
+		if (!userWishlistToUpdate.getUser().getId().equals(userId)) {
 			throw new UserNotAuthorizedException();
 		}
 
