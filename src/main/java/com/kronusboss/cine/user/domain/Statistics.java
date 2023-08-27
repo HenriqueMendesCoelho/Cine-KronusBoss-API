@@ -64,12 +64,16 @@ public class Statistics {
 	}
 
 	public Integer getDisplayTime() {
-		return user.getNotes().stream().map(n -> n.getMovie().getRuntime()).mapToInt(m -> m).sum();
+		return user.getMovies() != null
+				? user.getNotes().stream().map(n -> n.getMovie().getRuntime()).mapToInt(m -> m).sum()
+				: 0;
 	}
 
 	public Double getAverageRatingMovies() {
 
-		return user.getNotes().stream().map(n -> n.getNote()).mapToDouble(m -> m).average().orElse(0);
+		return user.getMovies() != null
+				? user.getNotes().stream().map(n -> n.getNote()).mapToDouble(m -> m).average().orElse(0)
+				: 0;
 	}
 
 }
