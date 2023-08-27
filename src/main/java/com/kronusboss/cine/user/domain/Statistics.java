@@ -2,6 +2,9 @@ package com.kronusboss.cine.user.domain;
 
 import java.util.UUID;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.BooleanUtils;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -56,22 +59,22 @@ public class Statistics {
 	}
 
 	public Integer getRatingsGiven() {
-		return user.getNotes() != null ? user.getNotes().size() : 0;
+		BooleanUtils.toBooleanDefaultIfNull(Boolean.TRUE, false);
+		return !CollectionUtils.isEmpty(user.getNotes()) ? user.getNotes().size() : 0;
 	}
 
 	public Integer getRegisteredMovies() {
-		return user.getMovies() != null ? user.getMovies().size() : 0;
+		return !CollectionUtils.isEmpty(user.getMovies()) ? user.getMovies().size() : 0;
 	}
 
 	public Integer getDisplayTime() {
-		return user.getMovies() != null
+		return !CollectionUtils.isEmpty(user.getNotes())
 				? user.getNotes().stream().map(n -> n.getMovie().getRuntime()).mapToInt(m -> m).sum()
 				: 0;
 	}
 
 	public Double getAverageRatingMovies() {
-
-		return user.getMovies() != null
+		return !CollectionUtils.isEmpty(user.getNotes())
 				? user.getNotes().stream().map(n -> n.getNote()).mapToDouble(m -> m).average().orElse(0)
 				: 0;
 	}
