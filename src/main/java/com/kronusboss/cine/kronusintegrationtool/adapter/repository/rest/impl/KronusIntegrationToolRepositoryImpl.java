@@ -5,22 +5,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenreResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenresResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSummaryResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.SendMailTemplateRequestDto;
@@ -37,33 +28,28 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToolRepository {
 
-	@Value("${kit.key}")
-	private String APIKEY;
-
-	@Value("${kit.url}")
-	private String URL_KIT;
-
 	@Value("${send.mail}")
 	private boolean sendMail;
+
+	@Autowired
+	private WebClient webClientKit;
 
 	@Autowired
 	private ObjectMapper mapper;
 
 	@Override
 	public MovieSummary movieSummary(Long tmdbId) {
-
-		RestTemplate template = getRestTemplate();
-		String uri = createUri("/api/v1/tmdb/movie/%s/summary".formatted(tmdbId));
-
+		String uri = "/api/v1/tmdb/movie/%s/summary".formatted(tmdbId);
 		try {
-			ResponseEntity<MovieSummaryResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSummaryResponseDto.class);
-
-			MovieSummaryResponseDto response = responseEntity.getBody();
+			MovieSummaryResponseDto response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToMono(MovieSummaryResponseDto.class)
+					.block();
 
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error with KIT API request at %s".formatted(uri), e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 
@@ -71,44 +57,38 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public MovieSearch searchByName(String name, Integer page, String language, boolean includeAdult) {
-		RestTemplate template = getRestTemplate();
-		String uri = createUri("/api/v1/tmdb/search/movie?query=%s&page=%s&language=%s&include_adult=%s".formatted(name,
-				page, language, includeAdult));
-
+		String uri = "/api/v1/tmdb/search/movie?query=%s&page=%s&language=%s&include_adult=%s".formatted(name, page,
+				language, includeAdult);
 		try {
-			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchResponseDto.class);
-
-			MovieSearchResponseDto response = responseEntity.getBody();
+			MovieSearchResponseDto response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToMono(MovieSearchResponseDto.class)
+					.block();
 
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error with KIT API request at %s".formatted(uri), e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 	}
 
 	@Override
-	public void sendMailTemplate(SendMailTemplate request) {
-
-		if (!sendMail) {
-			return;
-		}
-
-		SendMailTemplateRequestDto entity = new SendMailTemplateRequestDto(request);
-		RestTemplate template = getRestTemplate();
-		String uri = createUri("/api/v1/sendgrid/template");
-
-		HttpEntity<SendMailTemplateRequestDto> requestHttp = new HttpEntity<SendMailTemplateRequestDto>(entity);
-
+	public void sendMailTemplate(SendMailTemplate mail) {
 		try {
-			ResponseEntity<Void> response = template.exchange(uri, HttpMethod.POST, requestHttp, Void.class);
-			if (response.getStatusCode().is4xxClientError() || response.getStatusCode().is5xxServerError()) {
-				log.error(String.format("Error to send mail to: %s", entity.toString()));
-				log.error(String.format("Request returns status code: %s", response.getStatusCode()));
+			if (!sendMail) {
+				return;
 			}
+
+			SendMailTemplateRequestDto request = new SendMailTemplateRequestDto(mail);
+			webClientKit.post()
+					.uri("/api/v1/sendgrid/template")
+					.bodyValue(mapper.writeValueAsString(request))
+					.retrieve()
+					.bodyToMono(Void.class)
+					.block();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error to send mail:", e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 
@@ -116,95 +96,85 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public MovieSearch moviesPopular(Integer page) {
-		RestTemplate template = getRestTemplate();
-		String uri = createUri(
-				"/api/v1/tmdb/movie/popular?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR"));
-
+		String uri = "/api/v1/tmdb/movie/popular?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR");
 		try {
-			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchResponseDto.class);
-
-			MovieSearchResponseDto response = responseEntity.getBody();
+			MovieSearchResponseDto response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToMono(MovieSearchResponseDto.class)
+					.block();
 
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error with KIT API request at %s".formatted(uri), e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 	}
 
 	@Override
 	public MovieSearch moviesNowPlaying(Integer page) {
-		RestTemplate template = getRestTemplate();
-		String uri = createUri(
-				"/api/v1/tmdb/movie/now_playing?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR"));
-
+		String uri = "/api/v1/tmdb/movie/now_playing?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR");
 		try {
-			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchResponseDto.class);
-
-			MovieSearchResponseDto response = responseEntity.getBody();
+			MovieSearchResponseDto response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToMono(MovieSearchResponseDto.class)
+					.block();
 
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error with KIT API request at %s".formatted(uri), e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 	}
 
 	@Override
 	public MovieSearch moviesTopRated(Integer page) {
-		RestTemplate template = getRestTemplate();
-		String uri = createUri(
-				"/api/v1/tmdb/movie/top_rated?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR"));
-
+		String uri = "/api/v1/tmdb/movie/top_rated?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR");
 		try {
-			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchResponseDto.class);
-
-			MovieSearchResponseDto response = responseEntity.getBody();
+			MovieSearchResponseDto response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToMono(MovieSearchResponseDto.class)
+					.block();
 
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error with KIT API request at %s".formatted(uri), e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 	}
 
 	@Override
 	public MovieSearch moviesRecommendations(Long movieTmdbId, Integer page) {
-		RestTemplate template = getRestTemplate();
-		String uri = createUri(
-				"/api/v1/tmdb/movie/%s/recommendations?page=%s&language=%s".formatted(movieTmdbId, page, "pt-Br"));
-
+		String uri = "/api/v1/tmdb/movie/%s/recommendations?page=%s&language=%s".formatted(movieTmdbId, page, "pt-Br");
 		try {
-			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchResponseDto.class);
-
-			MovieSearchResponseDto response = responseEntity.getBody();
+			MovieSearchResponseDto response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToMono(MovieSearchResponseDto.class)
+					.block();
 
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error with KIT API request at %s".formatted(uri), e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 	}
 
 	@Override
 	public MovieSearch moviesSimilar(Long movieTmdbId, Integer page) {
-		RestTemplate template = getRestTemplate();
-		String uri = createUri(
-				"/api/v1/tmdb/movie/%s/similar?page=%s&language=%s".formatted(movieTmdbId, page, "pt-Br"));
-
+		String uri = "/api/v1/tmdb/movie/%s/similar?page=%s&language=%s".formatted(movieTmdbId, page, "pt-Br");
 		try {
-			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchResponseDto.class);
-
-			MovieSearchResponseDto response = responseEntity.getBody();
+			MovieSearchResponseDto response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToMono(MovieSearchResponseDto.class)
+					.block();
 
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error with KIT API request at %s".formatted(uri), e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 	}
@@ -212,101 +182,73 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	@Override
 	public MovieSearch discoverMovies(String sortByParam, Integer page, Integer primaryReleaseYear, String withGenres,
 			String withoutGenres) {
-		RestTemplate template = getRestTemplate();
-		StringBuilder uriBuilder = new StringBuilder(
+		StringBuilder uri = new StringBuilder(
 				"/api/v1/tmdb/discover/movie?page=%s&language=%s&include_adult=false&vote_count.gte=300".formatted(page,
 						"pt-Br"));
 
 		if (sortByParam != null) {
-			uriBuilder.append("&sort_by=%s".formatted(sortByParam));
+			uri.append("&sort_by=%s".formatted(sortByParam));
 		}
 
 		if (primaryReleaseYear != null) {
-			uriBuilder.append("&primary_release_year=%s".formatted(primaryReleaseYear));
+			uri.append("&primary_release_year=%s".formatted(primaryReleaseYear));
 		}
 
 		if (withGenres != null) {
-			uriBuilder.append("&with_genres=%s".formatted(withGenres));
+			uri.append("&with_genres=%s".formatted(withGenres));
 		}
 
 		if (withoutGenres != null) {
-			uriBuilder.append("&without_genres=%s".formatted(withoutGenres));
+			uri.append("&without_genres=%s".formatted(withoutGenres));
 		}
 
-		String uri = createUri(uriBuilder.toString());
-
 		try {
-			ResponseEntity<MovieSearchResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieSearchResponseDto.class);
-
-			MovieSearchResponseDto response = responseEntity.getBody();
+			MovieSearchResponseDto response = webClientKit.get()
+					.uri(uri.toString())
+					.retrieve()
+					.bodyToMono(MovieSearchResponseDto.class)
+					.block();
 
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error with KIT API request at %s".formatted(uri), e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 	}
 
 	@Override
 	public List<MovieGenre> listGenres() {
-		String language = "pt-Br";
-
-		RestTemplate template = getRestTemplate();
-		String uri = createUri("/api/v1/tmdb/genre/movie/list?language=%s".formatted(language));
-
+		String uri = "/api/v1/tmdb/genre/movie/list?language=%s".formatted("pt-Br");
 		try {
-			ResponseEntity<MovieGenresResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					MovieGenresResponseDto.class);
+			List<MovieGenreResponseDto> response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToFlux(MovieGenreResponseDto.class)
+					.collectList()
+					.block();
 
-			MovieGenresResponseDto response = responseEntity.getBody();
-			List<MovieGenreResponseDto> genres = response.getGenres();
-
-			return genres.stream().map(MovieGenreResponseDto::toDomain).collect(Collectors.toList());
+			return response.stream().map(MovieGenreResponseDto::toDomain).collect(Collectors.toList());
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error with KIT API request at %s".formatted(uri), e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 	}
 
 	@Override
 	public WatchProviders getWatchProviders(Long tmdbId) {
-		RestTemplate template = getRestTemplate();
-		String uri = createUri("/api/v1/tmdb/movie/%s/watch/providers".formatted(tmdbId));
-
+		String uri = "/api/v1/tmdb/movie/%s/watch/providers".formatted(tmdbId);
 		try {
-			ResponseEntity<WatchProvidersResponseDto> responseEntity = template.exchange(uri, HttpMethod.GET, null,
-					WatchProvidersResponseDto.class);
-
-			WatchProvidersResponseDto response = responseEntity.getBody();
+			WatchProvidersResponseDto response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToMono(WatchProvidersResponseDto.class)
+					.block();
 
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error(e.getMessage());
+			log.error("Error with KIT API request at %s".formatted(uri), e);
 			throw new RequestRejectedException(e.getMessage());
 		}
-	}
-
-	private String createUri(String path) {
-		String[] schemeHost = URL_KIT.split("://");
-		UriComponents uri = UriComponentsBuilder.newInstance()
-				.scheme(schemeHost[0])
-				.host(schemeHost[1])
-				.path(path)
-				.build();
-		return uri.toString();
-	}
-
-	private RestTemplate getRestTemplate() {
-		ClientHttpRequestInterceptor interceptor = (request, body, execution) -> {
-			request.getHeaders().add("Authorization", String.format("Bearer %s", APIKEY));
-			return execution.execute(request, body);
-		};
-
-		RestTemplate restTemplate = new RestTemplateBuilder().interceptors(interceptor)
-				.messageConverters(new MappingJackson2HttpMessageConverter(mapper))
-				.build();
-		return restTemplate;
 	}
 
 }
