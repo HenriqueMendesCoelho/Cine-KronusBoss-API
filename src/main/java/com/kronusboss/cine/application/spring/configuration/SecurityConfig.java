@@ -1,8 +1,13 @@
 package com.kronusboss.cine.application.spring.configuration;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,8 +19,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.kronusboss.cine.application.spring.security.JWTAuthenticationFilter;
 import com.kronusboss.cine.application.spring.security.JWTAuthorizationFilter;
@@ -35,7 +41,13 @@ public class SecurityConfig {
 	@Autowired
 	private JWTUtil jwtUtil;
 
-	private static final String[] PUBLIC_MATCHERS = { "/api/auth/forgot", };
+	private static final String[] PUBLIC_MATCHERS = { "/api/auth/forgot", "/api/user/password/reset",
+			"/api/user/password/*/reset" };
+
+	@Autowired
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+	}
 
 	@Bean
 	AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
@@ -44,8 +56,14 @@ public class SecurityConfig {
 	}
 
 	@Bean
+	BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable();
+		http.cors(withDefaults());
+		http.csrf((csrf) -> csrf.disable());
 		http.authorizeHttpRequests(authz -> authz.requestMatchers(PUBLIC_MATCHERS)
 				.permitAll()
 				.requestMatchers(HttpMethod.POST, "/api/user")
@@ -54,7 +72,7 @@ public class SecurityConfig {
 				.hasAuthority("ROLE_ADMIN")
 				.anyRequest()
 				.authenticated());
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil));
+		http.addFilter(jwtAuthorizationFilter());
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(authenticationConfiguration), jwtUtil,
 				userDetailsService));
 		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -63,25 +81,21 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
+	@Primary
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.applyPermitDefaultValues();
+		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 
-	@Autowired
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+	private JWTAuthenticationFilter jwtAuthorizationFilter() throws Exception {
+		JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(
+				authenticationManager(authenticationConfiguration), jwtUtil);
+		jwtAuthenticationFilter.setFilterProcessesUrl("/api/login");
+		return jwtAuthenticationFilter;
 	}
 
-	@Bean
-	WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-						// .allowedOrigins("https://*.kronusboss.com")
-						.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE");
-
-			}
-		};
-	}
 }

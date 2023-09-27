@@ -17,13 +17,11 @@ import lombok.ToString;
 @ToString
 public class DiscordWebhookRequestDto {
 
-	private static final String CINEFILOS_ROLE_ID = "813201361814028319";
-
 	public String content;
 	public List<EmbedRequestDto> embeds;
 
-	public DiscordWebhookRequestDto(Movie movie) {
-		content = String.format("<@&%s>", CINEFILOS_ROLE_ID);
+	public DiscordWebhookRequestDto(Movie movie, String roleId) {
+		content = roleId != null ? "<@&%s>".formatted(roleId) : "";
 		embeds = List.of(new EmbedRequestDto(movie));
 	}
 

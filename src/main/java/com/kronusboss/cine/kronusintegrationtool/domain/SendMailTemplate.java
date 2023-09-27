@@ -17,10 +17,10 @@ import lombok.Setter;
 public class SendMailTemplate {
 
 	private static final String WELCOME_TEMPLATEID = "d-c1f102718d3c4a5da8ea81e418676469";
-	private static final String FORGOT_PASSWORD_TEMPLATEID = "d-c7f944c5af3d413d9acfa82be63222a0";
+	private static final String FORGOT_PASSWORD_TEMPLATEID = "d-9cd809526c25440eb5722cbe68221491";
 	private static final String BLOCKED_ACCOUNT_TEMPLATEID = "d-0a10cc53f5df49a6822321c209ad6b69";
 	private static final String FROM = "noreply-cine@kronusboss.com";
-	private static final String[] CINE_FRONTEND_URL = Stream.of("cine_url", "https://www.cine.kronusboss.com/")
+	private static final String[] CINE_FRONTEND_URL = Stream.of("cine_url", "https://www.cine.kronusboss.com")
 			.toArray(String[]::new);;
 
 	private String from;
@@ -44,10 +44,11 @@ public class SendMailTemplate {
 				.build();
 	}
 
-	public static SendMailTemplate forgotPasswordMail(String to, String username, String recoverLink) {
+	public static SendMailTemplate forgotPasswordMail(String to, String username, String redefinePasswordKey) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		map.put("user", username);
-		map.put("link", recoverLink);
+		map.put(CINE_FRONTEND_URL[0],
+				String.format("%s/password/change/%s", CINE_FRONTEND_URL[1], redefinePasswordKey));
 		return SendMailTemplate.builder()
 				.from(FROM)
 				.to(to)

@@ -23,6 +23,8 @@ import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.util.CredentialUtil;
 import com.kronusboss.cine.user.adapter.controller.UserController;
 import com.kronusboss.cine.user.adapter.controller.dto.InviteResponseDto;
+import com.kronusboss.cine.user.adapter.controller.dto.UserEmailRequestDto;
+import com.kronusboss.cine.user.adapter.controller.dto.UserRedefinePasswordByKeyRequestDto;
 import com.kronusboss.cine.user.adapter.controller.dto.UserRequestDto;
 import com.kronusboss.cine.user.adapter.controller.dto.UserResponseAdmDto;
 import com.kronusboss.cine.user.adapter.controller.dto.UserResponseDto;
@@ -30,11 +32,15 @@ import com.kronusboss.cine.user.usecase.exception.DuplicatedUserException;
 import com.kronusboss.cine.user.usecase.exception.InviteNotValidException;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
+import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyInvalid;
+import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyNotFound;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/user")
+@Slf4j
 public class SpringUserController {
 
 	@Autowired
@@ -76,7 +82,7 @@ public class SpringUserController {
 		} catch (UserNotFoundException e) {
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			log.error(e.getMessage());
 			return ResponseEntity.noContent().build();
 		}
 	}
@@ -186,6 +192,26 @@ public class SpringUserController {
 		return ResponseEntity.ok().build();
 	}
 
+	// User RedefinePasswordKey
+	@PostMapping("/password/reset")
+	public ResponseEntity<?> createRedefinePassowordKey(@RequestBody UserEmailRequestDto request) {
+		controller.createRedefinePasswordKey(request);
+		return ResponseEntity.ok().build();
+	}
+
+	@PostMapping("/password/{key}/reset")
+	public ResponseEntity<?> createRedefinePassowordKey(@PathVariable String key,
+			@RequestBody UserRedefinePasswordByKeyRequestDto request) {
+		try {
+			controller.redefinePasswordByKey(request, key);
+		} catch (UserRedefinePasswordKeyNotFound | UserRedefinePasswordKeyInvalid | UserNotAuthorizedException e) {
+			log.error(e.getMessage());
+			return ResponseEntity.status(403).body(Map.of("error", true, "status", 403, "message", "Not Authorized"));
+		}
+		return ResponseEntity.ok().build();
+	}
+
+	// User Invite
 	@GetMapping("/invite")
 	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<List<InviteResponseDto>> listAllInvites() {

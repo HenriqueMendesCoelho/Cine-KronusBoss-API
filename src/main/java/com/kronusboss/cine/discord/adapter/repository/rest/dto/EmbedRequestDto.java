@@ -26,6 +26,7 @@ public class EmbedRequestDto {
 
 	private static final String URL_REDIRECT = "https://www.cine.kronusboss.com";
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.0", new DecimalFormatSymbols(Locale.US));
+	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm:ss");
 
 	public String title;
 	public Image image;
@@ -35,14 +36,14 @@ public class EmbedRequestDto {
 	public List<Field> fields;
 
 	public EmbedRequestDto(Movie movie) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm:ss");
-		String date = movie.getCreatedAt().format(formatter);
 
-		title = String.format("%s | Nota: %s", movie.getPortugueseTitle(), getAvgNotes(movie));
+		String date = movie.getCreatedAt().format(DATE_FORMATTER);
+
+		title = "%s | Nota: %s".formatted(movie.getPortugueseTitle(), getAvgNotes(movie));
 		image = new Image(movie.getUrlImage());
 		color = 3447003;
 		url = String.format("%s/movie/%s", URL_REDIRECT, movie.getId());
-		footer = new Footer(String.format("Cadastrado por: %s - %s", movie.getUser().getName(), date));
+		footer = new Footer("Cadastrado por: %s - %s".formatted(movie.getUser().getName(), date));
 		fields = movie.getNotes() != null ? movie.getNotes().stream().map(Field::new).collect(Collectors.toList())
 				: new ArrayList<>();
 	}
@@ -83,7 +84,7 @@ public class EmbedRequestDto {
 
 		List<Integer> notes = movie.getNotes().stream().map(n -> n.getNote()).collect(Collectors.toList());
 		double avgNote = notes.stream().mapToDouble(d -> d).average().orElse(0.0);
-		DECIMAL_FORMAT.setRoundingMode(RoundingMode.UP);
+		DECIMAL_FORMAT.setRoundingMode(RoundingMode.HALF_EVEN);
 
 		return Objects.toString(DECIMAL_FORMAT.format(avgNote), "0.0");
 	}

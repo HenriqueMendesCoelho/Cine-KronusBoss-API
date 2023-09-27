@@ -7,12 +7,16 @@ import lombok.Data;
 @Data
 public class StatisticsResponseDto {
 
-	private int ratingsGiven;
-	private int registeredMovies;
+	private Integer ratingsGiven;
+	private Integer registeredMovies;
+	private Integer displayTime;
+	private Double averageRatingMovies;
 
 	public StatisticsResponseDto(Statistics statistics) {
 		ratingsGiven = statistics.getRatingsGiven();
 		registeredMovies = statistics.getRegisteredMovies();
+		displayTime = statistics.getDisplayTime();
+		averageRatingMovies = statistics.getAverageRatingMovies();
 	}
 
 }

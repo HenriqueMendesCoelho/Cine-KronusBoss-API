@@ -31,7 +31,7 @@ public class SendMessageWebhookUseCaseImpl implements SendMessageWebhookUseCase 
 
 		DiscordWebhookInfo info = repository.execute(movie);
 
-		if (info.getMessageId() == null) {
+		if (info == null) {
 			return;
 		}
 

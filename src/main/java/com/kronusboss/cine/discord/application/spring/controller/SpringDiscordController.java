@@ -31,7 +31,7 @@ public class SpringDiscordController {
 	@PatchMapping("/{movieId}")
 	@PreAuthorize("hasRole('ADM')")
 	public ResponseEntity<?> updateMovieMessageDiscord(@PathVariable UUID movieId) {
-		controller.execute(movieId);
+		controller.update(movieId);
 
 		return ResponseEntity.ok().build();
 	}

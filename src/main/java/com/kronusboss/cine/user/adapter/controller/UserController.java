@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.user.adapter.controller.dto.InviteResponseDto;
+import com.kronusboss.cine.user.adapter.controller.dto.UserEmailRequestDto;
+import com.kronusboss.cine.user.adapter.controller.dto.UserRedefinePasswordByKeyRequestDto;
 import com.kronusboss.cine.user.adapter.controller.dto.UserRequestDto;
 import com.kronusboss.cine.user.adapter.controller.dto.UserResponseAdmDto;
 import com.kronusboss.cine.user.adapter.controller.dto.UserResponseDto;
@@ -12,6 +14,8 @@ import com.kronusboss.cine.user.usecase.exception.DuplicatedUserException;
 import com.kronusboss.cine.user.usecase.exception.InviteNotValidException;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
+import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyInvalid;
+import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyNotFound;
 
 public interface UserController {
 
@@ -40,8 +44,14 @@ public interface UserController {
 
 	UserResponseAdmDto blockUser(UUID userId) throws UserNotFoundException;
 
+	void createRedefinePasswordKey(UserEmailRequestDto request);
+
+	void redefinePasswordByKey(UserRedefinePasswordByKeyRequestDto request, String key)
+			throws UserRedefinePasswordKeyNotFound, UserRedefinePasswordKeyInvalid, UserNotAuthorizedException;
+
 	void delete(UUID id);
 
+	// Invites
 	List<InviteResponseDto> getAllInvites();
 
 	InviteResponseDto createUserInvite();

@@ -13,6 +13,6 @@ public class UserUpdatePasswordRequestDto {
 
 	@NotBlank
 	@Length(min = 8, max = 70)
-	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,70}$", message = "password is to weak")
+	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$!%*?&])[A-Za-z\\d@#$!%*?&]{8,70}$", message = "password is to weak")
 	private String newPassword;
 }

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.user.adapter.controller.UserController;
 import com.kronusboss.cine.user.adapter.controller.dto.InviteResponseDto;
+import com.kronusboss.cine.user.adapter.controller.dto.UserEmailRequestDto;
+import com.kronusboss.cine.user.adapter.controller.dto.UserRedefinePasswordByKeyRequestDto;
 import com.kronusboss.cine.user.adapter.controller.dto.UserRequestDto;
 import com.kronusboss.cine.user.adapter.controller.dto.UserResponseAdmDto;
 import com.kronusboss.cine.user.adapter.controller.dto.UserResponseDto;
@@ -22,10 +24,13 @@ import com.kronusboss.cine.user.usecase.DeleteUserUseCase;
 import com.kronusboss.cine.user.usecase.SearchInviteUseCase;
 import com.kronusboss.cine.user.usecase.SearchUserUseCase;
 import com.kronusboss.cine.user.usecase.UpdateUserUseCase;
+import com.kronusboss.cine.user.usecase.UserRedefinePasswordUseCase;
 import com.kronusboss.cine.user.usecase.exception.DuplicatedUserException;
 import com.kronusboss.cine.user.usecase.exception.InviteNotValidException;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
+import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyInvalid;
+import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyNotFound;
 
 @Controller
 public class UserControllerImpl implements UserController {
@@ -50,6 +55,9 @@ public class UserControllerImpl implements UserController {
 
 	@Autowired
 	private DeleteInviteUseCase deleteInviteUseCase;
+
+	@Autowired
+	private UserRedefinePasswordUseCase redefinePasswordUseCase;
 
 	@Override
 	public UserResponseDto getUserByEmail(UserTokenDto request, String email)
@@ -121,15 +129,28 @@ public class UserControllerImpl implements UserController {
 	}
 
 	@Override
-	public InviteResponseDto createUserInvite() {
-		Invite response = createInviteUseCase.create();
-		return new InviteResponseDto(response);
-	}
-
-	@Override
 	public List<InviteResponseDto> getAllInvites() {
 		List<Invite> response = searchInviteUseCase.list();
 		return response.stream().map(InviteResponseDto::new).collect(Collectors.toList());
+	}
+
+	@Override
+	public void createRedefinePasswordKey(UserEmailRequestDto request) {
+		redefinePasswordUseCase.createRedefinePassword(request.getEmail());
+	}
+
+	@Override
+	public void redefinePasswordByKey(UserRedefinePasswordByKeyRequestDto request, String key)
+			throws UserRedefinePasswordKeyNotFound, UserRedefinePasswordKeyInvalid, UserNotAuthorizedException {
+		redefinePasswordUseCase.redefine(key, request.getEmail(), request.getPassword());
+
+	}
+
+	// Invites
+	@Override
+	public InviteResponseDto createUserInvite() {
+		Invite response = createInviteUseCase.create();
+		return new InviteResponseDto(response);
 	}
 
 	@Override

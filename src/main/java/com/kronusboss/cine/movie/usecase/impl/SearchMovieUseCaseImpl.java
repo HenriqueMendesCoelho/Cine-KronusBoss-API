@@ -47,7 +47,7 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 			params[i] = "%" + titleSplitBySpace[i] + "%";
 		}
 
-		return repository.findMovieByTitleIlikeAny(params, pageable);
+		return repository.findMovieByTitleIlikeAll(params, pageable);
 	}
 
 	@Override

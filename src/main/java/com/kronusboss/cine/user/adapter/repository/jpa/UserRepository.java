@@ -14,4 +14,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	@EntityGraph(attributePaths = { "roles", "statistics" })
 	User findByEmail(String email);
 
+	@Transactional(readOnly = true)
+	@EntityGraph(attributePaths = { "roles", "statistics" })
+	User findByRedefinePasswordKey(String redefinePasswordKey);
+
 }
