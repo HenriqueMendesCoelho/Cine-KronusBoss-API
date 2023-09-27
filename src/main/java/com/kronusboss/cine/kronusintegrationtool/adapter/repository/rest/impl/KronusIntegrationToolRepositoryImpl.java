@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -12,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenreResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenresResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSummaryResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.SendMailTemplateRequestDto;
@@ -23,6 +25,7 @@ import com.kronusboss.cine.kronusintegrationtool.domain.WatchProviders;
 import com.kronusboss.cine.movie.domain.MovieGenre;
 
 import lombok.extern.log4j.Log4j2;
+import reactor.core.publisher.Flux;
 
 @Repository
 @Log4j2
@@ -222,8 +225,10 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 		try {
 			List<MovieGenreResponseDto> response = webClientKit.get()
 					.uri(uri)
+					.accept(MediaType.APPLICATION_JSON)
 					.retrieve()
-					.bodyToFlux(MovieGenreResponseDto.class)
+					.bodyToMono(MovieGenresResponseDto.class)
+					.flatMapMany(r -> Flux.fromIterable(r.getGenres()))
 					.collectList()
 					.block();
 
