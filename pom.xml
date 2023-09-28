@@ -10,12 +10,12 @@
 	</parent>
 	<groupId>com.kronusboss</groupId>
 	<artifactId>cine</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 	<name>cine</name>
 	<description>Cineminha API</description>
 	<properties>
-		<java.version>20</java.version>
+		<java.version>21</java.version>
 	</properties>
 	<dependencies>
 		<dependency>
