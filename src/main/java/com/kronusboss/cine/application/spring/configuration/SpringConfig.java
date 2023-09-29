@@ -6,6 +6,7 @@ import java.util.Locale;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
@@ -29,6 +30,11 @@ public class SpringConfig {
 				.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"))
 				.registerModule(module)
 				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+	}
+
+	@Bean
+	Jackson2JsonDecoder jackson2JsonDecoder() {
+		return new Jackson2JsonDecoder(objectMapper());
 	}
 
 	@Bean
