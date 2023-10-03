@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.discord.usecase.SendMessageWebhookUseCase;
 import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.rest.MovieSocketRespository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.usecase.CreateMovieUseCase;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieException;
@@ -25,6 +26,9 @@ public class CreateMovieUseCaseImpl implements CreateMovieUseCase {
 	@Autowired
 	private SendMessageWebhookUseCase sendMessageWebhook;
 
+	@Autowired
+	private MovieSocketRespository socketRepository;
+
 	@Override
 	public Movie save(Movie movie, UUID userId) throws DuplicatedMovieException {
 
@@ -39,6 +43,8 @@ public class CreateMovieUseCaseImpl implements CreateMovieUseCase {
 		Movie movieCreated = repository.saveAndFlush(movie);
 
 		sendMessageWebhook.sendMovieMessage(movieCreated.getId());
+
+		socketRepository.emitAllMoviesEvent(null);
 
 		return movieCreated;
 	}

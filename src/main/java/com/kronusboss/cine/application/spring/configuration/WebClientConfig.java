@@ -21,6 +21,12 @@ public class WebClientConfig {
 	@Value("${kit.url}")
 	private String kitUrl;
 
+	@Value("${socket.io.api.url}")
+	private String socketApiUrl;
+
+	@Value("${socket.io.api.key}")
+	private String socketApiKey;
+
 	@Autowired
 	private Jackson2JsonDecoder decoder;
 
@@ -39,6 +45,16 @@ public class WebClientConfig {
 				.baseUrl(kitUrl)
 				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
 				.defaultHeader(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", apiKeyKit))
+				.codecs(clientCodecConfigurer -> clientCodecConfigurer.customCodecs().register(decoder))
+				.build();
+	}
+
+	@Bean
+	WebClient webClientSocketApi() {
+		return WebClient.builder()
+				.baseUrl(socketApiUrl)
+				.defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.defaultHeader(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", socketApiKey))
 				.codecs(clientCodecConfigurer -> clientCodecConfigurer.customCodecs().register(decoder))
 				.build();
 	}

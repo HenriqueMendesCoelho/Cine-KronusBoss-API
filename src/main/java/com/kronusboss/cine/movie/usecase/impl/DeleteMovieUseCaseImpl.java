@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.rest.MovieSocketRespository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.usecase.DeleteMovieUseCase;
 import com.kronusboss.cine.user.adapter.repository.jpa.UserRepository;
@@ -21,6 +22,9 @@ public class DeleteMovieUseCaseImpl implements DeleteMovieUseCase {
 
 	@Autowired
 	private UserRepository userRepository;
+
+	@Autowired
+	private MovieSocketRespository socketRepository;
 
 	@Override
 	public void delete(UUID id, UUID idUserLoged) throws UserNotAuthorizedException {
@@ -45,6 +49,7 @@ public class DeleteMovieUseCaseImpl implements DeleteMovieUseCase {
 		}
 
 		repository.delete(movie);
+		socketRepository.emitAllMoviesEvent(null);
 	}
 
 }
