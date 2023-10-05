@@ -8,5 +8,5 @@ import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
 
 public interface SearchMovieNoteUseCase {
 
-	List<MovieNote> list(UUID movieId) throws MovieNotFoundException;
+	List<MovieNote> list(UUID movieId, UUID userId) throws MovieNotFoundException;
 }

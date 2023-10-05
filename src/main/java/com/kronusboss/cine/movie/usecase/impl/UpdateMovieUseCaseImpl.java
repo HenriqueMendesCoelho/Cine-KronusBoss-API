@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
 import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.rest.MovieSocketRespository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.usecase.UpdateMovieUseCase;
 import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
@@ -27,6 +28,9 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 	@Autowired
 	private UpdateMessageWebhookUseCase updateMessageWebhookUseCase;
 
+	@Autowired
+	private MovieSocketRespository movieSocketRespository;
+
 	@Override
 	public Movie update(Movie movie, UUID id, String userEmail)
 			throws MovieNotFoundException, UserNotAuthorizedException {
@@ -46,6 +50,8 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 			throw new UserNotAuthorizedException();
 		}
 
+		boolean emitUpdateEventSocket = movie.isShowNotes() != movieToUpdate.isShowNotes() ? true : false;
+
 		movieToUpdate.setDescription(movie.getDescription());
 		movieToUpdate.setDirector(movie.getDirector());
 		movieToUpdate.setEnglishUrlTrailer(movie.getEnglishUrlTrailer());
@@ -58,9 +64,14 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 		movieToUpdate.setImdbId(movie.getImdbId());
 		movieToUpdate.setGenres(movie.getGenres());
 		movieToUpdate.setRuntime(movie.getRuntime());
+		movieToUpdate.setShowNotes(movie.isShowNotes());
 
 		Movie movieUpdated = repository.saveAndFlush(movieToUpdate);
 		updateMessageWebhookUseCase.updateMovieMessage(movieToUpdate.getId());
+
+		if (emitUpdateEventSocket) {
+			movieSocketRespository.emitEventMovie(movieUpdated.getId(), "update-movie", null);
+		}
 
 		return movieUpdated;
 	}

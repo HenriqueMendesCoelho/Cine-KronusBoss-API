@@ -38,6 +38,7 @@ public class MovieResponseDto {
 	List<MovieGenreResponseDto> genres;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	private boolean showNotes;
 
 	public MovieResponseDto(Movie movie) {
 		id = movie.getId();
@@ -64,5 +65,6 @@ public class MovieResponseDto {
 		runtime = movie.getRuntime();
 		createdAt = movie.getCreatedAt();
 		updatedAt = movie.getUpdatedAt();
+		showNotes = movie.isShowNotes();
 	}
 }

@@ -35,15 +35,13 @@ public class CreateMovieUseCaseImpl implements CreateMovieUseCase {
 		if (repository.findByTmdbId(movie.getTmdbId()) != null) {
 			throw new DuplicatedMovieException("This tmdb id is already registered");
 		}
+
 		User user = userRepository.findById(userId).orElse(null);
 		movie.setUser(user);
-
+		movie.setShowNotes(false);
 		userRepository.saveAndFlush(user);
-
 		Movie movieCreated = repository.saveAndFlush(movie);
-
 		sendMessageWebhook.sendMovieMessage(movieCreated.getId());
-
 		socketRepository.emitAllMoviesEvent(null);
 
 		return movieCreated;

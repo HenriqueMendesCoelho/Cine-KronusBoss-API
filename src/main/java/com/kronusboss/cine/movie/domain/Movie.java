@@ -78,6 +78,9 @@ public class Movie {
 	@Column(nullable = true)
 	private Integer runtime;
 
+	@Column
+	private boolean showNotes;
+
 	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
 	private List<MovieNote> notes;
 
