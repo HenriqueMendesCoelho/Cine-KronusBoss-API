@@ -29,7 +29,7 @@ public class SearchMovieNoteUseCaseImpl implements SearchMovieNoteUseCase {
 		}
 
 		List<MovieNote> notes = movie.getNotes().stream().map(n -> {
-			if (!n.getUser().getId().equals(userId)) {
+			if (!movie.isShowNotes() && !n.getUser().getId().equals(userId)) {
 				n.setNote(null);
 			}
 
