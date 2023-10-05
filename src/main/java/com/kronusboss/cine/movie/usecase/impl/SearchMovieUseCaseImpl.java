@@ -1,5 +1,7 @@
 package com.kronusboss.cine.movie.usecase.impl;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -66,18 +68,13 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 			throw new MovieNoteNotFoundException();
 		}
 
-		if (!movie.isShowNotes() && CollectionUtils.isNotEmpty(movie.getNotes())) {
-			List<MovieNote> notes = movie.getNotes().stream().map(n -> {
-				if (!n.getUser().getId().equals(userId)) {
-					n.setNote(null);
-				}
-
-				return n;
-			}).collect(Collectors.toList());
-			movie.setNotes(notes);
+		Duration duration = Duration.between(movie.getCreatedAt(), LocalDateTime.now());
+		if (duration.getSeconds() >= 1800 && !movie.isShowNotes()) {
+			movie.setShowNotes(true);
+			repository.saveAndFlush(movie);
 		}
 
-		return movie;
+		return omitNoteIfNeeded(movie, userId);
 	}
 
 	private Page<Movie> omitNoteIfNeeded(Page<Movie> movies, UUID userId) {
@@ -95,6 +92,21 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 
 			return m;
 		});
+	}
+
+	private Movie omitNoteIfNeeded(Movie movie, UUID userId) {
+		if (!movie.isShowNotes() && CollectionUtils.isNotEmpty(movie.getNotes())) {
+			List<MovieNote> notes = movie.getNotes().stream().map(n -> {
+				if (!n.getUser().getId().equals(userId)) {
+					n.setNote(null);
+				}
+
+				return n;
+			}).collect(Collectors.toList());
+			movie.setNotes(notes);
+		}
+
+		return movie;
 	}
 
 }
