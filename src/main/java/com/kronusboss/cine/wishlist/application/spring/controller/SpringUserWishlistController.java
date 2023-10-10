@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.util.CredentialUtil;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.wishlist.adapter.controller.WishlistController;
+import com.kronusboss.cine.wishlist.adapter.controller.dto.MoviesAlreadyRatedResponseDto;
 import com.kronusboss.cine.wishlist.adapter.controller.dto.WishlistRequestDto;
 import com.kronusboss.cine.wishlist.adapter.controller.dto.WishlistResponseDto;
 import com.kronusboss.cine.wishlist.usecase.exception.WishlistDuplicatedException;
@@ -55,6 +57,19 @@ public class SpringUserWishlistController {
 		} catch (WishlistNotFoundException e) {
 			return ResponseEntity.noContent().build();
 		}
+
+	}
+
+	@GetMapping("/{id}/movies-rated")
+	public ResponseEntity<?> findById(@PathVariable UUID id) {
+
+		MoviesAlreadyRatedResponseDto response = controller.searchMoviesAlreadyRatedImpl(id);
+
+		if (CollectionUtils.isEmpty(response.getMovieTmdbIds())) {
+			return ResponseEntity.noContent().build();
+		}
+
+		return ResponseEntity.ok(response);
 
 	}
 
