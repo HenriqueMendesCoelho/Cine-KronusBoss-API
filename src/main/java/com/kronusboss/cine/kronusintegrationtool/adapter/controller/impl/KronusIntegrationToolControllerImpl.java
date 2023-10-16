@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.KronusIntegrationToolController;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieInfoResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.WatchProvidersResponseDto;
@@ -30,6 +31,12 @@ public class KronusIntegrationToolControllerImpl implements KronusIntegrationToo
 	public MovieSummaryResponseDto movieSummary(Long tmdbId) {
 		MovieSummary response = movieSumaryUseCase.execute(tmdbId);
 		return new MovieSummaryResponseDto(response);
+	}
+
+	@Override
+	public MovieInfoResponseDto movieInfo(Long tmdbId) {
+		MovieSummary response = movieSumaryUseCase.execute(tmdbId);
+		return new MovieInfoResponseDto(response);
 	}
 
 	@Override
