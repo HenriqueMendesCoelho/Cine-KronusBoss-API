@@ -67,15 +67,12 @@ public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 		return result;
 	}
 
-	private Map<String, Double> movieByGender() {
+	private Map<String, Integer> movieByGender() {
 		List<MovieGenre> genres = genreRepository.findAll();
 
-		int totalMovieCount = genres.stream().mapToInt(g -> g.getMovies().size()).sum();
-
-		Map<String, Double> result = genres.stream()
-				.collect(Collectors.groupingBy(MovieGenre::getName, Collectors.collectingAndThen(
-						Collectors.summingInt(g -> g.getMovies().size()),
-						count -> Double.valueOf(DECIMAL_FORMAT.format((double) count / totalMovieCount * 100)))));
+		Map<String, Integer> result = genres.stream()
+				.collect(Collectors.groupingBy(MovieGenre::getName,
+						Collectors.mapping(g -> g.getMovies().size(), Collectors.summingInt(Integer::intValue))));
 
 		result = result.entrySet()
 				.stream()

@@ -18,7 +18,7 @@ public class MovieStatistic {
 	private Integer totalNumberOfMovies;
 	private Double averageRate;
 	private Integer averageRuntime;
-	private Map<String, Double> moviesByGender;
+	private Map<String, Integer> moviesByGender;
 	private Map<String, Long> moviesSixMonthsAgo;
 
 }
