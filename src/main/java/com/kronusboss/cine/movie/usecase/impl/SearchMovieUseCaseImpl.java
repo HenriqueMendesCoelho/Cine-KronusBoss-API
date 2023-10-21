@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -33,18 +34,13 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 
 	@Override
 	public Page<Movie> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable, UUID userId) {
-		String[] sortJoinParams = sortJoin.split(",");
+		Pageable objPageableWithoutSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
 
-		String sortDirection = !sortJoinParams[sortJoinParams.length - 1].equalsIgnoreCase("asc")
-				&& !sortJoinParams[sortJoinParams.length - 1].equalsIgnoreCase("desc") ? "desc"
-						: sortJoinParams[sortJoinParams.length - 1];
-
-		if (sortDirection.equalsIgnoreCase("asc")) {
-			return repository.findMovieOrderByNoteAvgASC(pageable);
+		if (sortJoin.contains("notes,asc")) {
+			return omitNoteIfNeeded(repository.findMovieOrderByNoteAvgASC(objPageableWithoutSort), userId);
 		}
-		Page<Movie> movies = repository.findMovieOrderByNoteAvgDESC(pageable);
 
-		return omitNoteIfNeeded(movies, userId);
+		return omitNoteIfNeeded(repository.findMovieOrderByNoteAvgDESC(objPageableWithoutSort), userId);
 	}
 
 	@Override
