@@ -16,12 +16,10 @@ public interface MovieRepository extends JpaRepository<Movie, UUID> {
 	@Transactional(readOnly = true)
 	Movie findByTmdbId(Long tmdbId);
 
+	@Override
 	Page<Movie> findAll(Pageable pageable);
 
-	@Query(value = "select * from movie where portuguese_title ilike any(:title) or english_title ilike any(:title) or original_title ilike any(:title)", nativeQuery = true)
-	Page<Movie> findMovieByTitleIlikeAny(@Param("title") String[] title, Pageable pageable);
-
-	@Query(value = "select * from movie where portuguese_title ilike all(:title) or english_title ilike all(:title) or original_title ilike all(:title)", nativeQuery = true)
+	@Query(value = "select *, portuguese_title as portugueseTitle from movie where portuguese_title ilike all(:title) or english_title ilike all(:title) or original_title ilike all(:title)", nativeQuery = true)
 	Page<Movie> findMovieByTitleIlikeAll(@Param("title") String[] title, Pageable pageable);
 
 	@Query(value = "SELECT m.*, COALESCE(AVG(n.note), 0) AS average_notes FROM movie m "
