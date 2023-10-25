@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
+import com.kronusboss.cine.wishlist.adapter.controller.dto.MoviesAlreadyRatedResponseDto;
 import com.kronusboss.cine.wishlist.adapter.controller.dto.WishlistRequestDto;
 import com.kronusboss.cine.wishlist.adapter.controller.dto.WishlistResponseDto;
 import com.kronusboss.cine.wishlist.usecase.exception.WishlistDuplicatedException;
@@ -30,5 +31,7 @@ public interface WishlistController {
 			throws WishlistNotFoundException, WishlistMovieAlreadyExistsException;
 
 	void deleteUserWishlist(UUID wishlistId, UserTokenDto user);
+
+	MoviesAlreadyRatedResponseDto searchMoviesAlreadyRatedImpl(UUID wishlistId);
 
 }

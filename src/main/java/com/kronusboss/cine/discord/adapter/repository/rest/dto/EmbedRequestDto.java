@@ -26,7 +26,7 @@ public class EmbedRequestDto {
 
 	private static final String URL_REDIRECT = "https://www.cine.kronusboss.com";
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.0", new DecimalFormatSymbols(Locale.US));
-	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm:ss");
+	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm");
 
 	public String title;
 	public Image image;

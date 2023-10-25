@@ -20,13 +20,13 @@ import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 
 public interface MovieController {
 
-	Page<MovieResponseDto> listMoviesAll(Pageable pageable);
+	Page<MovieResponseDto> listMoviesAll(Pageable pageable, UserTokenDto user);
 
-	Page<MovieResponseDto> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable);
+	Page<MovieResponseDto> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable, UserTokenDto user);
 
-	Page<MovieResponseDto> listMoviesByTitle(String title, Pageable pageable);
+	Page<MovieResponseDto> listMoviesByTitle(String title, Pageable pageable, UserTokenDto user);
 
-	MovieResponseDto getById(UUID id) throws MovieNoteNotFoundException;
+	MovieResponseDto getById(UUID id, UserTokenDto user) throws MovieNoteNotFoundException;
 
 	MovieResponseDto save(MovieRequestDto movie, UserTokenDto user) throws DuplicatedMovieException;
 
@@ -35,7 +35,7 @@ public interface MovieController {
 
 	void delete(UUID id, UserTokenDto user) throws UserNotAuthorizedException;
 
-	List<MovieNoteResponseDto> listMoveiNotes(UUID movieId) throws MovieNotFoundException;
+	List<MovieNoteResponseDto> listMovieNotes(UUID movieId, UserTokenDto user) throws MovieNotFoundException;
 
 	MovieNoteResponseDto createMovieNote(MovieNoteRequestDto request, UserTokenDto user)
 			throws MovieNotFoundException, DuplicatedMovieNoteException;

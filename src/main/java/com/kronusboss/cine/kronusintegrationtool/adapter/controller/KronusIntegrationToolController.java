@@ -1,5 +1,6 @@
 package com.kronusboss.cine.kronusintegrationtool.adapter.controller;
 
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieInfoResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.WatchProvidersResponseDto;
@@ -7,6 +8,8 @@ import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.WatchPro
 public interface KronusIntegrationToolController {
 
 	MovieSummaryResponseDto movieSummary(Long tmdbId);
+
+	MovieInfoResponseDto movieInfo(Long tmdbId);
 
 	MovieSearchResponseDto movieSearchByName(String name, Integer page, String language);
 

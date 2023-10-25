@@ -1,5 +1,6 @@
 package com.kronusboss.cine.discord.adapter.repository.rest.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.web.firewall.RequestRejectedException;
@@ -57,7 +58,7 @@ public class DiscordRepositoryImpl implements DiscordRepository {
 
 	@Override
 	public DiscordWebhookInfo update(Movie movie) {
-		if (!update || movie.getMovieDiscord() == null || movie.getMovieDiscord().getMessageId().isEmpty()) {
+		if (!update || movie.getMovieDiscord() == null || StringUtils.isBlank(movie.getMovieDiscord().getMessageId())) {
 			return null;
 		}
 

@@ -3,6 +3,7 @@ package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -189,7 +190,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 				"/api/v1/tmdb/discover/movie?page=%s&language=%s&include_adult=false&vote_count.gte=300".formatted(page,
 						"pt-Br"));
 
-		if (sortByParam != null) {
+		if (StringUtils.isNotEmpty(sortByParam)) {
 			uri.append("&sort_by=%s".formatted(sortByParam));
 		}
 
@@ -197,11 +198,11 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 			uri.append("&primary_release_year=%s".formatted(primaryReleaseYear));
 		}
 
-		if (withGenres != null) {
+		if (StringUtils.isNotEmpty(withGenres)) {
 			uri.append("&with_genres=%s".formatted(withGenres));
 		}
 
-		if (withoutGenres != null) {
+		if (StringUtils.isNotEmpty(withoutGenres)) {
 			uri.append("&without_genres=%s".formatted(withoutGenres));
 		}
 

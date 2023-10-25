@@ -27,14 +27,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieNote implements Serializable {
+public class MovieNote implements Serializable, Cloneable {
 	private static final long serialVersionUID = -3877745486636189677L;
 
 	@EmbeddedId
 	private MovieNoteKey id;
 
 	@Column
-	private int note;
+	private Integer note;
 
 	@CreationTimestamp
 	@Column(nullable = false)
@@ -55,12 +55,18 @@ public class MovieNote implements Serializable {
 	private Movie movie;
 
 	@Builder
-	public MovieNote(int note, LocalDateTime createdAt, LocalDateTime updatedAt, User user, Movie movie) {
+	public MovieNote(Integer note, LocalDateTime createdAt, LocalDateTime updatedAt, User user, Movie movie) {
 		this.id = new MovieNoteKey(user.getId(), movie.getId());
 		this.note = note;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 		this.user = user;
 		this.movie = movie;
+	}
+
+	@Override
+	public MovieNote clone() throws CloneNotSupportedException {
+		return (MovieNote) super.clone();
+
 	}
 }

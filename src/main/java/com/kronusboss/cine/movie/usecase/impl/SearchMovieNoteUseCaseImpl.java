@@ -2,6 +2,7 @@ package com.kronusboss.cine.movie.usecase.impl;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ public class SearchMovieNoteUseCaseImpl implements SearchMovieNoteUseCase {
 	private MovieRepository repository;
 
 	@Override
-	public List<MovieNote> list(UUID movieId) throws MovieNotFoundException {
+	public List<MovieNote> list(UUID movieId, UUID userId) throws MovieNotFoundException {
 
 		Movie movie = repository.findById(movieId).orElse(null);
 
@@ -27,7 +28,15 @@ public class SearchMovieNoteUseCaseImpl implements SearchMovieNoteUseCase {
 			throw new MovieNotFoundException();
 		}
 
-		return movie.getNotes();
+		List<MovieNote> notes = movie.getNotes().stream().map(n -> {
+			if (!movie.isShowNotes() && !n.getUser().getId().equals(userId)) {
+				n.setNote(null);
+			}
+
+			return n;
+		}).collect(Collectors.toList());
+
+		return notes;
 	}
 
 }

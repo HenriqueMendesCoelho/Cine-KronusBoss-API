@@ -53,6 +53,8 @@ public class MovieRequestDto {
 	@NotNull
 	private Integer runtime;
 
+	private boolean showNotes;
+
 	public Movie toDomain() {
 		return Movie.builder()
 				.portugueseTitle(portugueseTitle)
@@ -67,6 +69,7 @@ public class MovieRequestDto {
 				.tmdbId(tmdbId)
 				.imdbId(imdbId)
 				.runtime(runtime)
+				.showNotes(showNotes)
 				.genres(genres.stream().map(g -> MovieGenre.builder().id(g).build()).collect(Collectors.toList()))
 				.build();
 	}

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
 import com.kronusboss.cine.movie.adapter.repository.jpa.MovieNoteRepository;
 import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.rest.MovieSocketRespository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.domain.MovieNote;
 import com.kronusboss.cine.movie.domain.MovieNoteKey;
@@ -17,7 +18,10 @@ import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
 import com.kronusboss.cine.user.adapter.repository.jpa.UserRepository;
 import com.kronusboss.cine.user.domain.User;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class CreateMovieNoteUseCaseImpl implements CreateMovieNoteUseCase {
 
 	@Autowired
@@ -31,6 +35,9 @@ public class CreateMovieNoteUseCaseImpl implements CreateMovieNoteUseCase {
 
 	@Autowired
 	private UpdateMessageWebhookUseCase updateMessageWebhookUseCase;
+
+	@Autowired
+	private MovieSocketRespository movieSocketRespository;
 
 	@Override
 	public MovieNote create(UUID movieId, Integer note, String emailUserLoged)
@@ -49,14 +56,28 @@ public class CreateMovieNoteUseCaseImpl implements CreateMovieNoteUseCase {
 		}
 
 		MovieNote movieNote = MovieNote.builder().movie(movie).note(note).user(user).build();
-
 		userRepository.saveAndFlush(user);
-
 		MovieNote noteCreated = repository.saveAndFlush(movieNote);
-
 		updateMessageWebhookUseCase.updateMovieMessage(movie.getId());
+		sendEventSocket(noteCreated);
 
 		return noteCreated;
+	}
+
+	private void sendEventSocket(MovieNote note) {
+		try {
+			MovieNote eventContent = note.clone();
+			Movie movie = note.getMovie();
+
+			if (!movie.isShowNotes()) {
+				eventContent.setNote(null);
+			}
+
+			movieSocketRespository.emitEventMovie(movie.getId(), "create-note", eventContent);
+		} catch (CloneNotSupportedException e) {
+			log.error("Error to emit event on note update: ", e);
+		}
+
 	}
 
 }

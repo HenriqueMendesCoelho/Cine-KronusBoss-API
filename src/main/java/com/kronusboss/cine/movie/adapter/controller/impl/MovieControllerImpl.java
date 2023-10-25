@@ -65,26 +65,26 @@ public class MovieControllerImpl implements MovieController {
 	private SearchMovieGenreUseCase searchMovieGenreUseCase;
 
 	@Override
-	public Page<MovieResponseDto> listMoviesAll(Pageable pageable) {
-		Page<Movie> response = searchMovieUseCase.listMoviesAll(pageable);
+	public Page<MovieResponseDto> listMoviesAll(Pageable pageable, UserTokenDto user) {
+		Page<Movie> response = searchMovieUseCase.listMoviesAll(pageable, user.getId());
 		return response.map(MovieResponseDto::new);
 	}
 
 	@Override
-	public Page<MovieResponseDto> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable) {
-		Page<Movie> response = searchMovieUseCase.listAllMoviesOrderByNotesAvg(sortJoin, pageable);
+	public Page<MovieResponseDto> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable, UserTokenDto user) {
+		Page<Movie> response = searchMovieUseCase.listAllMoviesOrderByNotesAvg(sortJoin, pageable, user.getId());
 		return response.map(MovieResponseDto::new);
 	}
 
 	@Override
-	public Page<MovieResponseDto> listMoviesByTitle(String title, Pageable pageable) {
-		Page<Movie> response = searchMovieUseCase.listMoviesByTitle(title, pageable);
+	public Page<MovieResponseDto> listMoviesByTitle(String title, Pageable pageable, UserTokenDto user) {
+		Page<Movie> response = searchMovieUseCase.listMoviesByTitle(title, pageable, user.getId());
 		return response.map(MovieResponseDto::new);
 	}
 
 	@Override
-	public MovieResponseDto getById(UUID id) throws MovieNoteNotFoundException {
-		Movie response = searchMovieUseCase.getById(id);
+	public MovieResponseDto getById(UUID id, UserTokenDto user) throws MovieNoteNotFoundException {
+		Movie response = searchMovieUseCase.getById(id, user.getId());
 		return new MovieResponseDto(response);
 	}
 
@@ -107,8 +107,8 @@ public class MovieControllerImpl implements MovieController {
 	}
 
 	@Override
-	public List<MovieNoteResponseDto> listMoveiNotes(UUID movieId) throws MovieNotFoundException {
-		return searchMovieNoteUseCase.list(movieId)
+	public List<MovieNoteResponseDto> listMovieNotes(UUID movieId, UserTokenDto user) throws MovieNotFoundException {
+		return searchMovieNoteUseCase.list(movieId, user.getId())
 				.stream()
 				.map(MovieNoteResponseDto::new)
 				.collect(Collectors.toList());

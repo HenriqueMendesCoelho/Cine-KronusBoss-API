@@ -44,8 +44,10 @@ public class SpringMovieController {
 	private MovieController controller;
 
 	@GetMapping
-	public ResponseEntity<?> getAllMoviesFiltered(@RequestParam String query, Pageable pageable) {
-		Page<MovieResponseDto> response = controller.listMoviesByTitle(query, pageable);
+	public ResponseEntity<?> getAllMoviesFiltered(@RequestParam String query, Pageable pageable,
+			@RequestHeader("Authorization") String token) {
+		UserTokenDto user = CredentialUtil.getUserFromToken(token);
+		Page<MovieResponseDto> response = controller.listMoviesByTitle(query, pageable, user);
 
 		if (response.isEmpty()) {
 			return ResponseEntity.noContent().build();
@@ -55,10 +57,12 @@ public class SpringMovieController {
 	}
 
 	@GetMapping("/list")
-	public ResponseEntity<?> getAllMovies(@RequestParam(required = false) String sortJoin, Pageable pageable) {
+	public ResponseEntity<?> getAllMovies(@RequestParam(required = false) String sortJoin, Pageable pageable,
+			@RequestHeader("Authorization") String token) {
+		UserTokenDto user = CredentialUtil.getUserFromToken(token);
 		Page<MovieResponseDto> response = sortJoin != null && sortJoin.contains("notes")
-				? controller.listAllMoviesOrderByNotesAvg(sortJoin, pageable)
-				: controller.listMoviesAll(pageable);
+				? controller.listAllMoviesOrderByNotesAvg(sortJoin, pageable, user)
+				: controller.listMoviesAll(pageable, user);
 
 		if (response.isEmpty()) {
 			return ResponseEntity.noContent().build();
@@ -68,10 +72,11 @@ public class SpringMovieController {
 	}
 
 	@GetMapping("/{movieId}")
-	public ResponseEntity<?> getMovieById(@PathVariable UUID movieId) {
+	public ResponseEntity<?> getMovieById(@PathVariable UUID movieId, @RequestHeader("Authorization") String token) {
 		MovieResponseDto response;
 		try {
-			response = controller.getById(movieId);
+			UserTokenDto user = CredentialUtil.getUserFromToken(token);
+			response = controller.getById(movieId, user);
 		} catch (MovieNoteNotFoundException e) {
 			return ResponseEntity.noContent().build();
 		}
@@ -131,9 +136,10 @@ public class SpringMovieController {
 	}
 
 	@GetMapping("/note/{movieId}")
-	public ResponseEntity<?> getMovieNote(@PathVariable UUID movieId) {
+	public ResponseEntity<?> getMovieNote(@PathVariable UUID movieId, @RequestHeader("Authorization") String token) {
 		try {
-			List<MovieNoteResponseDto> response = controller.listMoveiNotes(movieId);
+			UserTokenDto user = CredentialUtil.getUserFromToken(token);
+			List<MovieNoteResponseDto> response = controller.listMovieNotes(movieId, user);
 			return ResponseEntity.ok(response);
 		} catch (MovieNotFoundException e) {
 			return ResponseEntity.badRequest().body(Map.of("error", true, "code", 400, "message", e.getMessage()));
