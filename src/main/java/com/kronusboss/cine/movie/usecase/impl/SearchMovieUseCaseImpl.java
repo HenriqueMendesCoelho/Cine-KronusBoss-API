@@ -70,7 +70,10 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 			repository.saveAndFlush(movie);
 		}
 
-		return omitNoteIfNeeded(movie, userId);
+		Movie result = omitNoteIfNeeded(movie, userId);
+		result.getNotes().sort(MovieNote.comparator());
+
+		return result;
 	}
 
 	private Page<Movie> omitNoteIfNeeded(Page<Movie> movies, UUID userId) {

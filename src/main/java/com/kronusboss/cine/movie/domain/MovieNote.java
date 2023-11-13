@@ -2,6 +2,7 @@ package com.kronusboss.cine.movie.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -68,5 +69,9 @@ public class MovieNote implements Serializable, Cloneable {
 	public MovieNote clone() throws CloneNotSupportedException {
 		return (MovieNote) super.clone();
 
+	}
+
+	public static Comparator<MovieNote> comparator() {
+		return Comparator.comparingInt(MovieNote::getNote).reversed().thenComparing((m) -> m.getUser().getName());
 	}
 }

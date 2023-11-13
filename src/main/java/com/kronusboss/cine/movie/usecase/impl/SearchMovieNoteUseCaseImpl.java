@@ -35,6 +35,7 @@ public class SearchMovieNoteUseCaseImpl implements SearchMovieNoteUseCase {
 
 			return n;
 		}).collect(Collectors.toList());
+		notes.sort(MovieNote.comparator());
 
 		return notes;
 	}

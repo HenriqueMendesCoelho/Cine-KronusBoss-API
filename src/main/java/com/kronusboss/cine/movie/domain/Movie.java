@@ -22,7 +22,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -83,11 +82,11 @@ public class Movie {
 	private boolean showNotes;
 
 	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
-	@OrderBy("note DESC")
 	private List<MovieNote> notes;
 
 	@ManyToMany
-	@JoinTable(name = "movies_genres", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
+	@JoinTable(name = "movies_genres", joinColumns = @JoinColumn(name = "movie_id"),
+			inverseJoinColumns = @JoinColumn(name = "genre_id"))
 	private List<MovieGenre> genres;
 
 	@ManyToOne(optional = true)
