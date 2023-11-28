@@ -12,6 +12,8 @@ public interface SearchMovieUseCase {
 
 	Page<Movie> listMoviesAll(Pageable pageable, UUID userId);
 
+	Page<Movie> listAllMovies(String title, String genre, String sortJoin, Pageable pageable, UUID userId);
+
 	Page<Movie> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable, UUID userId);
 
 	Page<Movie> listMoviesByTitle(String title, Pageable pageable, UUID userId);

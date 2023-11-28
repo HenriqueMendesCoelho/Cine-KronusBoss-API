@@ -2,11 +2,12 @@ package com.kronusboss.cine.movie.usecase.impl;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -85,7 +86,7 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 					}
 
 					return n;
-				}).collect(Collectors.toList());
+				}).toList();
 				m.setNotes(notes);
 			}
 
@@ -101,11 +102,26 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 				}
 
 				return n;
-			}).collect(Collectors.toList());
+			}).toList();
 			movie.setNotes(notes);
 		}
 
 		return movie;
+	}
+
+	@Override
+	public Page<Movie> listAllMovies(String title, String genre, String sortJoin, Pageable pageable, UUID userId) {
+		List<String> titles = null;
+		if (StringUtils.isNotBlank(title)) {
+			titles = Arrays.asList(title.split(" "));
+		}
+		List<String> genres = null;
+		if (StringUtils.isNotBlank(genre)) {
+			genres = Arrays.asList(genre.split(","));
+		}
+		Page<Movie> movies = repository.findMovieFilteredCustom(titles, genres, sortJoin, pageable);
+
+		return omitNoteIfNeeded(movies, userId);
 	}
 
 }
