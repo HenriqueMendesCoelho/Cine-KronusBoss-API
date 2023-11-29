@@ -30,6 +30,7 @@ import jakarta.persistence.criteria.Order;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 public interface MovieRepository extends JpaRepository<Movie, UUID>, JpaSpecificationExecutor<Movie> {
 
@@ -53,7 +54,7 @@ public interface MovieRepository extends JpaRepository<Movie, UUID>, JpaSpecific
 			+ " ORDER BY average_notes DESC, m.portuguese_title ASC;", nativeQuery = true)
 	Page<Movie> findMovieOrderByNoteAvgDESC(Pageable pageable);
 
-	default Page<Movie> findMovieFilteredCustom(List<String> titles, List<String> genres, String sortJoin,
+	default Page<Movie> findMovieFilteredCustom(List<String> titles, List<Long> genres, String sortJoin,
 			Pageable pageable) {
 		Pageable _pageable = pageable;
 		if (StringUtils.isNotEmpty(sortJoin)
@@ -64,7 +65,7 @@ public interface MovieRepository extends JpaRepository<Movie, UUID>, JpaSpecific
 		return findAll(createSpecification(titles, genres, sortJoin, pageable), _pageable);
 	}
 
-	private Specification<Movie> createSpecification(List<String> titles, List<String> genres, String sortJoin,
+	private Specification<Movie> createSpecification(List<String> titles, List<Long> genres, String sortJoin,
 			Pageable pageable) {
 		return (Root<Movie> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
 			Predicate predicate = criteriaBuilder.conjunction();
@@ -95,17 +96,18 @@ public interface MovieRepository extends JpaRepository<Movie, UUID>, JpaSpecific
 			}
 
 			if (CollectionUtils.isNotEmpty(genres)) {
-				Join<Movie, MovieGenre> movieGenreJoin = root.join("genres", JoinType.LEFT);
+				Subquery<UUID> subquery = query.subquery(UUID.class);
+				Root<Movie> subMovieRoot = subquery.from(Movie.class);
+				Join<Movie, MovieGenre> genreJoin = subMovieRoot.join("genres");
+				subquery.select(subMovieRoot.get("id"));
 
-				List<Predicate> genrePredicates = new ArrayList<>();
-				for (String genreId : genres) {
-					if (StringUtils.isNotEmpty(genreId)) {
-						genrePredicates.add(criteriaBuilder.equal(movieGenreJoin.get("id"), Long.valueOf(genreId)));
-					}
-				}
+				Predicate genrePredicate = genreJoin.get("id").in(genres);
+				subquery.where(genrePredicate);
+				subquery.groupBy(subMovieRoot.get("id"));
+				subquery.having(criteriaBuilder.equal(criteriaBuilder.count(genreJoin), genres.size()));
 
-				predicate = criteriaBuilder.and(predicate,
-						criteriaBuilder.and(genrePredicates.toArray(new Predicate[0])));
+				Predicate hasAllGenres = criteriaBuilder.in(root.get("id")).value(subquery);
+				predicate = criteriaBuilder.and(predicate, hasAllGenres);
 			}
 
 			if (StringUtils.isNotEmpty(sortJoin)) {
@@ -113,11 +115,9 @@ public interface MovieRepository extends JpaRepository<Movie, UUID>, JpaSpecific
 				List<Order> orders = new ArrayList<>();
 
 				if ("notes,asc".equalsIgnoreCase(sortJoin)) {
-					System.err.println("Entrei1");
 					orders.add(criteriaBuilder.asc(criteriaBuilder.avg(movieNoteJoin.get("note"))));
 				}
 				if ("notes,desc".equalsIgnoreCase(sortJoin)) {
-					System.err.println("Entrei");
 					orders.add(criteriaBuilder.desc(criteriaBuilder.avg(movieNoteJoin.get("note"))));
 				}
 				if (!defaultOrders.isEmpty()) {

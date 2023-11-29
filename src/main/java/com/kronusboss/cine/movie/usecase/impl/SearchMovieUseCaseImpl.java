@@ -51,9 +51,9 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 		if (StringUtils.isNotBlank(title)) {
 			titles = Arrays.asList(title.split(" "));
 		}
-		List<String> genres = null;
+		List<Long> genres = null;
 		if (StringUtils.isNotBlank(genre)) {
-			genres = Arrays.asList(genre.split(","));
+			genres = Arrays.asList(genre.split(",")).stream().map(Long::parseLong).toList();
 		}
 		Page<Movie> movies = repository.findMovieFilteredCustom(titles, genres, sortJoin, pageable);
 
