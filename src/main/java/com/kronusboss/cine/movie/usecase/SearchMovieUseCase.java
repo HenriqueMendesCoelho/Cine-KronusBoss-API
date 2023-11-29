@@ -10,13 +10,7 @@ import com.kronusboss.cine.movie.usecase.exception.MovieNoteNotFoundException;
 
 public interface SearchMovieUseCase {
 
-	Page<Movie> listMoviesAll(Pageable pageable, UUID userId);
-
 	Page<Movie> listAllMovies(String title, String genre, String sortJoin, Pageable pageable, UUID userId);
-
-	Page<Movie> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable, UUID userId);
-
-	Page<Movie> listMoviesByTitle(String title, Pageable pageable, UUID userId);
 
 	Movie getById(UUID id, UUID userId) throws MovieNoteNotFoundException;
 

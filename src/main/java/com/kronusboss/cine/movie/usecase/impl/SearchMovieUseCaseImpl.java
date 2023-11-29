@@ -10,7 +10,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -25,37 +24,6 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 
 	@Autowired
 	private MovieRepository repository;
-
-	@Override
-	public Page<Movie> listMoviesAll(Pageable pageable, UUID userId) {
-		Page<Movie> movies = repository.findAll(pageable);
-
-		return omitNoteIfNeeded(movies, userId);
-	}
-
-	@Override
-	public Page<Movie> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable, UUID userId) {
-		Pageable objPageableWithoutSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-
-		if (sortJoin.contains("notes,asc")) {
-			return omitNoteIfNeeded(repository.findMovieOrderByNoteAvgASC(objPageableWithoutSort), userId);
-		}
-
-		return omitNoteIfNeeded(repository.findMovieOrderByNoteAvgDESC(objPageableWithoutSort), userId);
-	}
-
-	@Override
-	public Page<Movie> listMoviesByTitle(String title, Pageable pageable, UUID userId) {
-		String[] titleSplitBySpace = title.split(" ");
-
-		String[] params = new String[titleSplitBySpace.length];
-		for (int i = 0; i < params.length; i++) {
-			params[i] = "%" + titleSplitBySpace[i] + "%";
-		}
-		Page<Movie> movies = repository.findMovieByTitleIlikeAll(params, pageable);
-
-		return omitNoteIfNeeded(movies, userId);
-	}
 
 	@Override
 	public Movie getById(UUID id, UUID userId) throws MovieNoteNotFoundException {
@@ -75,6 +43,21 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 		result.getNotes().sort(MovieNote.comparator());
 
 		return result;
+	}
+
+	@Override
+	public Page<Movie> listAllMovies(String title, String genre, String sortJoin, Pageable pageable, UUID userId) {
+		List<String> titles = null;
+		if (StringUtils.isNotBlank(title)) {
+			titles = Arrays.asList(title.split(" "));
+		}
+		List<String> genres = null;
+		if (StringUtils.isNotBlank(genre)) {
+			genres = Arrays.asList(genre.split(","));
+		}
+		Page<Movie> movies = repository.findMovieFilteredCustom(titles, genres, sortJoin, pageable);
+
+		return omitNoteIfNeeded(movies, userId);
 	}
 
 	private Page<Movie> omitNoteIfNeeded(Page<Movie> movies, UUID userId) {
@@ -107,21 +90,6 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 		}
 
 		return movie;
-	}
-
-	@Override
-	public Page<Movie> listAllMovies(String title, String genre, String sortJoin, Pageable pageable, UUID userId) {
-		List<String> titles = null;
-		if (StringUtils.isNotBlank(title)) {
-			titles = Arrays.asList(title.split(" "));
-		}
-		List<String> genres = null;
-		if (StringUtils.isNotBlank(genre)) {
-			genres = Arrays.asList(genre.split(","));
-		}
-		Page<Movie> movies = repository.findMovieFilteredCustom(titles, genres, sortJoin, pageable);
-
-		return omitNoteIfNeeded(movies, userId);
 	}
 
 }
