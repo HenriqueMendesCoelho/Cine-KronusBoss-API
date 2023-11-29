@@ -17,7 +17,7 @@ public class SearchMovieGenreUseCaseImpl implements SearchMovieGenreUseCase {
 
 	@Override
 	public List<MovieGenre> list() {
-		return repository.findAll();
+		return repository.findAllByOrderByNameAsc();
 	}
 
 }
