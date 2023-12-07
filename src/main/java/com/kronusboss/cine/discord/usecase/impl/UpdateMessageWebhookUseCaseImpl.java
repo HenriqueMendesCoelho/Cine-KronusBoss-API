@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.discord.adapter.repository.rest.DiscordRepository;
 import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.MovieRepository;
 import com.kronusboss.cine.movie.domain.Movie;
 
 @Component

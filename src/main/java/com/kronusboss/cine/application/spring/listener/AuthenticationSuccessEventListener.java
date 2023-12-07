@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.user.adapter.repository.jpa.UserRepository;
+import com.kronusboss.cine.user.adapter.repository.UserRepository;
 import com.kronusboss.cine.user.domain.User;
 
 @Component

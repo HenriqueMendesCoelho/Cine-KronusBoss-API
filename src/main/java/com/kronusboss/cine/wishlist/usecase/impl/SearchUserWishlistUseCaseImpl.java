@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.wishlist.adapter.repository.jpa.WishlistRepository;
+import com.kronusboss.cine.wishlist.adapter.repository.WishlistRepository;
 import com.kronusboss.cine.wishlist.domain.Wishlist;
 import com.kronusboss.cine.wishlist.usecase.SearchUserWishlistUseCase;
 import com.kronusboss.cine.wishlist.usecase.exception.WishlistNotFoundException;

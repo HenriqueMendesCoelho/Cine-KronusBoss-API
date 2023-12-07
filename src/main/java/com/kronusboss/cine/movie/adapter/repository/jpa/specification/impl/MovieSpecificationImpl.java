@@ -7,10 +7,15 @@ import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Repository;
 
+import com.kronusboss.cine.movie.adapter.repository.jpa.MovieJpaRepository;
 import com.kronusboss.cine.movie.adapter.repository.jpa.specification.MovieSpecification;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.domain.MovieGenre;
@@ -26,10 +31,25 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
 
+@Repository
 public class MovieSpecificationImpl implements MovieSpecification {
 
+	@Autowired
+	private MovieJpaRepository repository;
+
 	@Override
-	public Specification<Movie> filterMovies(List<String> titles, List<Long> genres, String sortJoin,
+	public Page<Movie> findMovieFilteredCustom(List<String> titles, List<Long> genres, String sortJoin,
+			Pageable pageable) {
+		Pageable _pageable = pageable;
+		if (StringUtils.isNotEmpty(sortJoin)
+				&& ("notes,asc".equalsIgnoreCase(sortJoin) || "notes,desc".equalsIgnoreCase(sortJoin))) {
+			_pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
+		}
+
+		return repository.findAll(filterMovies(titles, genres, sortJoin, pageable), _pageable);
+	}
+
+	private Specification<Movie> filterMovies(List<String> titles, List<Long> genres, String sortJoin,
 			Pageable pageable) {
 		return (Root<Movie> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
 			Predicate predicate = criteriaBuilder.conjunction();

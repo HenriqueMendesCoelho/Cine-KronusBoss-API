@@ -8,7 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.user.domain.User;
-import com.kronusboss.cine.wishlist.adapter.repository.jpa.WishlistRepository;
+import com.kronusboss.cine.wishlist.adapter.repository.WishlistRepository;
 import com.kronusboss.cine.wishlist.domain.Wishlist;
 import com.kronusboss.cine.wishlist.usecase.CreateUserWishlistUseCase;
 import com.kronusboss.cine.wishlist.usecase.exception.WishlistDuplicatedException;

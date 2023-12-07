@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.MovieRepository;
 import com.kronusboss.cine.movie.adapter.repository.rest.MovieSocketRespository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.usecase.UpdateMovieUseCase;
 import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
-import com.kronusboss.cine.user.adapter.repository.jpa.UserRepository;
+import com.kronusboss.cine.user.adapter.repository.UserRepository;
 import com.kronusboss.cine.user.domain.Role;
 import com.kronusboss.cine.user.domain.User;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;

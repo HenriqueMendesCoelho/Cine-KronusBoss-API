@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kronusboss.cine.movie.domain.MovieGenre;
 
-public interface MovieGenreRepository extends JpaRepository<MovieGenre, Long> {
+public interface MovieGenreJpaRepository extends JpaRepository<MovieGenre, Long> {
 
 	@Transactional(readOnly = true)
 	MovieGenre findByName(String name);

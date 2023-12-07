@@ -13,7 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.MovieRepository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.domain.MovieNote;
 import com.kronusboss.cine.movie.usecase.SearchMovieUseCase;

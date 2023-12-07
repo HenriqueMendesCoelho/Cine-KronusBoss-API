@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieGenreRepository;
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieNoteRepository;
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.jpa.MovieGenreJpaRepository;
+import com.kronusboss.cine.movie.adapter.repository.jpa.MovieNoteJpaRepository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.domain.MovieGenre;
 import com.kronusboss.cine.movie.domain.MovieNote;
@@ -32,10 +32,10 @@ public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 	private MovieRepository repository;
 
 	@Autowired
-	private MovieGenreRepository genreRepository;
+	private MovieGenreJpaRepository genreRepository;
 
 	@Autowired
-	private MovieNoteRepository movieNoteRepository;
+	private MovieNoteJpaRepository movieNoteRepository;
 
 	@Override
 	public MovieStatistic getStatistics() {
