@@ -3,9 +3,9 @@ package com.kronusboss.cine.user.domain;
 import java.util.UUID;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.BooleanUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.kronusboss.cine.movie.domain.MovieNote;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,24 +59,35 @@ public class Statistics {
 	}
 
 	public Integer getRatingsGiven() {
-		BooleanUtils.toBooleanDefaultIfNull(Boolean.TRUE, false);
-		return !CollectionUtils.isEmpty(user.getNotes()) ? user.getNotes().size() : 0;
+		if (CollectionUtils.isNotEmpty(user.getNotes())) {
+			return user.getNotes().size();
+		}
+
+		return 0;
 	}
 
 	public Integer getRegisteredMovies() {
-		return !CollectionUtils.isEmpty(user.getMovies()) ? user.getMovies().size() : 0;
+		if (CollectionUtils.isNotEmpty(user.getMovies())) {
+			return user.getMovies().size();
+		}
+
+		return 0;
 	}
 
 	public Integer getDisplayTime() {
-		return !CollectionUtils.isEmpty(user.getNotes())
-				? user.getNotes().stream().map(n -> n.getMovie().getRuntime()).mapToInt(m -> m).sum()
-				: 0;
+		if (CollectionUtils.isNotEmpty(user.getNotes())) {
+			return user.getNotes().stream().map(n -> n.getMovie().getRuntime()).mapToInt(m -> m).sum();
+		}
+
+		return 0;
 	}
 
 	public Double getAverageRatingMovies() {
-		return !CollectionUtils.isEmpty(user.getNotes())
-				? user.getNotes().stream().map(n -> n.getNote()).mapToDouble(m -> m).average().orElse(0)
-				: 0;
+		if (CollectionUtils.isNotEmpty(user.getNotes())) {
+			return user.getNotes().stream().map(MovieNote::getNote).mapToDouble(m -> m).average().orElse(0);
+		}
+
+		return 0d;
 	}
 
 }

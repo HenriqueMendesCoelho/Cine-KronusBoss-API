@@ -65,20 +65,9 @@ public class MovieControllerImpl implements MovieController {
 	private SearchMovieGenreUseCase searchMovieGenreUseCase;
 
 	@Override
-	public Page<MovieResponseDto> listMoviesAll(Pageable pageable, UserTokenDto user) {
-		Page<Movie> response = searchMovieUseCase.listMoviesAll(pageable, user.getId());
-		return response.map(MovieResponseDto::new);
-	}
-
-	@Override
-	public Page<MovieResponseDto> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable, UserTokenDto user) {
-		Page<Movie> response = searchMovieUseCase.listAllMoviesOrderByNotesAvg(sortJoin, pageable, user.getId());
-		return response.map(MovieResponseDto::new);
-	}
-
-	@Override
-	public Page<MovieResponseDto> listMoviesByTitle(String title, Pageable pageable, UserTokenDto user) {
-		Page<Movie> response = searchMovieUseCase.listMoviesByTitle(title, pageable, user.getId());
+	public Page<MovieResponseDto> listAllMovies(String title, String genre, String sortJoin, Pageable pageable,
+			UserTokenDto user) {
+		Page<Movie> response = searchMovieUseCase.listAllMovies(title, genre, sortJoin, pageable, user.getId());
 		return response.map(MovieResponseDto::new);
 	}
 

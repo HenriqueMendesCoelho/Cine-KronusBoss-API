@@ -44,25 +44,11 @@ public class SpringMovieController {
 	private MovieController controller;
 
 	@GetMapping
-	public ResponseEntity<?> getAllMoviesFiltered(@RequestParam String query, Pageable pageable,
-			@RequestHeader("Authorization") String token) {
+	public ResponseEntity<?> getAllMoviesTest(@RequestParam(required = false) String title,
+			@RequestParam(required = false) String withGenres, @RequestParam(required = false) String sortJoin,
+			Pageable pageable, @RequestHeader("Authorization") String token) {
 		UserTokenDto user = CredentialUtil.getUserFromToken(token);
-		Page<MovieResponseDto> response = controller.listMoviesByTitle(query, pageable, user);
-
-		if (response.isEmpty()) {
-			return ResponseEntity.noContent().build();
-		}
-
-		return ResponseEntity.ok(response);
-	}
-
-	@GetMapping("/list")
-	public ResponseEntity<?> getAllMovies(@RequestParam(required = false) String sortJoin, Pageable pageable,
-			@RequestHeader("Authorization") String token) {
-		UserTokenDto user = CredentialUtil.getUserFromToken(token);
-		Page<MovieResponseDto> response = sortJoin != null && sortJoin.contains("notes")
-				? controller.listAllMoviesOrderByNotesAvg(sortJoin, pageable, user)
-				: controller.listMoviesAll(pageable, user);
+		Page<MovieResponseDto> response = controller.listAllMovies(title, withGenres, sortJoin, pageable, user);
 
 		if (response.isEmpty()) {
 			return ResponseEntity.noContent().build();

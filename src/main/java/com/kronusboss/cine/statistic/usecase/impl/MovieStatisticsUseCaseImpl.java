@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieGenreRepository;
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieNoteRepository;
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieRepository;
+import com.kronusboss.cine.movie.adapter.repository.MovieGenreRepository;
+import com.kronusboss.cine.movie.adapter.repository.MovieNoteRepository;
+import com.kronusboss.cine.movie.adapter.repository.MovieRepository;
 import com.kronusboss.cine.movie.domain.Movie;
 import com.kronusboss.cine.movie.domain.MovieGenre;
 import com.kronusboss.cine.movie.domain.MovieNote;

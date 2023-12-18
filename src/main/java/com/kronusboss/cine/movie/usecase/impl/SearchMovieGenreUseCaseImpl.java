@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieGenreRepository;
+import com.kronusboss.cine.movie.adapter.repository.MovieGenreRepository;
 import com.kronusboss.cine.movie.domain.MovieGenre;
 import com.kronusboss.cine.movie.usecase.SearchMovieGenreUseCase;
 
@@ -17,7 +17,7 @@ public class SearchMovieGenreUseCaseImpl implements SearchMovieGenreUseCase {
 
 	@Override
 	public List<MovieGenre> list() {
-		return repository.findAll();
+		return repository.findAllByOrderByNameAsc();
 	}
 
 }

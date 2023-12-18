@@ -27,6 +27,7 @@ public class EmbedRequestDto {
 	private static final String URL_REDIRECT = "https://www.cine.kronusboss.com";
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.0", new DecimalFormatSymbols(Locale.US));
 	private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy, HH:mm");
+	private static final Integer BLUE_COLOR_CODE = 3447003;
 
 	public String title;
 	public Image image;
@@ -41,7 +42,7 @@ public class EmbedRequestDto {
 
 		title = "%s | Nota: %s".formatted(movie.getPortugueseTitle(), getAvgNotes(movie));
 		image = new Image(movie.getUrlImage());
-		color = 3447003;
+		color = BLUE_COLOR_CODE;
 		url = String.format("%s/movie/%s", URL_REDIRECT, movie.getId());
 		footer = new Footer("Cadastrado por: %s - %s".formatted(movie.getUser().getName(), date));
 		fields = movie.getNotes() != null ? movie.getNotes().stream().map(Field::new).collect(Collectors.toList())

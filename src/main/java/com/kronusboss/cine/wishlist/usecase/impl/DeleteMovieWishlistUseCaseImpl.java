@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.kronusboss.cine.wishlist.adapter.repository.jpa.MovieWishlistRepository;
+import com.kronusboss.cine.wishlist.adapter.repository.MovieWishlistRepository;
 import com.kronusboss.cine.wishlist.domain.MovieWishlist;
 import com.kronusboss.cine.wishlist.usecase.DeleteMovieWishlistUseCase;
 

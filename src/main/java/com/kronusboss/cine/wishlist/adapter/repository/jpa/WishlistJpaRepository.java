@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.kronusboss.cine.wishlist.domain.Wishlist;
 
-public interface WishlistRepository extends JpaRepository<Wishlist, UUID> {
+public interface WishlistJpaRepository extends JpaRepository<Wishlist, UUID> {
 
 	@Transactional(readOnly = true)
 	List<Wishlist> findByUserIdOrderByCreatedAtDesc(UUID userId);

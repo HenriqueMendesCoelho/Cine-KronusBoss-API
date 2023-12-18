@@ -20,11 +20,8 @@ import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 
 public interface MovieController {
 
-	Page<MovieResponseDto> listMoviesAll(Pageable pageable, UserTokenDto user);
-
-	Page<MovieResponseDto> listAllMoviesOrderByNotesAvg(String sortJoin, Pageable pageable, UserTokenDto user);
-
-	Page<MovieResponseDto> listMoviesByTitle(String title, Pageable pageable, UserTokenDto user);
+	Page<MovieResponseDto> listAllMovies(String title, String genre, String sortJoin, Pageable pageable,
+			UserTokenDto user);
 
 	MovieResponseDto getById(UUID id, UserTokenDto user) throws MovieNoteNotFoundException;
 
