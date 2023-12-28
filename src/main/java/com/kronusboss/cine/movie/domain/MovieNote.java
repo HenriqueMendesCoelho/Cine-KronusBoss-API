@@ -1,7 +1,7 @@
 package com.kronusboss.cine.movie.domain;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Comparator;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,12 +38,12 @@ public class MovieNote implements Serializable, Cloneable {
 	private Integer note;
 
 	@CreationTimestamp
-	@Column(nullable = false)
-	private LocalDateTime createdAt;
+	@Column(nullable = false, columnDefinition = "timestamp with time zone")
+	private OffsetDateTime createdAt;
 
 	@UpdateTimestamp
-	@Column
-	private LocalDateTime updatedAt;
+	@Column(columnDefinition = "timestamp with time zone")
+	private OffsetDateTime updatedAt;
 
 	@ManyToOne
 	@MapsId("userId")
@@ -56,7 +56,7 @@ public class MovieNote implements Serializable, Cloneable {
 	private Movie movie;
 
 	@Builder
-	public MovieNote(Integer note, LocalDateTime createdAt, LocalDateTime updatedAt, User user, Movie movie) {
+	public MovieNote(Integer note, OffsetDateTime createdAt, OffsetDateTime updatedAt, User user, Movie movie) {
 		this.id = new MovieNoteKey(user.getId(), movie.getId());
 		this.note = note;
 		this.createdAt = createdAt;

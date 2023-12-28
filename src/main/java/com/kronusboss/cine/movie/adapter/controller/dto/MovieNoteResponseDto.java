@@ -1,6 +1,6 @@
 package com.kronusboss.cine.movie.adapter.controller.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.kronusboss.cine.movie.domain.MovieNote;
 
@@ -16,8 +16,8 @@ import lombok.Setter;
 public class MovieNoteResponseDto {
 
 	private Integer note;
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
+	private OffsetDateTime createdAt;
+	private OffsetDateTime updatedAt;
 	private MovieNoteUserResponseDto user;
 
 	public MovieNoteResponseDto(MovieNote movieNote) {

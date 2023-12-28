@@ -1,6 +1,6 @@
 package com.kronusboss.cine.wishlist.adapter.controller.dto;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,8 +23,8 @@ public class WishlistResponseDto {
 	private String name;
 	private List<MovieWishlistResponseDto> moviesWishlists;
 	private boolean shareable;
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
+	private OffsetDateTime createdAt;
+	private OffsetDateTime updatedAt;
 	private WishlistUserResponseDto user;
 
 	public WishlistResponseDto(Wishlist wishlist) {

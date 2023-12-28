@@ -33,7 +33,7 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 			throw new MovieNoteNotFoundException();
 		}
 
-		Duration duration = Duration.between(movie.getCreatedAt(), LocalDateTime.now());
+		Duration duration = Duration.between(movie.getCreatedAt().toLocalDateTime(), LocalDateTime.now());
 		if (duration.getSeconds() >= 1800 && !movie.isShowNotes()) {
 			movie.setShowNotes(true);
 			repository.saveAndFlush(movie);

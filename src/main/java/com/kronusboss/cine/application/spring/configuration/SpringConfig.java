@@ -2,6 +2,7 @@ package com.kronusboss.cine.application.spring.configuration;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.Executors;
 
 import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
@@ -33,9 +34,11 @@ public class SpringConfig {
 		return new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 				.setSerializationInclusion(Include.NON_NULL)
 				.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
-				.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"))
 				.registerModule(new JavaTimeModule())
-				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+				.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX"))
+				.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+				.enable(SerializationFeature.WRITE_DATES_WITH_ZONE_ID)
+				.setTimeZone(TimeZone.getTimeZone("America/Sao_Paulo"));
 	}
 
 	@Bean

@@ -1,7 +1,7 @@
 package com.kronusboss.cine.wishlist.domain;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,9 +49,10 @@ public class Wishlist implements Serializable {
 	private User user;
 
 	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "movie_wishlist_user_wishlist", joinColumns = {
-			@JoinColumn(name = "wishlist_id", referencedColumnName = "id") }, inverseJoinColumns = @JoinColumn(name = "movie_id"), uniqueConstraints = {
-					@UniqueConstraint(columnNames = { "wishlist_id", "movie_id" }) })
+	@JoinTable(name = "movie_wishlist_user_wishlist",
+			joinColumns = { @JoinColumn(name = "wishlist_id", referencedColumnName = "id") },
+			inverseJoinColumns = @JoinColumn(name = "movie_id"),
+			uniqueConstraints = { @UniqueConstraint(columnNames = { "wishlist_id", "movie_id" }) })
 	private List<MovieWishlist> moviesWishlists;
 
 	@Column(nullable = false)
@@ -59,9 +60,9 @@ public class Wishlist implements Serializable {
 
 	@CreationTimestamp
 	@Column
-	private LocalDateTime createdAt;
+	private OffsetDateTime createdAt;
 
 	@Column
-	private LocalDateTime updatedAt;
+	private OffsetDateTime updatedAt;
 
 }

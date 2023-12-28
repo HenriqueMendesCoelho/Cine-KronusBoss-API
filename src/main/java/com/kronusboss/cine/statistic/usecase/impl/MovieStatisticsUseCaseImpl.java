@@ -54,7 +54,7 @@ public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 		LocalDateTime sixMonthsAgo = today.minusMonths(6).withDayOfMonth(1);
 
 		Map<Integer, Long> groupedMovies = movies.stream()
-				.filter(obj -> obj.getCreatedAt().isAfter(sixMonthsAgo))
+				.filter(obj -> obj.getCreatedAt().toLocalDateTime().isAfter(sixMonthsAgo))
 				.collect(Collectors.groupingBy(obj -> YearMonth.from(obj.getCreatedAt()).getMonthValue(),
 						Collectors.counting()));
 

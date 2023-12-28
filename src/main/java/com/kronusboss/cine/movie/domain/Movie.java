@@ -1,7 +1,7 @@
 package com.kronusboss.cine.movie.domain;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -94,12 +94,12 @@ public class Movie {
 	private User user;
 
 	@CreationTimestamp
-	@Column(nullable = false)
-	private LocalDateTime createdAt;
+	@Column(nullable = false, columnDefinition = "timestamp with time zone")
+	private OffsetDateTime createdAt;
 
 	@UpdateTimestamp
-	@Column
-	private LocalDateTime updatedAt;
+	@Column(columnDefinition = "timestamp with time zone")
+	private OffsetDateTime updatedAt;
 
 	@OneToOne(mappedBy = "movie", cascade = CascadeType.ALL)
 	@PrimaryKeyJoinColumn
