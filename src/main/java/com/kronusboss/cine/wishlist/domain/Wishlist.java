@@ -59,10 +59,10 @@ public class Wishlist implements Serializable {
 	private boolean shareable;
 
 	@CreationTimestamp
-	@Column
+	@Column(nullable = false, columnDefinition = "timestamp with time zone")
 	private OffsetDateTime createdAt;
 
-	@Column
+	@Column(columnDefinition = "timestamp with time zone")
 	private OffsetDateTime updatedAt;
 
 }
