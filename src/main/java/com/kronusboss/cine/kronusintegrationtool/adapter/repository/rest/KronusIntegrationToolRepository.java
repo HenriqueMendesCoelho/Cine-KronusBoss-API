@@ -2,6 +2,7 @@ package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest;
 
 import java.util.List;
 
+import com.kronusboss.cine.kronusintegrationtool.domain.Credit;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
 import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
@@ -32,4 +33,6 @@ public interface KronusIntegrationToolRepository {
 	void sendMailTemplate(SendMailTemplate request);
 
 	List<MovieGenre> listGenres();
+
+	Credit getCredits(Long tmdbId);
 }

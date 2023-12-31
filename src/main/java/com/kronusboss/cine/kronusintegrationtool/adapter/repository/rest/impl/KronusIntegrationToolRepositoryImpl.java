@@ -13,12 +13,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.CreditResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenreResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenresResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSummaryResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.SendMailTemplateRequestDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.WatchProvidersResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.domain.Credit;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
 import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
@@ -248,6 +250,23 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.uri(uri)
 					.retrieve()
 					.bodyToMono(WatchProvidersResponseDto.class)
+					.block();
+
+			return response.toDomain();
+		} catch (Exception e) {
+			log.error("Error with KIT API request at %s".formatted(uri), e);
+			throw new RequestRejectedException(e.getMessage());
+		}
+	}
+
+	@Override
+	public Credit getCredits(Long tmdbId) {
+		String uri = "/api/v1/tmdb/movie/%s/credits".formatted(tmdbId);
+		try {
+			CreditResponseDto response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToMono(CreditResponseDto.class)
 					.block();
 
 			return response.toDomain();

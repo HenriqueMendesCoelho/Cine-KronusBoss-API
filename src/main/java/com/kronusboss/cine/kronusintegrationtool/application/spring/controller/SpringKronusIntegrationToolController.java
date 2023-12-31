@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.KronusIntegrationToolController;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.CreditResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieInfoResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
@@ -105,6 +106,13 @@ public class SpringKronusIntegrationToolController {
 	@GetMapping("/movie/tmdb/{movieId}/watch-providers")
 	public ResponseEntity<?> getWatchProviders(@PathVariable Long movieId) {
 		WatchProvidersResponseDto response = controller.searchWatchProvidersByMovieId(movieId);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/movie/tmdb/{movieId}/credits")
+	public ResponseEntity<?> getCredits(@PathVariable Long movieId) {
+		CreditResponseDto response = controller.searchMovieCredits(movieId);
 
 		return ResponseEntity.ok(response);
 	}
