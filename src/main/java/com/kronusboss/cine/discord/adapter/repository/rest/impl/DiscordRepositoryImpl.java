@@ -51,7 +51,7 @@ public class DiscordRepositoryImpl implements DiscordRepository {
 					.block();
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error("Error on Discord Webhook create message request:", e);
+			log.error("Error on Discord Webhook create message request raised: ", e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 	}
@@ -62,18 +62,18 @@ public class DiscordRepositoryImpl implements DiscordRepository {
 			return null;
 		}
 
+		String messageId = movie.getMovieDiscord().getMessageId();
 		DiscordWebhookRequestDto request = new DiscordWebhookRequestDto(movie, roleId);
-
 		try {
 			DiscordWebhookResponseDto response = webClientDiscord.patch()
-					.uri(String.format("/messages/%s?wait=true", movie.getMovieDiscord().getMessageId()))
+					.uri(String.format("/messages/%s?wait=true", messageId))
 					.bodyValue(mapper.writeValueAsString(request))
 					.retrieve()
 					.bodyToMono(DiscordWebhookResponseDto.class)
 					.block();
 			return response.toDomain();
 		} catch (Exception e) {
-			log.error("Error on Discord Webhook update message request:", e);
+			log.error("Error on Discord Webhook update message request raised: ", e);
 			throw new RequestRejectedException(e.getMessage());
 		}
 	}
