@@ -3,6 +3,8 @@ package com.kronusboss.cine.discord.adapter.repository.rest.dto;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +39,8 @@ public class EmbedRequestDto {
 	public List<Field> fields;
 
 	public EmbedRequestDto(Movie movie) {
-
-		String date = movie.getCreatedAt().format(DATE_FORMATTER);
+		ZonedDateTime adjustedTime = movie.getCreatedAt().atZoneSameInstant(ZoneId.of("GMT-3"));
+		String date = adjustedTime.format(DATE_FORMATTER);
 
 		title = "%s | Nota: %s".formatted(movie.getPortugueseTitle(), getAvgNotes(movie));
 		image = new Image(movie.getUrlImage());
