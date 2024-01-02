@@ -14,6 +14,9 @@ import com.kronusboss.cine.user.domain.Role;
 import com.kronusboss.cine.user.domain.User;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class DeleteMovieUseCaseImpl implements DeleteMovieUseCase {
 
@@ -49,7 +52,16 @@ public class DeleteMovieUseCaseImpl implements DeleteMovieUseCase {
 		}
 
 		repository.delete(movie);
-		socketRepository.emitAllMoviesEvent(null);
+		emitEventSocket();
+
+	}
+
+	private void emitEventSocket() {
+		try {
+			socketRepository.emitAllMoviesEvent(null);
+		} catch (Exception e) {
+			log.error("Error to emit event on movie creation raised: ", e);
+		}
 	}
 
 }
