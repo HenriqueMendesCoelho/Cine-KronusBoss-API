@@ -39,7 +39,6 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 			repository.saveAndFlush(movie);
 		}
 
-		movie.getNotes().sort(MovieNote.comparator());
 		Movie result = omitNoteIfNeeded(movie, userId);
 
 		return result;
@@ -78,6 +77,7 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 	}
 
 	private Movie omitNoteIfNeeded(Movie movie, UUID userId) {
+		orderNotes(movie);
 		if (!movie.isShowNotes() && CollectionUtils.isNotEmpty(movie.getNotes())) {
 			List<MovieNote> notes = movie.getNotes().stream().map(n -> {
 				if (!n.getUser().getId().equals(userId)) {
@@ -92,4 +92,11 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 		return movie;
 	}
 
+	private void orderNotes(Movie movie) {
+		if (movie.isShowNotes()) {
+			movie.getNotes().sort(MovieNote.comparator());
+		} else {
+			movie.getNotes().sort(MovieNote.comparatorAlphabetical());
+		}
+	}
 }

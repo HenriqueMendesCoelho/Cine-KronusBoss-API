@@ -74,4 +74,8 @@ public class MovieNote implements Serializable, Cloneable {
 	public static Comparator<MovieNote> comparator() {
 		return Comparator.comparingInt(MovieNote::getNote).reversed().thenComparing((m) -> m.getUser().getName());
 	}
+
+	public static Comparator<MovieNote> comparatorAlphabetical() {
+		return Comparator.comparing((m) -> m.getUser().getName());
+	}
 }
