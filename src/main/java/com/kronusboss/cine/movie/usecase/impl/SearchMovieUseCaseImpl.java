@@ -39,8 +39,8 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 			repository.saveAndFlush(movie);
 		}
 
+		movie.getNotes().sort(MovieNote.comparator());
 		Movie result = omitNoteIfNeeded(movie, userId);
-		result.getNotes().sort(MovieNote.comparator());
 
 		return result;
 	}
