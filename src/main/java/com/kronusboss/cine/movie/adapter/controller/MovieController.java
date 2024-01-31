@@ -44,4 +44,6 @@ public interface MovieController {
 
 	List<MovieGenreResponseDto> listGenres();
 
+	List<MovieGenreResponseDto> listAllGenresWithMovies();
+
 }

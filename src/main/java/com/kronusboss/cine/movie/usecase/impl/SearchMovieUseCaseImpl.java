@@ -95,8 +95,9 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 	private void orderNotes(Movie movie) {
 		if (movie.isShowNotes()) {
 			movie.getNotes().sort(MovieNote.comparator());
-		} else {
-			movie.getNotes().sort(MovieNote.comparatorAlphabetical());
+			return;
 		}
+
+		movie.getNotes().sort(MovieNote.comparatorAlphabetical());
 	}
 }

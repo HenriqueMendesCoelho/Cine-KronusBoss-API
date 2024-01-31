@@ -128,4 +128,10 @@ public class MovieControllerImpl implements MovieController {
 		return genres.stream().map(MovieGenreResponseDto::new).collect(Collectors.toList());
 	}
 
+	@Override
+	public List<MovieGenreResponseDto> listAllGenresWithMovies() {
+		List<MovieGenre> genres = searchMovieGenreUseCase.listAllGenresWithMovies();
+		return genres.stream().map(MovieGenreResponseDto::new).collect(Collectors.toList());
+	}
+
 }

@@ -5,5 +5,8 @@ import java.util.List;
 import com.kronusboss.cine.movie.domain.MovieGenre;
 
 public interface SearchMovieGenreUseCase {
+
 	List<MovieGenre> list();
+
+	List<MovieGenre> listAllGenresWithMovies();
 }
