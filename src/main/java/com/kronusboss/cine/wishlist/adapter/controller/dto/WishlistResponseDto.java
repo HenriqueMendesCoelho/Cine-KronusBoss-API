@@ -1,7 +1,6 @@
 package com.kronusboss.cine.wishlist.adapter.controller.dto;
 
 import java.time.OffsetDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -38,9 +37,10 @@ public class WishlistResponseDto {
 		createdAt = wishlist.getCreatedAt();
 		updatedAt = wishlist.getUpdatedAt();
 		if (CollectionUtils.isNotEmpty(wishlist.getMoviesWishlists())) {
+
 			moviesWishlists = wishlist.getMoviesWishlists()
 					.stream()
-					.sorted(Comparator.comparingInt(MoviesWishlists::getWishlistOrder))
+					.sorted(MoviesWishlists.comparator())
 					.map(dto -> new MovieWishlistResponseDto(dto.getMovieWishlist()))
 					.collect(Collectors.toList());
 		}

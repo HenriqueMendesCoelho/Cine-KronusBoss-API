@@ -1,5 +1,7 @@
 package com.kronusboss.cine.wishlist.domain;
 
+import java.util.Comparator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -41,4 +43,9 @@ public class MoviesWishlists {
 	@Column
 	private Integer wishlistOrder;
 
+	public static Comparator<MoviesWishlists> comparator() {
+		Comparator<Integer> nullsLast = Comparator.nullsLast(Comparator.naturalOrder());
+		return Comparator.comparing(MoviesWishlists::getWishlistOrder, nullsLast)
+				.thenComparing(dto -> dto.getMovieWishlist().getTitle());
+	}
 }
