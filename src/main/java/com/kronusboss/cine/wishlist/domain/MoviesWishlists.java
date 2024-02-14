@@ -16,7 +16,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-@EqualsAndHashCode
 @Entity
 @Table(name = "movie_wishlist_user_wishlist",
 		uniqueConstraints = { @UniqueConstraint(columnNames = { "wishlist_id", "movie_id" }),
@@ -25,6 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class MoviesWishlists {
 
 	@EmbeddedId
@@ -45,7 +45,6 @@ public class MoviesWishlists {
 
 	public static Comparator<MoviesWishlists> comparator() {
 		Comparator<Integer> nullsLast = Comparator.nullsLast(Comparator.naturalOrder());
-		return Comparator.comparing(MoviesWishlists::getWishlistOrder, nullsLast)
-				.thenComparing(dto -> dto.getMovieWishlist().getTitle());
+		return Comparator.comparing(MoviesWishlists::getWishlistOrder, nullsLast);
 	}
 }
