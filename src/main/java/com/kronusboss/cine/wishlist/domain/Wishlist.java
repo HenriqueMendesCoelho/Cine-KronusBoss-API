@@ -16,9 +16,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -48,12 +47,8 @@ public class Wishlist implements Serializable {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "movie_wishlist_user_wishlist",
-			joinColumns = { @JoinColumn(name = "wishlist_id", referencedColumnName = "id") },
-			inverseJoinColumns = @JoinColumn(name = "movie_id"),
-			uniqueConstraints = { @UniqueConstraint(columnNames = { "wishlist_id", "movie_id" }) })
-	private List<MovieWishlist> moviesWishlists;
+	@OneToMany(mappedBy = "wishlist", cascade = CascadeType.PERSIST)
+	private List<MoviesWishlists> moviesWishlists;
 
 	@Column(nullable = false)
 	private boolean shareable;

@@ -9,7 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,8 +40,8 @@ public class MovieWishlist {
 	@Column
 	private LocalDate releaseDate;
 
-	@ManyToMany(mappedBy = "moviesWishlists", fetch = FetchType.EAGER)
-	private List<Wishlist> wishlists;
+	@OneToMany(mappedBy = "movieWishlist", fetch = FetchType.EAGER)
+	private List<MoviesWishlists> wishlists;
 
 	public MovieWishlist(MovieSummary movie) {
 		tmdbId = movie.getTmdbId();

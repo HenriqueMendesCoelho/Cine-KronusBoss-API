@@ -58,7 +58,7 @@ public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 				.filter(obj -> obj.getCreatedAt().toLocalDateTime().isAfter(sixMonthsAgo))
 				.collect(Collectors.groupingBy(obj -> YearMonth.from(obj.getCreatedAt()), Collectors.counting()));
 
-		for (int i = 0; i < NUMBER_OF_MONTHS; i++) {
+		for (int i = 0; i <= NUMBER_OF_MONTHS; i++) {
 			YearMonth monthToCheck = YearMonth.from(today.minusMonths(i).withDayOfMonth(1));
 			groupedMovies.putIfAbsent(monthToCheck, 0L);
 		}
@@ -66,7 +66,8 @@ public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 		Map<String, Long> result = groupedMovies.entrySet()
 				.stream()
 				.sorted(Map.Entry.comparingByKey())
-				.collect(Collectors.toMap(e -> getMonthNameInPortuguese(e.getKey().getMonthValue()),
+				.collect(Collectors.toMap(
+						e -> getMonthNameInPortuguese(e.getKey().getMonthValue(), e.getKey().getYear()),
 						Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
 		return result;
@@ -87,9 +88,9 @@ public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 		return result;
 	}
 
-	private String getMonthNameInPortuguese(int monthValue) {
+	private String getMonthNameInPortuguese(int monthValue, int year) {
 		String[] monthNames = new DateFormatSymbols(Locale.forLanguageTag("pt-BR")).getMonths();
-		return monthNames[monthValue - 1];
+		return "%s - %s".formatted(monthNames[monthValue - 1], year);
 	}
 
 	private Double averageRate() {

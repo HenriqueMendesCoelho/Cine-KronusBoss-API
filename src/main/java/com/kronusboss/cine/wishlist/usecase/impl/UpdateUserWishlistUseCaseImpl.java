@@ -13,8 +13,11 @@ import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusI
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.wishlist.adapter.repository.MovieWishlistRepository;
+import com.kronusboss.cine.wishlist.adapter.repository.MoviesWishlistsRepository;
 import com.kronusboss.cine.wishlist.adapter.repository.WishlistRepository;
 import com.kronusboss.cine.wishlist.domain.MovieWishlist;
+import com.kronusboss.cine.wishlist.domain.MoviesWishlists;
+import com.kronusboss.cine.wishlist.domain.MoviesWishlistsKey;
 import com.kronusboss.cine.wishlist.domain.Wishlist;
 import com.kronusboss.cine.wishlist.usecase.UpdateUserWishlistUseCase;
 import com.kronusboss.cine.wishlist.usecase.exception.WishlistMovieAlreadyExistsException;
@@ -32,6 +35,9 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 	private MovieWishlistRepository movieWishlistRepository;
 
 	@Autowired
+	private MoviesWishlistsRepository moviesWishlistsRepository;
+
+	@Autowired
 	private KronusIntegrationToolRepository kitRepository;
 
 	@Override
@@ -39,11 +45,7 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 			throws WishlistNotFoundException, WishlistMovieAlreadyExistsException, UserNotAuthorizedException {
 		Wishlist userWishlistToUpdate = repository.findById(userWishlist.getId()).orElse(null);
 
-		if (userWishlistToUpdate == null) {
-			throw new WishlistNotFoundException();
-		}
-
-		if (userWishlistToUpdate.getMoviesWishlists().size() > LIMIT) {
+		if (userWishlistToUpdate == null || userWishlistToUpdate.getMoviesWishlists().size() > LIMIT) {
 			throw new WishlistNotFoundException();
 		}
 
@@ -51,16 +53,21 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 			throw new UserNotAuthorizedException();
 		}
 
-		createMovieWishlist(userWishlistToUpdate.getMoviesWishlists());
+		List<MovieWishlist> moviesToCheck = userWishlistToUpdate.getMoviesWishlists()
+				.stream()
+				.map(MoviesWishlists::getMovieWishlist)
+				.toList();
+		createIfNotExistMovieWishlist(moviesToCheck);
 
 		userWishlistToUpdate = userWishlistToUpdate.toBuilder()
 				.name(userWishlist.getName())
-				.moviesWishlists(userWishlist.getMoviesWishlists())
+				.moviesWishlists(setOrder(userWishlist.getMoviesWishlists()))
 				.shareable(userWishlist.isShareable())
 				.updatedAt(OffsetDateTime.now())
 				.build();
 
 		try {
+			moviesWishlistsRepository.saveAll(userWishlistToUpdate.getMoviesWishlists());
 			return repository.save(userWishlistToUpdate);
 		} catch (DataIntegrityViolationException e) {
 			throw new WishlistMovieAlreadyExistsException(userWishlist.getName());
@@ -72,21 +79,22 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 			throws WishlistNotFoundException, WishlistMovieAlreadyExistsException {
 		Wishlist userWishlistToUpdate = repository.findById(wishlistId).orElse(null);
 
-		if (userWishlistToUpdate == null) {
-			throw new WishlistNotFoundException();
-		}
-
-		if (userWishlistToUpdate.getMoviesWishlists().size() >= LIMIT) {
+		if (userWishlistToUpdate == null || userWishlistToUpdate.getMoviesWishlists().size() >= LIMIT) {
 			throw new WishlistNotFoundException();
 		}
 
 		MovieWishlist movieToAdd = MovieWishlist.builder().tmdbId(tmdbId).build();
-		List<MovieWishlist> movies = createMovieWishlist(List.of(movieToAdd));
-
-		userWishlistToUpdate.getMoviesWishlists().addAll(movies);
+		List<MovieWishlist> movies = createIfNotExistMovieWishlist(List.of(movieToAdd));
+		userWishlistToUpdate.getMoviesWishlists().addAll(createMoviesWishlists(wishlistId, movies));
+		List<MoviesWishlists> moviesWishlistsDistict = userWishlistToUpdate.getMoviesWishlists()
+				.stream()
+				.distinct()
+				.toList();
 		userWishlistToUpdate.setUpdatedAt(OffsetDateTime.now());
 
 		try {
+			List<MoviesWishlists> list = moviesWishlistsRepository.saveAll(setOrder(moviesWishlistsDistict));
+			userWishlistToUpdate.setMoviesWishlists(list);
 			return repository.save(userWishlistToUpdate);
 		} catch (DataIntegrityViolationException e) {
 			throw new WishlistMovieAlreadyExistsException(userWishlistToUpdate.getName());
@@ -94,7 +102,7 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 
 	}
 
-	private List<MovieWishlist> createMovieWishlist(List<MovieWishlist> movies) {
+	private List<MovieWishlist> createIfNotExistMovieWishlist(List<MovieWishlist> movies) {
 		List<MovieWishlist> result = new ArrayList<>();
 		for (MovieWishlist movie : movies) {
 			MovieWishlist exists = movieWishlistRepository.findById(movie.getTmdbId()).orElse(null);
@@ -113,6 +121,25 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 			result.add(movieWishlistRepository.saveAndFlush(new MovieWishlist(movieCreate)));
 		}
 		return result;
+	}
+
+	private List<MoviesWishlists> setOrder(List<MoviesWishlists> moviesToAdd) {
+		for (int i = 0; i < moviesToAdd.size(); i++) {
+			moviesToAdd.get(i).setWishlistOrder(i + 1);
+		}
+
+		return moviesToAdd;
+	}
+
+	private List<MoviesWishlists> createMoviesWishlists(UUID wishlistId, List<MovieWishlist> movies) {
+
+		return movies.stream()
+				.map(m -> MoviesWishlists.builder()
+						.id(new MoviesWishlistsKey(wishlistId, m.getTmdbId()))
+						.wishlist(Wishlist.builder().id(wishlistId).build())
+						.movieWishlist(MovieWishlist.builder().tmdbId(m.getTmdbId()).build())
+						.build())
+				.toList();
 	}
 
 }
