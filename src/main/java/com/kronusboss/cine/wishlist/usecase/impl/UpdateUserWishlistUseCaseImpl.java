@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,9 @@ import com.kronusboss.cine.wishlist.usecase.UpdateUserWishlistUseCase;
 import com.kronusboss.cine.wishlist.usecase.exception.WishlistMovieAlreadyExistsException;
 import com.kronusboss.cine.wishlist.usecase.exception.WishlistNotFoundException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase {
 
@@ -59,6 +63,7 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 				.toList();
 		createIfNotExistMovieWishlist(moviesToCheck);
 
+		removeMoviesIfNeeded(userWishlistToUpdate, userWishlist);
 		userWishlistToUpdate = userWishlistToUpdate.toBuilder()
 				.name(userWishlist.getName())
 				.moviesWishlists(setOrder(userWishlist.getMoviesWishlists()))
@@ -70,6 +75,7 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 			moviesWishlistsRepository.saveAll(userWishlistToUpdate.getMoviesWishlists());
 			return repository.save(userWishlistToUpdate);
 		} catch (DataIntegrityViolationException e) {
+			log.error("Error to update wishlist: ", e);
 			throw new WishlistMovieAlreadyExistsException(userWishlist.getName());
 		}
 	}
@@ -85,18 +91,19 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 
 		MovieWishlist movieToAdd = MovieWishlist.builder().tmdbId(tmdbId).build();
 		List<MovieWishlist> movies = createIfNotExistMovieWishlist(List.of(movieToAdd));
-		userWishlistToUpdate.getMoviesWishlists().addAll(createMoviesWishlists(wishlistId, movies));
-		List<MoviesWishlists> moviesWishlistsDistict = userWishlistToUpdate.getMoviesWishlists()
-				.stream()
-				.distinct()
-				.toList();
+
+		List<MoviesWishlists> moviesWishlistsUpdated = new ArrayList<MoviesWishlists>(
+				userWishlistToUpdate.getMoviesWishlists());
+		moviesWishlistsUpdated.addAll(createMoviesWishlists(wishlistId, movies));
+
 		userWishlistToUpdate.setUpdatedAt(OffsetDateTime.now());
 
 		try {
-			List<MoviesWishlists> list = moviesWishlistsRepository.saveAll(setOrder(moviesWishlistsDistict));
+			List<MoviesWishlists> list = moviesWishlistsRepository.saveAll(setOrder(moviesWishlistsUpdated));
 			userWishlistToUpdate.setMoviesWishlists(list);
 			return repository.save(userWishlistToUpdate);
 		} catch (DataIntegrityViolationException e) {
+			log.error("Error to add movie to wishlist: ", e);
 			throw new WishlistMovieAlreadyExistsException(userWishlistToUpdate.getName());
 		}
 
@@ -140,6 +147,21 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 						.movieWishlist(MovieWishlist.builder().tmdbId(m.getTmdbId()).build())
 						.build())
 				.toList();
+	}
+
+	private void removeMoviesIfNeeded(Wishlist userWishlistToUpdate, Wishlist request) {
+		List<MoviesWishlists> moviesToRemove = userWishlistToUpdate.getMoviesWishlists()
+				.stream()
+				.filter(wU -> request.getMoviesWishlists()
+						.stream()
+						.noneMatch(req -> req.getMovieWishlist().getTmdbId().equals(wU.getMovieWishlist().getTmdbId())))
+				.toList();
+
+		if (CollectionUtils.isEmpty(moviesToRemove)) {
+			return;
+		}
+		userWishlistToUpdate.getMoviesWishlists().removeAll(moviesToRemove);
+		moviesWishlistsRepository.deleteAll(moviesToRemove);
 	}
 
 }

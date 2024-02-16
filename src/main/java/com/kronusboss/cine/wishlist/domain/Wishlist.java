@@ -47,7 +47,7 @@ public class Wishlist implements Serializable {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToMany(mappedBy = "wishlist", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "wishlist", cascade = CascadeType.ALL)
 	private List<MoviesWishlists> moviesWishlists;
 
 	@Column(nullable = false)
