@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 
 import com.kronusboss.cine.user.domain.User;
-import com.kronusboss.cine.wishlist.domain.MoviesWishlists;
 import com.kronusboss.cine.wishlist.domain.Wishlist;
 
 import lombok.AllArgsConstructor;
@@ -40,7 +39,6 @@ public class WishlistResponseDto {
 
 			moviesWishlists = wishlist.getMoviesWishlists()
 					.stream()
-					.sorted(MoviesWishlists.comparator())
 					.map(dto -> new MovieWishlistResponseDto(dto.getMovieWishlist()))
 					.collect(Collectors.toList());
 		}

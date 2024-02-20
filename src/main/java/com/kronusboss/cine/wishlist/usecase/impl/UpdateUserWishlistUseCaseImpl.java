@@ -139,7 +139,6 @@ public class UpdateUserWishlistUseCaseImpl implements UpdateUserWishlistUseCase 
 	}
 
 	private List<MoviesWishlists> createMoviesWishlists(UUID wishlistId, List<MovieWishlist> movies) {
-
 		return movies.stream()
 				.map(m -> MoviesWishlists.builder()
 						.id(new MoviesWishlistsKey(wishlistId, m.getTmdbId()))

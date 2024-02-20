@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -48,6 +49,7 @@ public class Wishlist implements Serializable {
 	private User user;
 
 	@OneToMany(mappedBy = "wishlist", cascade = CascadeType.ALL)
+	@OrderBy("wishlistOrder asc")
 	private List<MoviesWishlists> moviesWishlists;
 
 	@Column(nullable = false)
