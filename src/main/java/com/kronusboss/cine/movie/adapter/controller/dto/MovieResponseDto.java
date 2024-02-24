@@ -2,7 +2,6 @@ package com.kronusboss.cine.movie.adapter.controller.dto;
 
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -69,7 +68,7 @@ public class MovieResponseDto {
 		createdAt = movie.getCreatedAt();
 		updatedAt = movie.getUpdatedAt();
 		showNotes = movie.isShowNotes();
-		Duration duration = Duration.between(movie.getCreatedAt().toLocalDateTime(), LocalDateTime.now());
+		Duration duration = Duration.between(movie.getCreatedAt(), OffsetDateTime.now());
 		timeSinceCreation = duration.getSeconds();
 	}
 }
