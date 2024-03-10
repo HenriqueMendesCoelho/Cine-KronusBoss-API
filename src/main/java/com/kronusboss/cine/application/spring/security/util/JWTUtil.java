@@ -16,26 +16,22 @@ import io.jsonwebtoken.Jwts;
 public class JWTUtil {
 
 	private static final String AUDIENCE = "https://www.cine.kronusboss.com/api";
+	private static final SecretKey key = Jwts.SIG.HS512.key().build();
 
 	@Value("${jwt.expiration}")
 	public long expiration;
-
-	private SecretKey getKey() {
-		return Jwts.SIG.HS512.key().build();
-	}
 
 	public String generateToken(UUID userId, String username, String name, Set<String> roles) {
 		return Jwts.builder()
 				.subject(username)
 				.expiration(new Date(System.currentTimeMillis() + expiration))
-				.signWith(getKey())
+				.signWith(key)
 				.audience()
 				.add(AUDIENCE)
 				.and()
 				.claim("id", userId)
 				.claim("name", name)
 				.claim("roles", roles.stream().map(s -> s.split("_")[1]).toList())
-				.encodePayload(true)
 				.compact();
 	}
 
@@ -63,7 +59,7 @@ public class JWTUtil {
 
 	private Claims getClaims(String token) {
 		try {
-			return Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
+			return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
 		} catch (Exception e) {
 			return null;
 		}
