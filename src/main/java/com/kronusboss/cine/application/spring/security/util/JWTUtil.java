@@ -1,42 +1,41 @@
 package com.kronusboss.cine.application.spring.security.util;
 
-import java.security.Key;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JWTUtil {
 
+	private static final String AUDIENCE = "https://www.cine.kronusboss.com/api";
+
 	@Value("${jwt.expiration}")
 	public long expiration;
 
-	@Value("${jwt.secret}")
-	public String secret;
-
-	private Key getKey() {
-		return new SecretKeySpec(secret.getBytes(), SignatureAlgorithm.HS512.getJcaName());
+	private SecretKey getKey() {
+		return Jwts.SIG.HS512.key().build();
 	}
 
 	public String generateToken(UUID userId, String username, String name, Set<String> roles) {
 		return Jwts.builder()
-				.setSubject(username)
-				.setExpiration(new Date(System.currentTimeMillis() + expiration))
+				.subject(username)
+				.expiration(new Date(System.currentTimeMillis() + expiration))
 				.signWith(getKey())
-				.setAudience(username)
+				.audience()
+				.add(AUDIENCE)
+				.and()
 				.claim("id", userId)
 				.claim("name", name)
-				.claim("roles", roles.stream().map(s -> s.split("_")[1]).collect(Collectors.toSet()))
+				.claim("roles", roles.stream().map(s -> s.split("_")[1]).toList())
+				.encodePayload(true)
 				.compact();
 	}
 
@@ -64,7 +63,7 @@ public class JWTUtil {
 
 	private Claims getClaims(String token) {
 		try {
-			return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
+			return Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload();
 		} catch (Exception e) {
 			return null;
 		}
