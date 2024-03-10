@@ -5,21 +5,23 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserTokenDto {
+
+	private UUID id;
+	private String name;
+	private Set<String> roles;
 
 	@JsonProperty("sub")
 	private String login;
 	@JsonProperty("exp")
-	private Long expiracao;
+	private Long expiration;
 	@JsonProperty("aud")
-	private String audiencia;
-	@JsonProperty("name")
-	private String name;
-	@JsonProperty("roles")
-	private Set<String> roles;
-	@JsonProperty("id")
-	private UUID id;
+	private Set<String> audience;
 }

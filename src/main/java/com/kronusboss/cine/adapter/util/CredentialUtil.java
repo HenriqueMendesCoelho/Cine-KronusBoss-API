@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 public class CredentialUtil {
 
 	public static UserTokenDto getUserFromToken(String token) throws TokenInvalidException {
-		String tokenSemBearer = token.substring(7);
-		String tokenPayloadBase64 = tokenSemBearer.split("[.]")[1];
+		String _token = token.substring(7);
+		String tokenPayloadBase64 = _token.split("[.]")[1];
 		String payload = new String(Base64.getDecoder().decode(tokenPayloadBase64));
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -21,7 +21,7 @@ public class CredentialUtil {
 		try {
 			UserTokenDto user = mapper.readValue(payload, UserTokenDto.class);
 
-			if (user.getLogin() == null || user.getAudiencia() == null || user.getExpiracao() == null
+			if (user.getLogin() == null || user.getAudience() == null || user.getExpiration() == null
 					|| user.getName() == null || user.getId() == null) {
 				log.error("Token not have all needed fields");
 				throw new TokenInvalidException();
