@@ -3,6 +3,7 @@ package com.kronusboss.cine.movie.usecase.impl;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
@@ -27,6 +28,7 @@ public class DeleteMovieNoteUseCaseImpl implements DeleteMovieNoteUseCase {
 	private MovieSocketRespository movieSocketRespository;
 
 	@Override
+	@CacheEvict(value = "statistics", allEntries = true)
 	public void delete(UUID userId, UUID movieId) {
 		MovieNote movieNoteToDelete = repository.findById(new MovieNoteKey(userId, movieId)).orElse(null);
 

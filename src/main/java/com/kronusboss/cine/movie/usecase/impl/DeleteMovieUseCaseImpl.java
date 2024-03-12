@@ -3,6 +3,7 @@ package com.kronusboss.cine.movie.usecase.impl;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.movie.adapter.repository.MovieRepository;
@@ -30,6 +31,7 @@ public class DeleteMovieUseCaseImpl implements DeleteMovieUseCase {
 	private MovieSocketRespository socketRepository;
 
 	@Override
+	@CacheEvict(value = "statistics", allEntries = true)
 	public void delete(UUID id, UUID idUserLoged) throws UserNotAuthorizedException {
 		Movie movie = repository.findById(id).get();
 

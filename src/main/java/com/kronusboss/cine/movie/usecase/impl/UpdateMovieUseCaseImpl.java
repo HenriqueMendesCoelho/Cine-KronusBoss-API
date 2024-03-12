@@ -3,6 +3,7 @@ package com.kronusboss.cine.movie.usecase.impl;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
@@ -32,6 +33,7 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 	private MovieSocketRespository movieSocketRespository;
 
 	@Override
+	@CacheEvict(value = "statistics", allEntries = true)
 	public Movie update(Movie movie, UUID id, String userEmail)
 			throws MovieNotFoundException, UserNotAuthorizedException {
 

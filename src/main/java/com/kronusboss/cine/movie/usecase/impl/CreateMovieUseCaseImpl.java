@@ -3,6 +3,7 @@ package com.kronusboss.cine.movie.usecase.impl;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.discord.usecase.SendMessageWebhookUseCase;
@@ -33,6 +34,7 @@ public class CreateMovieUseCaseImpl implements CreateMovieUseCase {
 	private MovieSocketRespository socketRepository;
 
 	@Override
+	@CacheEvict(value = "statistics", allEntries = true)
 	public Movie save(Movie movie, UUID userId) throws DuplicatedMovieException {
 
 		if (repository.findByTmdbId(movie.getTmdbId()) != null) {

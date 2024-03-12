@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.movie.adapter.repository.MovieGenreRepository;
@@ -39,6 +40,7 @@ public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 	private MovieNoteRepository movieNoteRepository;
 
 	@Override
+	@Cacheable("statistics")
 	public MovieStatistic getStatistics() {
 		List<Movie> movies = repository.findAll();
 		return MovieStatistic.builder()
