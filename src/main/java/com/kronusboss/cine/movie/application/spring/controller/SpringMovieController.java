@@ -108,10 +108,23 @@ public class SpringMovieController {
 		}
 	}
 
-	@GetMapping("/genre")
+	@GetMapping("/genres")
 	public ResponseEntity<?> listMovieGenres() {
 
 		List<MovieGenreResponseDto> response = controller.listGenres();
+
+		if (response.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+
+		return ResponseEntity.ok(response);
+
+	}
+
+	@GetMapping("/genres-with-movies")
+	public ResponseEntity<?> listMovieGenresWithMovies() {
+
+		List<MovieGenreResponseDto> response = controller.listAllGenresWithMovies();
 
 		if (response.isEmpty()) {
 			return ResponseEntity.noContent().build();

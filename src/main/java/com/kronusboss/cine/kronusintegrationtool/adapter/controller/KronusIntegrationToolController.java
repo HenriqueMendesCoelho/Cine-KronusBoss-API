@@ -1,5 +1,6 @@
 package com.kronusboss.cine.kronusintegrationtool.adapter.controller;
 
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.CreditResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieInfoResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
@@ -28,4 +29,5 @@ public interface KronusIntegrationToolController {
 
 	WatchProvidersResponseDto searchWatchProvidersByMovieId(Long movieId);
 
+	CreditResponseDto searchMovieCredits(Long movieId);
 }

@@ -17,7 +17,7 @@ public class SpringStatisticController {
 	private StatisticController controller;
 
 	@GetMapping("/movies")
-	public ResponseEntity<?> sendMovieMessageDiscord() {
+	public ResponseEntity<MovieStatisticResponseDto> sendMovieMessageDiscord() {
 		MovieStatisticResponseDto response = controller.charts();
 
 		return ResponseEntity.ok(response);

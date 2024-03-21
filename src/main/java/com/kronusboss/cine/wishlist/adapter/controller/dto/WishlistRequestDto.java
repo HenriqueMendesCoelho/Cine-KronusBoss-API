@@ -31,8 +31,7 @@ public class WishlistRequestDto {
 		return Wishlist.builder()
 				.id(id)
 				.name(name)
-				.moviesWishlists(
-						moviesWishlists.stream().map(MovieWishlistRequestDto::toDomain).collect(Collectors.toList()))
+				.moviesWishlists(moviesWishlists.stream().map(dto -> dto.toDomain(id)).collect(Collectors.toList()))
 				.shareable(shareable)
 				.build();
 	}

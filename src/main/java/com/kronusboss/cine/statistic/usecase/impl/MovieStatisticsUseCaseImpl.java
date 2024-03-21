@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.kronusboss.cine.movie.adapter.repository.MovieGenreRepository;
@@ -27,6 +28,7 @@ import com.kronusboss.cine.statistic.usecase.MovieStatisticsUseCase;
 public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.US));
+	private static final int NUMBER_OF_MONTHS = 6;
 
 	@Autowired
 	private MovieRepository repository;
@@ -38,6 +40,7 @@ public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 	private MovieNoteRepository movieNoteRepository;
 
 	@Override
+	@Cacheable("statistics")
 	public MovieStatistic getStatistics() {
 		List<Movie> movies = repository.findAll();
 		return MovieStatistic.builder()
@@ -51,18 +54,23 @@ public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 
 	private Map<String, Long> moviesSixMonthsAgo(List<Movie> movies) {
 		LocalDateTime today = LocalDateTime.now();
-		LocalDateTime sixMonthsAgo = today.minusMonths(6).withDayOfMonth(1);
+		LocalDateTime sixMonthsAgo = today.minusMonths(NUMBER_OF_MONTHS).withDayOfMonth(1);
 
-		Map<Integer, Long> groupedMovies = movies.stream()
-				.filter(obj -> obj.getCreatedAt().isAfter(sixMonthsAgo))
-				.collect(Collectors.groupingBy(obj -> YearMonth.from(obj.getCreatedAt()).getMonthValue(),
-						Collectors.counting()));
+		Map<YearMonth, Long> groupedMovies = movies.stream()
+				.filter(obj -> obj.getCreatedAt().toLocalDateTime().isAfter(sixMonthsAgo))
+				.collect(Collectors.groupingBy(obj -> YearMonth.from(obj.getCreatedAt()), Collectors.counting()));
+
+		for (int i = 0; i <= NUMBER_OF_MONTHS; i++) {
+			YearMonth monthToCheck = YearMonth.from(today.minusMonths(i).withDayOfMonth(1));
+			groupedMovies.putIfAbsent(monthToCheck, 0L);
+		}
 
 		Map<String, Long> result = groupedMovies.entrySet()
 				.stream()
-				.sorted((entry1, entry2) -> Integer.compare(entry1.getKey(), entry2.getKey()))
-				.collect(Collectors.toMap((e) -> getMonthNameInPortuguese(e.getKey()), Map.Entry::getValue,
-						(e1, e2) -> e1, LinkedHashMap::new));
+				.sorted(Map.Entry.comparingByKey())
+				.collect(Collectors.toMap(
+						e -> getMonthNameInPortuguese(e.getKey().getMonthValue(), e.getKey().getYear()),
+						Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
 		return result;
 	}
@@ -82,9 +90,9 @@ public class MovieStatisticsUseCaseImpl implements MovieStatisticsUseCase {
 		return result;
 	}
 
-	private static String getMonthNameInPortuguese(int monthValue) {
+	private String getMonthNameInPortuguese(int monthValue, int year) {
 		String[] monthNames = new DateFormatSymbols(Locale.forLanguageTag("pt-BR")).getMonths();
-		return monthNames[monthValue - 1];
+		return "%s - %s".formatted(monthNames[monthValue - 1], year);
 	}
 
 	private Double averageRate() {

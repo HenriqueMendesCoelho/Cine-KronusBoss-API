@@ -4,14 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.KronusIntegrationToolController;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.CreditResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieInfoResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.WatchProvidersResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.domain.Credit;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
 import com.kronusboss.cine.kronusintegrationtool.domain.WatchProviders;
 import com.kronusboss.cine.kronusintegrationtool.usecase.MovieSumaryUseCase;
+import com.kronusboss.cine.kronusintegrationtool.usecase.SearchCreditUseCase;
 import com.kronusboss.cine.kronusintegrationtool.usecase.SearchMovieTmdbUseCase;
 import com.kronusboss.cine.kronusintegrationtool.usecase.SearchWatchProviedersUseCase;
 
@@ -26,6 +29,9 @@ public class KronusIntegrationToolControllerImpl implements KronusIntegrationToo
 
 	@Autowired
 	private SearchWatchProviedersUseCase searchWatchProviedersUseCase;
+
+	@Autowired
+	private SearchCreditUseCase searchCreditUseCase;
 
 	@Override
 	public MovieSummaryResponseDto movieSummary(Long tmdbId) {
@@ -87,6 +93,12 @@ public class KronusIntegrationToolControllerImpl implements KronusIntegrationToo
 	public WatchProvidersResponseDto searchWatchProvidersByMovieId(Long movieId) {
 		WatchProviders response = searchWatchProviedersUseCase.searchByMovieId(movieId);
 		return new WatchProvidersResponseDto(response);
+	}
+
+	@Override
+	public CreditResponseDto searchMovieCredits(Long movieId) {
+		Credit response = searchCreditUseCase.getMovieCredits(movieId);
+		return new CreditResponseDto(response);
 	}
 
 }

@@ -33,14 +33,13 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 			throw new MovieNoteNotFoundException();
 		}
 
-		Duration duration = Duration.between(movie.getCreatedAt(), LocalDateTime.now());
+		Duration duration = Duration.between(movie.getCreatedAt().toLocalDateTime(), LocalDateTime.now());
 		if (duration.getSeconds() >= 1800 && !movie.isShowNotes()) {
 			movie.setShowNotes(true);
 			repository.saveAndFlush(movie);
 		}
 
 		Movie result = omitNoteIfNeeded(movie, userId);
-		result.getNotes().sort(MovieNote.comparator());
 
 		return result;
 	}
@@ -78,6 +77,7 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 	}
 
 	private Movie omitNoteIfNeeded(Movie movie, UUID userId) {
+		orderNotes(movie);
 		if (!movie.isShowNotes() && CollectionUtils.isNotEmpty(movie.getNotes())) {
 			List<MovieNote> notes = movie.getNotes().stream().map(n -> {
 				if (!n.getUser().getId().equals(userId)) {
@@ -92,4 +92,12 @@ public class SearchMovieUseCaseImpl implements SearchMovieUseCase {
 		return movie;
 	}
 
+	private void orderNotes(Movie movie) {
+		if (movie.isShowNotes()) {
+			movie.getNotes().sort(MovieNote.comparator());
+			return;
+		}
+
+		movie.getNotes().sort(MovieNote.comparatorAlphabetical());
+	}
 }

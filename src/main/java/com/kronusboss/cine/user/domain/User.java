@@ -78,11 +78,11 @@ public class User implements Serializable {
 	private List<Wishlist> wishlists;
 
 	@CreationTimestamp
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "timestamp with time zone")
 	private LocalDateTime createdAt;
 
 	@UpdateTimestamp
-	@Column
+	@Column(columnDefinition = "timestamp with time zone")
 	private LocalDateTime updatedAt;
 
 	@Column(length = 200, nullable = true)

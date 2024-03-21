@@ -1,10 +1,11 @@
 package com.kronusboss.cine.movie.adapter.repository.jpa.specification.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
+import com.kronusboss.cine.movie.adapter.repository.jpa.MovieJpaRepository;
+import com.kronusboss.cine.movie.adapter.repository.jpa.specification.MovieSpecification;
+import com.kronusboss.cine.movie.domain.Movie;
+import com.kronusboss.cine.movie.domain.MovieGenre;
+import com.kronusboss.cine.movie.domain.MovieNote;
+import jakarta.persistence.criteria.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,21 +16,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
-import com.kronusboss.cine.movie.adapter.repository.jpa.MovieJpaRepository;
-import com.kronusboss.cine.movie.adapter.repository.jpa.specification.MovieSpecification;
-import com.kronusboss.cine.movie.domain.Movie;
-import com.kronusboss.cine.movie.domain.MovieGenre;
-import com.kronusboss.cine.movie.domain.MovieNote;
-
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
-import jakarta.persistence.criteria.Order;
-import jakarta.persistence.criteria.Path;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Subquery;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class MovieSpecificationImpl implements MovieSpecification {
@@ -41,8 +31,8 @@ public class MovieSpecificationImpl implements MovieSpecification {
 	public Page<Movie> findMovieFilteredCustom(List<String> titles, List<Long> genres, String sortJoin,
 			Pageable pageable) {
 		Pageable _pageable = pageable;
-		if (StringUtils.isNotEmpty(sortJoin)
-				&& ("notes,asc".equalsIgnoreCase(sortJoin) || "notes,desc".equalsIgnoreCase(sortJoin))) {
+		if (StringUtils.isNotEmpty(sortJoin) && ("notes,asc".equalsIgnoreCase(sortJoin)
+				|| "notes,desc".equalsIgnoreCase(sortJoin))) {
 			_pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
 		}
 
@@ -54,13 +44,13 @@ public class MovieSpecificationImpl implements MovieSpecification {
 		return (Root<Movie> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
 			Predicate predicate = criteriaBuilder.conjunction();
 			Sort defaultSort = pageable.getSort();
-			List<org.springframework.data.domain.Sort.Order> defaultOrders = defaultSort != null ? defaultSort.toList()
-					: Collections.emptyList();
+			List<org.springframework.data.domain.Sort.Order> defaultOrders =
+					defaultSort != null ? defaultSort.toList() : Collections.emptyList();
 
 			if (CollectionUtils.isNotEmpty(titles)) {
 				List<Predicate> titlePredicates = new ArrayList<>();
 				for (String title : titles) {
-					if (title != null && !title.isEmpty()) {
+					if (StringUtils.isNotEmpty(title)) {
 						titlePredicates.add(criteriaBuilder.or(
 								criteriaBuilder.like(criteriaBuilder.lower(root.get("portugueseTitle")),
 										"%" + title.toLowerCase() + "%"),
@@ -107,7 +97,8 @@ public class MovieSpecificationImpl implements MovieSpecification {
 				if (!defaultOrders.isEmpty()) {
 					defaultOrders.forEach(order -> {
 						Path<?> expression = root.get(order.getProperty());
-						Order newOrder = order.isAscending() ? criteriaBuilder.asc(expression)
+						Order newOrder = order.isAscending()
+								? criteriaBuilder.asc(expression)
 								: criteriaBuilder.desc(expression);
 						orders.add(newOrder);
 					});

@@ -20,4 +20,9 @@ public class SearchMovieGenreUseCaseImpl implements SearchMovieGenreUseCase {
 		return repository.findAllByOrderByNameAsc();
 	}
 
+	@Override
+	public List<MovieGenre> listAllGenresWithMovies() {
+		return repository.findAllGenresHaveMovieAssociated();
+	}
+
 }

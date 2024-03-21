@@ -1,7 +1,7 @@
 package com.kronusboss.cine.wishlist.domain;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,9 +16,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -48,20 +48,18 @@ public class Wishlist implements Serializable {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "movie_wishlist_user_wishlist", joinColumns = {
-			@JoinColumn(name = "wishlist_id", referencedColumnName = "id") }, inverseJoinColumns = @JoinColumn(name = "movie_id"), uniqueConstraints = {
-					@UniqueConstraint(columnNames = { "wishlist_id", "movie_id" }) })
-	private List<MovieWishlist> moviesWishlists;
+	@OneToMany(mappedBy = "wishlist", cascade = CascadeType.ALL)
+	@OrderBy("wishlistOrder asc")
+	private List<MoviesWishlists> moviesWishlists;
 
 	@Column(nullable = false)
 	private boolean shareable;
 
 	@CreationTimestamp
-	@Column
-	private LocalDateTime createdAt;
+	@Column(nullable = false, columnDefinition = "timestamp with time zone")
+	private OffsetDateTime createdAt;
 
-	@Column
-	private LocalDateTime updatedAt;
+	@Column(columnDefinition = "timestamp with time zone")
+	private OffsetDateTime updatedAt;
 
 }

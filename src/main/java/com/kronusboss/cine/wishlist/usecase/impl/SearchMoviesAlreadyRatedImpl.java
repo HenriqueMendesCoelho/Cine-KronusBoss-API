@@ -34,7 +34,7 @@ public class SearchMoviesAlreadyRatedImpl implements SearchMoviesAlreadyRated {
 		return moviesRated.stream()
 				.filter(m -> wishlist.getMoviesWishlists()
 						.stream()
-						.anyMatch(mw -> mw.getTmdbId().equals(m.getTmdbId())))
+						.anyMatch(mw -> mw.getMovieWishlist().getTmdbId().equals(m.getTmdbId())))
 				.toList();
 	}
 
