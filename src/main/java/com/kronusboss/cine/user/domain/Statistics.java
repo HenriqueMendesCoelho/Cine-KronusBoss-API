@@ -1,23 +1,15 @@
 package com.kronusboss.cine.user.domain;
 
-import java.util.UUID;
-
-import org.apache.commons.collections4.CollectionUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kronusboss.cine.movie.domain.MovieNote;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "user_statistics")
@@ -43,6 +35,9 @@ public class Statistics {
 
 	@Column
 	private Integer consecutiveFailedLoginAttempts;
+
+	@Column(columnDefinition = "timestamp with time zone")
+	private OffsetDateTime lastLoginAt;
 
 	@JsonIgnore
 	@OneToOne

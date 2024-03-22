@@ -1,14 +1,13 @@
 package com.kronusboss.cine.user.adapter.controller.dto;
 
-import java.time.LocalDateTime;
+import com.kronusboss.cine.user.domain.User;
+import lombok.Data;
+
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import com.kronusboss.cine.user.domain.User;
-
-import lombok.Data;
 
 @Data
 public class UserResponseAdmDto {
@@ -19,11 +18,10 @@ public class UserResponseAdmDto {
 	private Set<String> roles = new HashSet<>();
 	private PreferencesResponseDto preferences;
 	private StatisticsResponseAdmDto statistics;
-	private LocalDateTime createdAt;
-	private LocalDateTime updatedAt;
+	private OffsetDateTime createdAt;
+	private OffsetDateTime updatedAt;
 
 	public UserResponseAdmDto(User user) {
-
 		id = user.getId();
 		name = user.getName();
 		email = user.getEmail();

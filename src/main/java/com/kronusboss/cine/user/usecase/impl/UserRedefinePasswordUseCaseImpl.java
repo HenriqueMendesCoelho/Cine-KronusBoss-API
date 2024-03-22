@@ -1,14 +1,5 @@
 package com.kronusboss.cine.user.usecase.impl;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Random;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
-
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
 import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
 import com.kronusboss.cine.user.adapter.repository.UserRepository;
@@ -17,6 +8,15 @@ import com.kronusboss.cine.user.usecase.UserRedefinePasswordUseCase;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyInvalid;
 import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyNotFound;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.Random;
 
 @Component
 public class UserRedefinePasswordUseCaseImpl implements UserRedefinePasswordUseCase {
@@ -40,11 +40,11 @@ public class UserRedefinePasswordUseCaseImpl implements UserRedefinePasswordUseC
 
 		String key = generateRedefineKeyPassword();
 
-		kronusIntegrationToolRepository
-				.sendMailTemplate(SendMailTemplate.forgotPasswordMail(user.getEmail(), user.getName(), key));
+		kronusIntegrationToolRepository.sendMailTemplate(
+				SendMailTemplate.forgotPasswordMail(user.getEmail(), user.getName(), key));
 
 		user.setRedefinePasswordKey(key);
-		user.setRedefinePasswordKeyCreatedAt(LocalDateTime.now());
+		user.setRedefinePasswordKeyCreatedAt(OffsetDateTime.now());
 
 		repository.saveAndFlush(user);
 	}

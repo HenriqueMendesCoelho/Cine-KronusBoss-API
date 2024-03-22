@@ -1,37 +1,23 @@
 package com.kronusboss.cine.user.domain;
 
+import com.kronusboss.cine.movie.domain.Movie;
+import com.kronusboss.cine.movie.domain.MovieNote;
+import com.kronusboss.cine.wishlist.domain.Wishlist;
+import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import com.kronusboss.cine.movie.domain.Movie;
-import com.kronusboss.cine.movie.domain.MovieNote;
-import com.kronusboss.cine.wishlist.domain.Wishlist;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "\"user\"")
@@ -79,17 +65,17 @@ public class User implements Serializable {
 
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "timestamp with time zone")
-	private LocalDateTime createdAt;
+	private OffsetDateTime createdAt;
 
 	@UpdateTimestamp
 	@Column(columnDefinition = "timestamp with time zone")
-	private LocalDateTime updatedAt;
+	private OffsetDateTime updatedAt;
 
 	@Column(length = 200, nullable = true)
 	private String redefinePasswordKey;
 
-	@Column(nullable = true)
-	private LocalDateTime redefinePasswordKeyCreatedAt;
+	@Column(nullable = true, columnDefinition = "timestamp with time zone")
+	private OffsetDateTime redefinePasswordKeyCreatedAt;
 
 	public User() {
 		addRole(Role.USER);
