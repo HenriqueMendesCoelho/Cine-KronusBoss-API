@@ -1,8 +1,11 @@
 package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
+import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.*;
+import com.kronusboss.cine.kronusintegrationtool.domain.*;
+import com.kronusboss.cine.movie.domain.MovieGenre;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,25 +13,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.reactive.function.client.WebClient;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.CreditResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenreResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieGenresResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSearchResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.MovieSummaryResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.SendMailTemplateRequestDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.dto.WatchProvidersResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.domain.Credit;
-import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
-import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
-import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
-import com.kronusboss.cine.kronusintegrationtool.domain.WatchProviders;
-import com.kronusboss.cine.movie.domain.MovieGenre;
-
-import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @Log4j2
@@ -53,6 +41,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.bodyToMono(MovieSummaryResponseDto.class)
 					.block();
 
+			assert response != null;
 			return response.toDomain();
 		} catch (Exception e) {
 			log.error("Error with KIT API request at %s".formatted(uri), e);
@@ -71,6 +60,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.retrieve()
 					.bodyToMono(MovieSearchResponseDto.class)
 					.block();
+			assert response != null;
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -109,6 +99,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.retrieve()
 					.bodyToMono(MovieSearchResponseDto.class)
 					.block();
+			assert response != null;
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -126,6 +117,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.retrieve()
 					.bodyToMono(MovieSearchResponseDto.class)
 					.block();
+			assert response != null;
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -143,6 +135,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.retrieve()
 					.bodyToMono(MovieSearchResponseDto.class)
 					.block();
+			assert response != null;
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -160,6 +153,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.retrieve()
 					.bodyToMono(MovieSearchResponseDto.class)
 					.block();
+			assert response != null;
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -177,6 +171,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.retrieve()
 					.bodyToMono(MovieSearchResponseDto.class)
 					.block();
+			assert response != null;
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -214,6 +209,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.retrieve()
 					.bodyToMono(MovieSearchResponseDto.class)
 					.block();
+			assert response != null;
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -234,6 +230,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.flatMapMany(r -> Flux.fromIterable(r.getGenres()))
 					.collectList()
 					.block();
+			assert response != null;
 
 			return response.stream().map(MovieGenreResponseDto::toDomain).collect(Collectors.toList());
 		} catch (Exception e) {
@@ -251,6 +248,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.retrieve()
 					.bodyToMono(WatchProvidersResponseDto.class)
 					.block();
+			assert response != null;
 
 			return response.toDomain();
 		} catch (Exception e) {
@@ -268,6 +266,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 					.retrieve()
 					.bodyToMono(CreditResponseDto.class)
 					.block();
+			assert response != null;
 
 			return response.toDomain();
 		} catch (Exception e) {
