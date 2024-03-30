@@ -6,16 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Data
 @Builder
@@ -43,9 +40,11 @@ public class EmbedRequestDto {
 		color = BLUE_COLOR_CODE;
 		url = String.format("%s/movie/%s", URL_REDIRECT, movie.getId());
 		footer = new Footer("Cadastrado por: %s".formatted(movie.getUser().getName()));
-		fields = movie.getNotes() != null
-				? movie.getNotes().stream().map(Field::new).collect(Collectors.toList())
-				: new ArrayList<>();
+		fields = CollectionUtils.isNotEmpty(movie.getNotes()) ? movie.getNotes()
+				.stream()
+				.map(Field::new)
+				.sorted(Field.comparator())
+				.toList() : new ArrayList<>();
 		timestamp = movie.getCreatedAt();
 	}
 
@@ -54,7 +53,7 @@ public class EmbedRequestDto {
 			return "0.0";
 		}
 
-		List<Integer> notes = movie.getNotes().stream().map(n -> n.getNote()).collect(Collectors.toList());
+		List<Integer> notes = movie.getNotes().stream().map(MovieNote::getNote).toList();
 		double avgNote = notes.stream().mapToDouble(d -> d).average().orElse(0.0);
 		DECIMAL_FORMAT.setRoundingMode(RoundingMode.HALF_EVEN);
 
@@ -73,6 +72,10 @@ public class EmbedRequestDto {
 			name = note.getUser().getName();
 			value = Objects.toString(note.getNote(), "");
 			inline = true;
+		}
+
+		public static Comparator<Field> comparator() {
+			return Comparator.comparing(Field::getValue).reversed().thenComparing(Field::getName);
 		}
 	}
 
