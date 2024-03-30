@@ -75,7 +75,11 @@ public class EmbedRequestDto {
 		}
 
 		public static Comparator<Field> comparator() {
-			return Comparator.comparing(Field::getValue).reversed().thenComparing(Field::getName);
+			return Comparator.comparingInt(Field::getValueInt).reversed().thenComparing(Field::getName);
+		}
+
+		public int getValueInt() {
+			return Integer.parseInt(this.getValue());
 		}
 	}
 
