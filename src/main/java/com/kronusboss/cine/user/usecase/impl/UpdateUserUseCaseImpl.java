@@ -1,17 +1,16 @@
 package com.kronusboss.cine.user.usecase.impl;
 
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import com.kronusboss.cine.user.adapter.repository.UserRepository;
 import com.kronusboss.cine.user.domain.Role;
 import com.kronusboss.cine.user.domain.User;
 import com.kronusboss.cine.user.usecase.UpdateUserUseCase;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
@@ -26,7 +25,7 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
 	public User update(User user, UUID userId, String emailUserLoged)
 			throws UserNotFoundException, UserNotAuthorizedException {
 		User userLoged = repository.findByEmail(emailUserLoged);
-		User userToUpdate = repository.getReferenceById(userId);
+		User userToUpdate = repository.findById(userId).orElse(null);
 
 		if (userLoged.getId() != userId && !userLoged.getRoles().contains(Role.ADM)) {
 			throw new UserNotAuthorizedException();
