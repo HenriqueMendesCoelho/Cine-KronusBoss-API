@@ -1,11 +1,5 @@
 package com.kronusboss.cine.movie.usecase.impl;
 
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Component;
-
 import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
 import com.kronusboss.cine.movie.adapter.repository.MovieRepository;
 import com.kronusboss.cine.movie.adapter.repository.rest.MovieSocketRespository;
@@ -16,7 +10,14 @@ import com.kronusboss.cine.user.adapter.repository.UserRepository;
 import com.kronusboss.cine.user.domain.Role;
 import com.kronusboss.cine.user.domain.User;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
+@Slf4j
 @Component
 public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 
@@ -38,7 +39,7 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 			throws MovieNotFoundException, UserNotAuthorizedException {
 
 		User user = userRepository.findByEmail(userEmail);
-		Movie movieToUpdate = repository.getReferenceById(id);
+		Movie movieToUpdate = repository.findById(id).orElse(null);
 
 		if (movieToUpdate == null) {
 			throw new MovieNotFoundException();
@@ -51,8 +52,6 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 		if (!user.getRoles().contains(Role.ADM) && movieToUpdate.getUser().getId() != user.getId()) {
 			throw new UserNotAuthorizedException();
 		}
-
-		boolean emitUpdateEventSocket = movie.isShowNotes() != movieToUpdate.isShowNotes() ? true : false;
 
 		movieToUpdate.setDescription(movie.getDescription());
 		movieToUpdate.setDirector(movie.getDirector());
@@ -70,12 +69,19 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 
 		Movie movieUpdated = repository.saveAndFlush(movieToUpdate);
 		updateMessageWebhookUseCase.updateMovieMessage(movieToUpdate.getId());
-
-		if (emitUpdateEventSocket) {
-			movieSocketRespository.emitEventMovie(movieUpdated.getId(), "update-movie", null);
+		if (movie.isShowNotes() != movieToUpdate.isShowNotes()) {
+			sendEventSocket(movieUpdated);
 		}
 
 		return movieUpdated;
 	}
 
+	private void sendEventSocket(Movie movie) {
+		try {
+			movieSocketRespository.emitEventMovie(movie.getId(), "update-movie", null);
+		} catch (Exception e) {
+			log.error("Error to emit event on movie update (UpdateMovieUseCaseImpl): ", e);
+		}
+
+	}
 }

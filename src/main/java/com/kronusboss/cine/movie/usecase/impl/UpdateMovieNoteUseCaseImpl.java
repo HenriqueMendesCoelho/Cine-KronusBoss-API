@@ -1,11 +1,5 @@
 package com.kronusboss.cine.movie.usecase.impl;
 
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Component;
-
 import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
 import com.kronusboss.cine.movie.adapter.repository.MovieNoteRepository;
 import com.kronusboss.cine.movie.adapter.repository.rest.MovieSocketRespository;
@@ -14,11 +8,15 @@ import com.kronusboss.cine.movie.domain.MovieNote;
 import com.kronusboss.cine.movie.domain.MovieNoteKey;
 import com.kronusboss.cine.movie.usecase.UpdateMovieNoteUseCase;
 import com.kronusboss.cine.movie.usecase.exception.MovieNoteNotFoundException;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.stereotype.Component;
 
-@Component
+import java.util.UUID;
+
 @Slf4j
+@Component
 public class UpdateMovieNoteUseCaseImpl implements UpdateMovieNoteUseCase {
 
 	@Autowired
@@ -58,8 +56,8 @@ public class UpdateMovieNoteUseCaseImpl implements UpdateMovieNoteUseCase {
 			}
 
 			movieSocketRespository.emitEventMovie(movie.getId(), "update-note", eventContent);
-		} catch (CloneNotSupportedException e) {
-			log.error("Error to emit event on note update: ", e);
+		} catch (Exception e) {
+			log.error("Error to emit event on note update (UpdateMovieNoteUseCaseImpl): ", e);
 		}
 
 	}

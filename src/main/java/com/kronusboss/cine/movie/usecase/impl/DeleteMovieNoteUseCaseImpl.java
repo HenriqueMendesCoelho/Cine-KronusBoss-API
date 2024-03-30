@@ -1,11 +1,5 @@
 package com.kronusboss.cine.movie.usecase.impl;
 
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Component;
-
 import com.kronusboss.cine.discord.usecase.UpdateMessageWebhookUseCase;
 import com.kronusboss.cine.movie.adapter.repository.MovieNoteRepository;
 import com.kronusboss.cine.movie.adapter.repository.rest.MovieSocketRespository;
@@ -14,7 +8,14 @@ import com.kronusboss.cine.movie.domain.MovieNote;
 import com.kronusboss.cine.movie.domain.MovieNoteKey;
 import com.kronusboss.cine.movie.usecase.DeleteMovieNoteUseCase;
 import com.kronusboss.cine.user.domain.User;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
+@Slf4j
 @Component
 public class DeleteMovieNoteUseCaseImpl implements DeleteMovieNoteUseCase {
 
@@ -42,10 +43,15 @@ public class DeleteMovieNoteUseCaseImpl implements DeleteMovieNoteUseCase {
 	}
 
 	private void sendEventSocket(UUID userId, UUID movieId) {
-		MovieNote eventContent = MovieNote.builder()
-				.movie(Movie.builder().id(movieId).build())
-				.user(User.builder().id(userId).build())
-				.build();
-		movieSocketRespository.emitEventMovie(movieId, "delete-note", eventContent);
+		try {
+			MovieNote eventContent = MovieNote.builder()
+					.movie(Movie.builder().id(movieId).build())
+					.user(User.builder().id(userId).build())
+					.build();
+			movieSocketRespository.emitEventMovie(movieId, "delete-note", eventContent);
+		} catch (Exception e) {
+			log.error("Error on Socket Api emit event delete note (DeleteMovieNoteUseCaseImpl):", e);
+		}
+
 	}
 }
