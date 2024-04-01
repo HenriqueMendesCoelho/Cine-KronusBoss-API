@@ -1,25 +1,15 @@
 package com.kronusboss.cine.user.adapter.controller;
 
+import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
+import com.kronusboss.cine.user.adapter.controller.dto.*;
+import com.kronusboss.cine.user.usecase.exception.*;
+
 import java.util.List;
 import java.util.UUID;
 
-import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
-import com.kronusboss.cine.user.adapter.controller.dto.InviteResponseDto;
-import com.kronusboss.cine.user.adapter.controller.dto.UserEmailRequestDto;
-import com.kronusboss.cine.user.adapter.controller.dto.UserRedefinePasswordByKeyRequestDto;
-import com.kronusboss.cine.user.adapter.controller.dto.UserRequestDto;
-import com.kronusboss.cine.user.adapter.controller.dto.UserResponseAdmDto;
-import com.kronusboss.cine.user.adapter.controller.dto.UserResponseDto;
-import com.kronusboss.cine.user.usecase.exception.DuplicatedUserException;
-import com.kronusboss.cine.user.usecase.exception.InviteNotValidException;
-import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
-import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
-import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyInvalid;
-import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyNotFound;
-
 public interface UserController {
 
-	List<UserResponseDto> getAllUsers() throws UserNotFoundException;
+	List<UserResponseAdmDto> getAllUsers() throws UserNotFoundException;
 
 	UserResponseDto getUserByEmail(UserTokenDto user, String email)
 			throws UserNotFoundException, UserNotAuthorizedException;

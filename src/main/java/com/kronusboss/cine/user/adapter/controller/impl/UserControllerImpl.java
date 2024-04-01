@@ -1,36 +1,18 @@
 package com.kronusboss.cine.user.adapter.controller.impl;
 
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
+import com.kronusboss.cine.user.adapter.controller.UserController;
+import com.kronusboss.cine.user.adapter.controller.dto.*;
+import com.kronusboss.cine.user.domain.Invite;
+import com.kronusboss.cine.user.domain.User;
+import com.kronusboss.cine.user.usecase.*;
+import com.kronusboss.cine.user.usecase.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
-import com.kronusboss.cine.user.adapter.controller.UserController;
-import com.kronusboss.cine.user.adapter.controller.dto.InviteResponseDto;
-import com.kronusboss.cine.user.adapter.controller.dto.UserEmailRequestDto;
-import com.kronusboss.cine.user.adapter.controller.dto.UserRedefinePasswordByKeyRequestDto;
-import com.kronusboss.cine.user.adapter.controller.dto.UserRequestDto;
-import com.kronusboss.cine.user.adapter.controller.dto.UserResponseAdmDto;
-import com.kronusboss.cine.user.adapter.controller.dto.UserResponseDto;
-import com.kronusboss.cine.user.domain.Invite;
-import com.kronusboss.cine.user.domain.User;
-import com.kronusboss.cine.user.usecase.CreateInviteUseCase;
-import com.kronusboss.cine.user.usecase.CreateUserUseCase;
-import com.kronusboss.cine.user.usecase.DeleteInviteUseCase;
-import com.kronusboss.cine.user.usecase.DeleteUserUseCase;
-import com.kronusboss.cine.user.usecase.SearchInviteUseCase;
-import com.kronusboss.cine.user.usecase.SearchUserUseCase;
-import com.kronusboss.cine.user.usecase.UpdateUserUseCase;
-import com.kronusboss.cine.user.usecase.UserRedefinePasswordUseCase;
-import com.kronusboss.cine.user.usecase.exception.DuplicatedUserException;
-import com.kronusboss.cine.user.usecase.exception.InviteNotValidException;
-import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
-import com.kronusboss.cine.user.usecase.exception.UserNotFoundException;
-import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyInvalid;
-import com.kronusboss.cine.user.usecase.exception.UserRedefinePasswordKeyNotFound;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserControllerImpl implements UserController {
@@ -119,8 +101,8 @@ public class UserControllerImpl implements UserController {
 	}
 
 	@Override
-	public List<UserResponseDto> getAllUsers() throws UserNotFoundException {
-		return searchUserUseCase.getAllUsers().stream().map(UserResponseDto::new).collect(Collectors.toList());
+	public List<UserResponseAdmDto> getAllUsers() throws UserNotFoundException {
+		return searchUserUseCase.getAllUsers().stream().map(UserResponseAdmDto::new).collect(Collectors.toList());
 	}
 
 	@Override
