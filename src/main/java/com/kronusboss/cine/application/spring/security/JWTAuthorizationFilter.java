@@ -1,7 +1,11 @@
 package com.kronusboss.cine.application.spring.security;
 
-import java.io.IOException;
-
+import com.kronusboss.cine.application.spring.security.util.JWTUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,20 +13,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.kronusboss.cine.application.spring.security.util.JWTUtil;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
 
 @Slf4j
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-	private JWTUtil jwtUtil;
+	private final JWTUtil jwtUtil;
 
-	private UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
 
 	public JWTAuthorizationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil,
 			UserDetailsService userDetailsService) {
@@ -47,7 +45,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 	}
 
 	private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-		if (jwtUtil.tokenValido(token)) {
+		if (jwtUtil.isTokenValid(token)) {
 			String username = jwtUtil.getUsername(token);
 			UserDetails user = userDetailsService.loadUserByUsername(username);
 			return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

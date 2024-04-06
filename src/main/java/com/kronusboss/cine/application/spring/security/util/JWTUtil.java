@@ -3,6 +3,8 @@ package com.kronusboss.cine.application.spring.security.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
+@Slf4j
 @Component
 public class JWTUtil {
 
@@ -42,30 +45,33 @@ public class JWTUtil {
 				.compact();
 	}
 
-	public boolean tokenValido(String token) {
+	public boolean isTokenValid(String token) {
 		Claims claims = getClaims(token);
-
-		if (claims != null) {
-			String username = claims.getSubject();
-			Date expirationDate = claims.getExpiration();
-			Date now = new Date(System.currentTimeMillis());
-			return username != null && expirationDate != null && now.before(expirationDate);
+		if (claims == null) {
+			return false;
 		}
-		return false;
+
+		boolean hasUsername = StringUtils.isNotEmpty(claims.getSubject());
+		boolean hasExpirationDate = claims.getExpiration() != null;
+		Date now = new Date(System.currentTimeMillis());
+
+		return hasUsername && hasExpirationDate && now.before(claims.getExpiration());
 	}
 
 	public String getUsername(String token) {
 		Claims claims = getClaims(token);
-		if (claims != null) {
-			return claims.getSubject();
+		if (claims == null) {
+			return null;
 		}
-		return null;
+
+		return claims.getSubject();
 	}
 
 	private Claims getClaims(String token) {
 		try {
 			return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
 		} catch (Exception e) {
+			log.error("Error to parse token", e);
 			return null;
 		}
 	}

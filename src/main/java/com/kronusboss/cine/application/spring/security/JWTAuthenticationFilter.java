@@ -1,11 +1,14 @@
 package com.kronusboss.cine.application.spring.security;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kronusboss.cine.adapter.core.controller.dto.UserLoginDto;
+import com.kronusboss.cine.application.spring.security.dto.LoginResponseDto;
+import com.kronusboss.cine.application.spring.security.util.JWTUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,23 +16,18 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kronusboss.cine.adapter.core.controller.dto.UserLoginDto;
-import com.kronusboss.cine.application.spring.security.dto.LoginResponseDto;
-import com.kronusboss.cine.application.spring.security.util.JWTUtil;
-
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-	private AuthenticationManager authenticationManager;
+	private final AuthenticationManager authenticationManager;
 
-	private JWTUtil jwtUtil;
+	private final JWTUtil jwtUtil;
 
 	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
 		setAuthenticationFailureHandler(new JWTAuthenticationFailureHandler());
