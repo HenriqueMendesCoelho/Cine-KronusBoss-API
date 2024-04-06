@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
@@ -17,7 +16,6 @@ import java.util.UUID;
 public class JWTUtil {
 
 	private static final String AUDIENCE = "https://www.cine.kronusboss.com/api";
-	private static final SecretKey key = Jwts.SIG.HS512.key().build();
 
 	@Value("${jwt.secret}")
 	public String secret;
@@ -25,7 +23,7 @@ public class JWTUtil {
 	@Value("${jwt.expiration}")
 	public long expiration;
 
-	private Key getSigningKey() {
+	private SecretKey getSigningKey() {
 		byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
@@ -66,7 +64,7 @@ public class JWTUtil {
 
 	private Claims getClaims(String token) {
 		try {
-			return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
+			return Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
 		} catch (Exception e) {
 			return null;
 		}
