@@ -1,16 +1,17 @@
 package com.kronusboss.cine.application.spring.security.util;
 
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.crypto.SecretKey;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
 
 @Component
 public class JWTUtil {
@@ -18,14 +19,22 @@ public class JWTUtil {
 	private static final String AUDIENCE = "https://www.cine.kronusboss.com/api";
 	private static final SecretKey key = Jwts.SIG.HS512.key().build();
 
+	@Value("${jwt.secret}")
+	public String secret;
+
 	@Value("${jwt.expiration}")
 	public long expiration;
+
+	private Key getSigningKey() {
+		byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+		return Keys.hmacShaKeyFor(keyBytes);
+	}
 
 	public String generateToken(UUID userId, String username, String name, Set<String> roles) {
 		return Jwts.builder()
 				.subject(username)
 				.expiration(new Date(System.currentTimeMillis() + expiration))
-				.signWith(key)
+				.signWith(getSigningKey())
 				.audience()
 				.add(AUDIENCE)
 				.and()
@@ -42,9 +51,7 @@ public class JWTUtil {
 			String username = claims.getSubject();
 			Date expirationDate = claims.getExpiration();
 			Date now = new Date(System.currentTimeMillis());
-			if (username != null && expirationDate != null && now.before(expirationDate)) {
-				return true;
-			}
+			return username != null && expirationDate != null && now.before(expirationDate);
 		}
 		return false;
 	}
