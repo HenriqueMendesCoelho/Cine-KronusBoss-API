@@ -14,7 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Random;
 
@@ -62,9 +61,8 @@ public class UserRedefinePasswordUseCaseImpl implements UserRedefinePasswordUseC
 			throw new UserNotAuthorizedException("Email provided not known with target user");
 		}
 
-		Duration duration = Duration.between(user.getRedefinePasswordKeyCreatedAt(), LocalDateTime.now());
-		Long hours = duration.toHours();
-
+		Duration duration = Duration.between(user.getRedefinePasswordKeyCreatedAt(), OffsetDateTime.now());
+		long hours = duration.toHours();
 		if (hours >= 1) {
 			cleanRedefinePassowordKeyAndSave(user);
 			throw new UserRedefinePasswordKeyInvalid();
