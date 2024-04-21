@@ -37,7 +37,6 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 	@CacheEvict(value = "statistics", allEntries = true)
 	public Movie update(Movie movie, UUID id, String userEmail)
 			throws MovieNotFoundException, UserNotAuthorizedException {
-
 		User user = userRepository.findByEmail(userEmail);
 		Movie movieToUpdate = repository.findById(id).orElse(null);
 
@@ -52,6 +51,8 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 		if (!user.getRoles().contains(Role.ADM) && movieToUpdate.getUser().getId() != user.getId()) {
 			throw new UserNotAuthorizedException();
 		}
+
+		final boolean emitEvent = movie.isShowNotes() != movieToUpdate.isShowNotes();
 
 		movieToUpdate.setDescription(movie.getDescription());
 		movieToUpdate.setDirector(movie.getDirector());
@@ -69,7 +70,7 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 
 		Movie movieUpdated = repository.saveAndFlush(movieToUpdate);
 		updateMessageWebhookUseCase.updateMovieMessage(movieToUpdate.getId());
-		if (movie.isShowNotes() != movieToUpdate.isShowNotes()) {
+		if (emitEvent) {
 			sendEventSocket(movieUpdated);
 		}
 
