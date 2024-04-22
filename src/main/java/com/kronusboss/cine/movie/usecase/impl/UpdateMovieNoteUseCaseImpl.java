@@ -55,7 +55,7 @@ public class UpdateMovieNoteUseCaseImpl implements UpdateMovieNoteUseCase {
 				eventContent.setNote(null);
 			}
 
-			movieSocketRespository.emitEventMovie(movie.getId(), "update-note", eventContent);
+			movieSocketRespository.emitEventMovie(movie.getId(), "update-note", eventContent, null);
 		} catch (Exception e) {
 			log.error("Error to emit event on note update (UpdateMovieNoteUseCaseImpl): ", e);
 		}

@@ -48,7 +48,7 @@ public class DeleteMovieNoteUseCaseImpl implements DeleteMovieNoteUseCase {
 					.movie(Movie.builder().id(movieId).build())
 					.user(User.builder().id(userId).build())
 					.build();
-			movieSocketRespository.emitEventMovie(movieId, "delete-note", eventContent);
+			movieSocketRespository.emitEventMovie(movieId, "delete-note", eventContent, null);
 		} catch (Exception e) {
 			log.error("Error on Socket Api emit event delete note (DeleteMovieNoteUseCaseImpl):", e);
 		}

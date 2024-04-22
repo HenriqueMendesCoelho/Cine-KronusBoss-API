@@ -1,11 +1,5 @@
 package com.kronusboss.cine.movie.usecase.impl;
 
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Component;
-
 import com.kronusboss.cine.movie.adapter.repository.MovieRepository;
 import com.kronusboss.cine.movie.adapter.repository.rest.MovieSocketRespository;
 import com.kronusboss.cine.movie.domain.Movie;
@@ -14,8 +8,12 @@ import com.kronusboss.cine.user.adapter.repository.UserRepository;
 import com.kronusboss.cine.user.domain.Role;
 import com.kronusboss.cine.user.domain.User;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -33,7 +31,7 @@ public class DeleteMovieUseCaseImpl implements DeleteMovieUseCase {
 	@Override
 	@CacheEvict(value = "statistics", allEntries = true)
 	public void delete(UUID id, UUID idUserLoged) throws UserNotAuthorizedException {
-		Movie movie = repository.findById(id).get();
+		Movie movie = repository.findById(id).orElse(null);
 
 		if (movie == null) {
 			return;
@@ -54,13 +52,14 @@ public class DeleteMovieUseCaseImpl implements DeleteMovieUseCase {
 		}
 
 		repository.delete(movie);
-		emitEventSocket();
+		emitEventSocket(id, idUserLoged);
 
 	}
 
-	private void emitEventSocket() {
+	private void emitEventSocket(UUID movieId, UUID idUserLoged) {
 		try {
 			socketRepository.emitAllMoviesEvent(null);
+			socketRepository.emitEventMovie(movieId, "deleted-movie", null, idUserLoged.toString());
 		} catch (Exception e) {
 			log.error("Error to emit event on movie creation raised: ", e);
 		}

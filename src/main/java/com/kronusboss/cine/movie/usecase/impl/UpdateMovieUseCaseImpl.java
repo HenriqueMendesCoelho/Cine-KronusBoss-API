@@ -79,7 +79,7 @@ public class UpdateMovieUseCaseImpl implements UpdateMovieUseCase {
 
 	private void sendEventSocket(Movie movie) {
 		try {
-			movieSocketRespository.emitEventMovie(movie.getId(), "update-movie", null);
+			movieSocketRespository.emitEventMovie(movie.getId(), "update-movie", null, null);
 		} catch (Exception e) {
 			log.error("Error to emit event on movie update (UpdateMovieUseCaseImpl): ", e);
 		}

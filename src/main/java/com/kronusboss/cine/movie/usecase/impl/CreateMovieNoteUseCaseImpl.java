@@ -73,7 +73,7 @@ public class CreateMovieNoteUseCaseImpl implements CreateMovieNoteUseCase {
 				eventContent.setNote(null);
 			}
 
-			movieSocketRespository.emitEventMovie(movie.getId(), "create-note", eventContent);
+			movieSocketRespository.emitEventMovie(movie.getId(), "create-note", eventContent, null);
 		} catch (Exception e) {
 			log.error("Error to emit event on note create (CreateMovieNoteUseCaseImpl): ", e);
 		}
