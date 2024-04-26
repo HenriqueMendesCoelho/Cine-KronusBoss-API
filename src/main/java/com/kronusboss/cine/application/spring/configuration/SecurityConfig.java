@@ -1,9 +1,8 @@
 package com.kronusboss.cine.application.spring.configuration;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
-import java.util.Arrays;
-
+import com.kronusboss.cine.application.spring.security.JWTAuthenticationFilter;
+import com.kronusboss.cine.application.spring.security.JWTAuthorizationFilter;
+import com.kronusboss.cine.application.spring.security.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +22,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.kronusboss.cine.application.spring.security.JWTAuthenticationFilter;
-import com.kronusboss.cine.application.spring.security.JWTAuthorizationFilter;
-import com.kronusboss.cine.application.spring.security.util.JWTUtil;
+import java.util.Arrays;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -33,18 +32,14 @@ import com.kronusboss.cine.application.spring.security.util.JWTUtil;
 public class SecurityConfig {
 
 	private static final String ORIGIN = "https://www.cine.kronusboss.com/";
-
-	@Autowired
-	private UserDetailsService userDetailsService;
-
-	@Autowired
-	private AuthenticationConfiguration authenticationConfiguration;
-
-	@Autowired
-	private JWTUtil jwtUtil;
-
 	private static final String[] PUBLIC_MATCHERS = { "/api/auth/forgot", "/api/user/password/reset",
 			"/api/user/password/*/reset", "/api/movie/tmdb/*/info" };
+	@Autowired
+	private UserDetailsService userDetailsService;
+	@Autowired
+	private AuthenticationConfiguration authenticationConfiguration;
+	@Autowired
+	private JWTUtil jwtUtil;
 
 	@Autowired
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -71,7 +66,7 @@ public class SecurityConfig {
 				.requestMatchers(HttpMethod.POST, "/api/user")
 				.permitAll()
 				.requestMatchers(HttpMethod.GET, "/actuator/**")
-				.hasAuthority("ROLE_ADMIN")
+				.hasAuthority("ROLE_ADM")
 				.anyRequest()
 				.authenticated());
 		http.addFilter(jwtAuthorizationFilter());
