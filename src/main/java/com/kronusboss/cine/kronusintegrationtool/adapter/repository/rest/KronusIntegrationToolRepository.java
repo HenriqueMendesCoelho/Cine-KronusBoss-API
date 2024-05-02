@@ -1,13 +1,9 @@
 package com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest;
 
-import java.util.List;
-
-import com.kronusboss.cine.kronusintegrationtool.domain.Credit;
-import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
-import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
-import com.kronusboss.cine.kronusintegrationtool.domain.SendMailTemplate;
-import com.kronusboss.cine.kronusintegrationtool.domain.WatchProviders;
+import com.kronusboss.cine.kronusintegrationtool.domain.*;
 import com.kronusboss.cine.movie.domain.MovieGenre;
+
+import java.util.List;
 
 public interface KronusIntegrationToolRepository {
 
@@ -18,6 +14,8 @@ public interface KronusIntegrationToolRepository {
 	MovieSearch moviesPopular(Integer page);
 
 	MovieSearch moviesNowPlaying(Integer page);
+
+	MovieSearch moviesUpcoming(Integer page);
 
 	MovieSearch moviesTopRated(Integer page);
 

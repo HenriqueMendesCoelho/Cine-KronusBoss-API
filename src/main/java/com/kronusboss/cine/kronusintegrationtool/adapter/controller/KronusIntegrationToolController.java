@@ -1,10 +1,6 @@
 package com.kronusboss.cine.kronusintegrationtool.adapter.controller;
 
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.CreditResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieInfoResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.WatchProvidersResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.*;
 
 public interface KronusIntegrationToolController {
 
@@ -17,6 +13,8 @@ public interface KronusIntegrationToolController {
 	MovieSearchResponseDto moviesPopular(Integer page);
 
 	MovieSearchResponseDto moviesNowPlaying(Integer page);
+
+	MovieSearchResponseDto moviesUpcoming(Integer page);
 
 	MovieSearchResponseDto moviesTopRated(Integer page);
 

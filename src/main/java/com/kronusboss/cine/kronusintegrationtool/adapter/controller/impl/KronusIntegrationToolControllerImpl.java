@@ -1,14 +1,7 @@
 package com.kronusboss.cine.kronusintegrationtool.adapter.controller.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.KronusIntegrationToolController;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.CreditResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieInfoResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.WatchProvidersResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.*;
 import com.kronusboss.cine.kronusintegrationtool.domain.Credit;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSummary;
@@ -17,6 +10,8 @@ import com.kronusboss.cine.kronusintegrationtool.usecase.MovieSumaryUseCase;
 import com.kronusboss.cine.kronusintegrationtool.usecase.SearchCreditUseCase;
 import com.kronusboss.cine.kronusintegrationtool.usecase.SearchMovieTmdbUseCase;
 import com.kronusboss.cine.kronusintegrationtool.usecase.SearchWatchProviedersUseCase;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 @Controller
 public class KronusIntegrationToolControllerImpl implements KronusIntegrationToolController {
@@ -60,6 +55,12 @@ public class KronusIntegrationToolControllerImpl implements KronusIntegrationToo
 	@Override
 	public MovieSearchResponseDto moviesNowPlaying(Integer page) {
 		MovieSearch response = searchMovieTmdbUseCase.moviesNowPlaying(page);
+		return new MovieSearchResponseDto(response);
+	}
+
+	@Override
+	public MovieSearchResponseDto moviesUpcoming(Integer page) {
+		MovieSearch response = searchMovieTmdbUseCase.moviesUpcoming(page);
 		return new MovieSearchResponseDto(response);
 	}
 

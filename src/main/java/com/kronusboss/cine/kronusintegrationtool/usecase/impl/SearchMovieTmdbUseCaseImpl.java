@@ -1,11 +1,10 @@
 package com.kronusboss.cine.kronusintegrationtool.usecase.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.kronusboss.cine.kronusintegrationtool.adapter.repository.rest.KronusIntegrationToolRepository;
 import com.kronusboss.cine.kronusintegrationtool.domain.MovieSearch;
 import com.kronusboss.cine.kronusintegrationtool.usecase.SearchMovieTmdbUseCase;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SearchMovieTmdbUseCaseImpl implements SearchMovieTmdbUseCase {
@@ -26,6 +25,11 @@ public class SearchMovieTmdbUseCaseImpl implements SearchMovieTmdbUseCase {
 	@Override
 	public MovieSearch moviesNowPlaying(Integer page) {
 		return repository.moviesNowPlaying(page);
+	}
+
+	@Override
+	public MovieSearch moviesUpcoming(Integer page) {
+		return repository.moviesUpcoming(page);
 	}
 
 	@Override

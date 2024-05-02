@@ -33,7 +33,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public MovieSummary movieSummary(Long tmdbId) {
-		String uri = "/api/v1/tmdb/movie/%s/summary".formatted(tmdbId);
+		final String uri = "/api/v1/tmdb/movie/%s/summary".formatted(tmdbId);
 		try {
 			MovieSummaryResponseDto response = webClientKit.get()
 					.uri(uri)
@@ -52,8 +52,8 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public MovieSearch searchByName(String name, Integer page, String language, boolean includeAdult) {
-		String uri = "/api/v1/tmdb/search/movie?query=%s&page=%s&language=%s&include_adult=%s".formatted(name, page,
-				language, includeAdult);
+		final String uri = "/api/v1/tmdb/search/movie?query=%s&page=%s&language=%s&include_adult=%s".formatted(name,
+				page, language, includeAdult);
 		try {
 			MovieSearchResponseDto response = webClientKit.get()
 					.uri(uri)
@@ -92,7 +92,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public MovieSearch moviesPopular(Integer page) {
-		String uri = "/api/v1/tmdb/movie/popular?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR");
+		final String uri = "/api/v1/tmdb/movie/popular?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR");
 		try {
 			MovieSearchResponseDto response = webClientKit.get()
 					.uri(uri)
@@ -110,7 +110,26 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public MovieSearch moviesNowPlaying(Integer page) {
-		String uri = "/api/v1/tmdb/movie/now_playing?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR");
+		final String uri = "/api/v1/tmdb/movie/now_playing?page=%s&language=%s&region=%s".formatted(page, "pt-Br",
+				"BR");
+		try {
+			MovieSearchResponseDto response = webClientKit.get()
+					.uri(uri)
+					.retrieve()
+					.bodyToMono(MovieSearchResponseDto.class)
+					.block();
+			assert response != null;
+
+			return response.toDomain();
+		} catch (Exception e) {
+			log.error("Error with KIT API request at %s".formatted(uri), e);
+			throw new RequestRejectedException(e.getMessage());
+		}
+	}
+
+	@Override
+	public MovieSearch moviesUpcoming(Integer page) {
+		final String uri = "/api/v1/tmdb/movie/upcoming?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR");
 		try {
 			MovieSearchResponseDto response = webClientKit.get()
 					.uri(uri)
@@ -128,7 +147,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public MovieSearch moviesTopRated(Integer page) {
-		String uri = "/api/v1/tmdb/movie/top_rated?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR");
+		final String uri = "/api/v1/tmdb/movie/top_rated?page=%s&language=%s&region=%s".formatted(page, "pt-Br", "BR");
 		try {
 			MovieSearchResponseDto response = webClientKit.get()
 					.uri(uri)
@@ -146,7 +165,8 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public MovieSearch moviesRecommendations(Long movieTmdbId, Integer page) {
-		String uri = "/api/v1/tmdb/movie/%s/recommendations?page=%s&language=%s".formatted(movieTmdbId, page, "pt-Br");
+		final String uri = "/api/v1/tmdb/movie/%s/recommendations?page=%s&language=%s".formatted(movieTmdbId, page,
+				"pt-Br");
 		try {
 			MovieSearchResponseDto response = webClientKit.get()
 					.uri(uri)
@@ -164,7 +184,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public MovieSearch moviesSimilar(Long movieTmdbId, Integer page) {
-		String uri = "/api/v1/tmdb/movie/%s/similar?page=%s&language=%s".formatted(movieTmdbId, page, "pt-Br");
+		final String uri = "/api/v1/tmdb/movie/%s/similar?page=%s&language=%s".formatted(movieTmdbId, page, "pt-Br");
 		try {
 			MovieSearchResponseDto response = webClientKit.get()
 					.uri(uri)
@@ -183,7 +203,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 	@Override
 	public MovieSearch discoverMovies(String sortByParam, Integer page, Integer primaryReleaseYear, String withGenres,
 			String withoutGenres) {
-		StringBuilder uri = new StringBuilder(
+		final StringBuilder uri = new StringBuilder(
 				"/api/v1/tmdb/discover/movie?page=%s&language=%s&include_adult=false&vote_count.gte=300".formatted(page,
 						"pt-Br"));
 
@@ -220,7 +240,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public List<MovieGenre> listGenres() {
-		String uri = "/api/v1/tmdb/genre/movie/list?language=%s".formatted("pt-Br");
+		final String uri = "/api/v1/tmdb/genre/movie/list?language=%s".formatted("pt-Br");
 		try {
 			List<MovieGenreResponseDto> response = webClientKit.get()
 					.uri(uri)
@@ -241,7 +261,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public WatchProviders getWatchProviders(Long tmdbId) {
-		String uri = "/api/v1/tmdb/movie/%s/watch/providers".formatted(tmdbId);
+		final String uri = "/api/v1/tmdb/movie/%s/watch/providers".formatted(tmdbId);
 		try {
 			WatchProvidersResponseDto response = webClientKit.get()
 					.uri(uri)
@@ -259,7 +279,7 @@ public class KronusIntegrationToolRepositoryImpl implements KronusIntegrationToo
 
 	@Override
 	public Credit getCredits(Long tmdbId) {
-		String uri = "/api/v1/tmdb/movie/%s/credits".formatted(tmdbId);
+		final String uri = "/api/v1/tmdb/movie/%s/credits".formatted(tmdbId);
 		try {
 			CreditResponseDto response = webClientKit.get()
 					.uri(uri)

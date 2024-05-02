@@ -10,6 +10,8 @@ public interface SearchMovieTmdbUseCase {
 
 	MovieSearch moviesNowPlaying(Integer page);
 
+	MovieSearch moviesUpcoming(Integer page);
+
 	MovieSearch moviesTopRated(Integer page);
 
 	MovieSearch moviesRecommendations(Long movieTmdbId, Integer page);

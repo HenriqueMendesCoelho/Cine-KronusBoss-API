@@ -1,19 +1,10 @@
 package com.kronusboss.cine.kronusintegrationtool.application.spring.controller;
 
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.KronusIntegrationToolController;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.KronusIntegrationToolController;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.CreditResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieInfoResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.WatchProvidersResponseDto;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -66,6 +57,13 @@ public class SpringKronusIntegrationToolController {
 	@GetMapping("/movie/tmdb/now-playing")
 	public ResponseEntity<?> moviesNowPlaying(@RequestParam(required = false, defaultValue = "1") Integer page) {
 		MovieSearchResponseDto response = controller.moviesNowPlaying(page);
+
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/movie/tmdb/upcoming")
+	public ResponseEntity<?> moviesUpcoming(@RequestParam(required = false, defaultValue = "1") Integer page) {
+		MovieSearchResponseDto response = controller.moviesUpcoming(page);
 
 		return ResponseEntity.ok(response);
 	}
