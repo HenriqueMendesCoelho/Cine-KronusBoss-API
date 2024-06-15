@@ -1,43 +1,27 @@
 package com.kronusboss.cine.movie.application.spring.controller;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.kronusboss.cine.adapter.core.controller.dto.UserTokenDto;
 import com.kronusboss.cine.adapter.util.CredentialUtil;
 import com.kronusboss.cine.movie.adapter.controller.MovieController;
-import com.kronusboss.cine.movie.adapter.controller.dto.MovieGenreResponseDto;
-import com.kronusboss.cine.movie.adapter.controller.dto.MovieNoteRequestDto;
-import com.kronusboss.cine.movie.adapter.controller.dto.MovieNoteResponseDto;
-import com.kronusboss.cine.movie.adapter.controller.dto.MovieRequestDto;
-import com.kronusboss.cine.movie.adapter.controller.dto.MovieResponseDto;
+import com.kronusboss.cine.movie.adapter.controller.dto.*;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieException;
 import com.kronusboss.cine.movie.usecase.exception.DuplicatedMovieNoteException;
 import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
 import com.kronusboss.cine.movie.usecase.exception.MovieNoteNotFoundException;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
-
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/movie")
+@RequestMapping("/movie")
 public class SpringMovieController {
 
 	@Autowired

@@ -90,10 +90,7 @@ public class SecurityConfig {
 	}
 
 	private JWTAuthenticationFilter jwtAuthorizationFilter() throws Exception {
-		JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(
-				authenticationManager(authenticationConfiguration), jwtUtil);
-		jwtAuthenticationFilter.setFilterProcessesUrl("/api/login");
-		return jwtAuthenticationFilter;
+		return new JWTAuthenticationFilter(authenticationManager(authenticationConfiguration), jwtUtil);
 	}
 
 }

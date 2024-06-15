@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/movie/tmdb")
 public class SpringKronusIntegrationToolController {
 
 	@Autowired
 	private KronusIntegrationToolController controller;
 
-	@GetMapping("/movie/tmdb/{movieId}/summary")
+	@GetMapping("/{movieId}/summary")
 	public ResponseEntity<?> summaryMovieTmdb(@PathVariable Long movieId) {
 		MovieSummaryResponseDto response = controller.movieSummary(movieId);
 
@@ -25,7 +25,7 @@ public class SpringKronusIntegrationToolController {
 
 	}
 
-	@GetMapping("/movie/tmdb/{movieId}/info")
+	@GetMapping("/{movieId}/info")
 	public ResponseEntity<?> infoMovieTmdb(@PathVariable Long movieId) {
 		MovieInfoResponseDto response = controller.movieInfo(movieId);
 
@@ -37,7 +37,7 @@ public class SpringKronusIntegrationToolController {
 
 	}
 
-	@GetMapping("/movie/tmdb")
+	@GetMapping
 	public ResponseEntity<?> searchByName(@RequestParam(required = true) String query,
 			@RequestParam(required = false, defaultValue = "1") Integer page,
 			@RequestParam(required = false, defaultValue = "pt-Br") String language) {
@@ -47,35 +47,35 @@ public class SpringKronusIntegrationToolController {
 
 	}
 
-	@GetMapping("/movie/tmdb/popular")
+	@GetMapping("/popular")
 	public ResponseEntity<?> moviesPopular(@RequestParam(required = false, defaultValue = "1") Integer page) {
 		MovieSearchResponseDto response = controller.moviesPopular(page);
 
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/movie/tmdb/now-playing")
+	@GetMapping("/now-playing")
 	public ResponseEntity<?> moviesNowPlaying(@RequestParam(required = false, defaultValue = "1") Integer page) {
 		MovieSearchResponseDto response = controller.moviesNowPlaying(page);
 
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/movie/tmdb/upcoming")
+	@GetMapping("/upcoming")
 	public ResponseEntity<?> moviesUpcoming(@RequestParam(required = false, defaultValue = "1") Integer page) {
 		MovieSearchResponseDto response = controller.moviesUpcoming(page);
 
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/movie/tmdb/top-rated")
+	@GetMapping("/top-rated")
 	public ResponseEntity<?> moviesTopRated(@RequestParam(required = false, defaultValue = "1") Integer page) {
 		MovieSearchResponseDto response = controller.moviesTopRated(page);
 
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/movie/tmdb/{movieId}/recommendations")
+	@GetMapping("/{movieId}/recommendations")
 	public ResponseEntity<?> moviesRecommendations(@PathVariable Long movieId,
 			@RequestParam(required = false, defaultValue = "1") Integer page) {
 		MovieSearchResponseDto response = controller.moviesRecommendations(movieId, page);
@@ -83,7 +83,7 @@ public class SpringKronusIntegrationToolController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/movie/tmdb/{movieId}/similar")
+	@GetMapping("/{movieId}/similar")
 	public ResponseEntity<?> moviesSimilar(@PathVariable Long movieId,
 			@RequestParam(required = false, defaultValue = "1") Integer page) {
 		MovieSearchResponseDto response = controller.moviesSimilar(movieId, page);
@@ -91,7 +91,7 @@ public class SpringKronusIntegrationToolController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/movie/tmdb/discover")
+	@GetMapping("/discover")
 	public ResponseEntity<?> discoverMovies(@RequestParam(required = false) String sort,
 			@RequestParam(required = false, defaultValue = "1") Integer page,
 			@RequestParam(required = false) Integer year, @RequestParam(required = false) String with_genres,
@@ -101,14 +101,14 @@ public class SpringKronusIntegrationToolController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/movie/tmdb/{movieId}/watch-providers")
+	@GetMapping("/{movieId}/watch-providers")
 	public ResponseEntity<?> getWatchProviders(@PathVariable Long movieId) {
 		WatchProvidersResponseDto response = controller.searchWatchProvidersByMovieId(movieId);
 
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/movie/tmdb/{movieId}/credits")
+	@GetMapping("/{movieId}/credits")
 	public ResponseEntity<?> getCredits(@PathVariable Long movieId) {
 		CreditResponseDto response = controller.searchMovieCredits(movieId);
 
