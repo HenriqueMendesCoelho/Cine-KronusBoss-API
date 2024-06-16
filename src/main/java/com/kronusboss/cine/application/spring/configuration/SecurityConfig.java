@@ -6,7 +6,6 @@ import com.kronusboss.cine.application.spring.security.util.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,15 +13,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -31,9 +26,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-	private static final String ORIGIN = "https://www.cine.kronusboss.com/";
-	private static final String[] PUBLIC_MATCHERS = { "/api/auth/forgot", "/api/user/password/reset",
-			"/api/user/password/*/reset", "/api/movie/tmdb/*/info" };
+	private static final String[] PUBLIC_MATCHERS = { "/public/**" };
 	@Autowired
 	private UserDetailsService userDetailsService;
 	@Autowired
@@ -60,10 +53,8 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors(withDefaults());
-		http.csrf((csrf) -> csrf.disable());
+		http.csrf(AbstractHttpConfigurer::disable);
 		http.authorizeHttpRequests(authz -> authz.requestMatchers(PUBLIC_MATCHERS)
-				.permitAll()
-				.requestMatchers(HttpMethod.POST, "/api/user")
 				.permitAll()
 				.requestMatchers(HttpMethod.GET, "/actuator/**")
 				.hasAuthority("ROLE_ADM")
@@ -75,18 +66,6 @@ public class SecurityConfig {
 		http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		return http.build();
-	}
-
-	@Bean
-	@Primary
-	CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.addAllowedOrigin(ORIGIN);
-		configuration.applyPermitDefaultValues();
-		configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
 	}
 
 	private JWTAuthenticationFilter jwtAuthorizationFilter() throws Exception {

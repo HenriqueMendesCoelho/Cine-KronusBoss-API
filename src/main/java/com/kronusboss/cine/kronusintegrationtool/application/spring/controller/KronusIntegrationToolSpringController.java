@@ -1,14 +1,17 @@
 package com.kronusboss.cine.kronusintegrationtool.application.spring.controller;
 
 import com.kronusboss.cine.kronusintegrationtool.adapter.controller.KronusIntegrationToolController;
-import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.*;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.CreditResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSearchResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.MovieSummaryResponseDto;
+import com.kronusboss.cine.kronusintegrationtool.adapter.controller.dto.WatchProvidersResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/movie/tmdb")
-public class SpringKronusIntegrationToolController {
+public class KronusIntegrationToolSpringController {
 
 	@Autowired
 	private KronusIntegrationToolController controller;
@@ -16,18 +19,6 @@ public class SpringKronusIntegrationToolController {
 	@GetMapping("/{movieId}/summary")
 	public ResponseEntity<?> summaryMovieTmdb(@PathVariable Long movieId) {
 		MovieSummaryResponseDto response = controller.movieSummary(movieId);
-
-		if (response == null) {
-			return ResponseEntity.noContent().build();
-		}
-
-		return ResponseEntity.ok(response);
-
-	}
-
-	@GetMapping("/{movieId}/info")
-	public ResponseEntity<?> infoMovieTmdb(@PathVariable Long movieId) {
-		MovieInfoResponseDto response = controller.movieInfo(movieId);
 
 		if (response == null) {
 			return ResponseEntity.noContent().build();

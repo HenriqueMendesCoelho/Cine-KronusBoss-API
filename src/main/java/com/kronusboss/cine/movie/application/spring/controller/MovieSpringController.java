@@ -10,7 +10,7 @@ import com.kronusboss.cine.movie.usecase.exception.MovieNotFoundException;
 import com.kronusboss.cine.movie.usecase.exception.MovieNoteNotFoundException;
 import com.kronusboss.cine.user.usecase.exception.UserNotAuthorizedException;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/movie")
-public class SpringMovieController {
+@RequiredArgsConstructor
+public class MovieSpringController {
 
-	@Autowired
-	private MovieController controller;
+	private final MovieController controller;
 
 	@GetMapping
 	public ResponseEntity<?> getAllMoviesTest(@RequestParam(required = false) String title,
