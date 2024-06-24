@@ -23,6 +23,7 @@ public class EmbedRequestDto {
 	private static final String URL_REDIRECT = "https://www.cine.kronusboss.com";
 	private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("0.0", new DecimalFormatSymbols(Locale.US));
 	private static final Integer BLUE_COLOR_CODE = 3447003;
+	private static final String DELETED_USER_RED_CIRCLE_EMOJI = "\uD83D\uDD34";
 
 	public String title;
 	public Image image;
@@ -39,7 +40,9 @@ public class EmbedRequestDto {
 		image = new Image(movie.getUrlImage());
 		color = BLUE_COLOR_CODE;
 		url = String.format("%s/movie/%s", URL_REDIRECT, movie.getId());
-		footer = new Footer("Cadastrado por: %s".formatted(movie.getUser().getName()));
+		footer = movie.getUser() == null
+				? new Footer("%s Cadastrado por: Usuário desconhecido".formatted(DELETED_USER_RED_CIRCLE_EMOJI))
+				: new Footer("Cadastrado por: %s".formatted(movie.getUser().getName()));
 		fields = CollectionUtils.isNotEmpty(movie.getNotes()) ? movie.getNotes()
 				.stream()
 				.map(Field::new)
@@ -62,7 +65,6 @@ public class EmbedRequestDto {
 
 	@Data
 	@AllArgsConstructor
-	@NoArgsConstructor
 	public static class Field {
 		public String name;
 		public String value;
@@ -85,14 +87,12 @@ public class EmbedRequestDto {
 
 	@Data
 	@AllArgsConstructor
-	@NoArgsConstructor
 	public static class Footer {
 		public String text;
 	}
 
 	@Data
 	@AllArgsConstructor
-	@NoArgsConstructor
 	public static class Image {
 		public String url;
 	}
