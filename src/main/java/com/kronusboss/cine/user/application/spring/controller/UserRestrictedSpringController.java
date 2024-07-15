@@ -52,8 +52,7 @@ public class UserRestrictedSpringController {
 
 	@GetMapping("/{email}")
 	@PreAuthorize("hasRole('ADM')")
-	public ResponseEntity<?> getUserAdm(@RequestParam(required = true) @Valid String email,
-			@RequestHeader("Authorization") String token) {
+	public ResponseEntity<?> getUserAdm(@PathVariable String email, @RequestHeader("Authorization") String token) {
 		try {
 			UserTokenDto user = CredentialUtil.getUserFromToken(token);
 			UserResponseAdmDto response = controller.getUserByEmailAdm(user, email);
