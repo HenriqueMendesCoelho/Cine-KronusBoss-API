@@ -5,8 +5,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "movie_wishlist_user_wishlist",
-		uniqueConstraints = { @UniqueConstraint(columnNames = { "wishlist_id", "movie_id" }),
-				@UniqueConstraint(columnNames = { "wishlist_id", "wishlist_order" }) })
+		uniqueConstraints = { @UniqueConstraint(columnNames = { "wishlist_id", "movie_id" }) })
 @Data
 @Builder
 @NoArgsConstructor
