@@ -1,13 +1,9 @@
 package com.kronusboss.cine.kronusintegrationtool.domain;
 
+import lombok.*;
+
 import java.util.LinkedHashMap;
 import java.util.stream.Stream;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Setter
@@ -19,11 +15,13 @@ public class SendMailTemplate {
 	private static final String WELCOME_TEMPLATEID = "d-c1f102718d3c4a5da8ea81e418676469";
 	private static final String FORGOT_PASSWORD_TEMPLATEID = "d-9cd809526c25440eb5722cbe68221491";
 	private static final String BLOCKED_ACCOUNT_TEMPLATEID = "d-0a10cc53f5df49a6822321c209ad6b69";
-	private static final String FROM = "noreply-cine@kronusboss.com";
-	private static final String[] CINE_FRONTEND_URL = Stream.of("cine_url", "https://www.cine.kronusboss.com")
-			.toArray(String[]::new);;
+	private static final String[] MOVIE_MUX_FRONTEND_URL = Stream.of("cine_url", "https://www.moviemux.com")
+			.toArray(String[]::new);
 
-	private String from;
+	@Builder.Default
+	private String from = "noreply-cine@kronusboss.com";
+	@Builder.Default
+	private String name = "Movie Mux";
 	private String to;
 	private String templateId;
 	private String subject;
@@ -33,9 +31,8 @@ public class SendMailTemplate {
 	public static SendMailTemplate welcomeMail(String to, String username) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		map.put("user", username);
-		map.put(CINE_FRONTEND_URL[0], CINE_FRONTEND_URL[1]);
+		map.put(MOVIE_MUX_FRONTEND_URL[0], MOVIE_MUX_FRONTEND_URL[1]);
 		return SendMailTemplate.builder()
-				.from(FROM)
 				.to(to)
 				.subject(String.format("%s, bem-vindo ao Cineminha!", username))
 				.params(map)
@@ -47,10 +44,9 @@ public class SendMailTemplate {
 	public static SendMailTemplate forgotPasswordMail(String to, String username, String redefinePasswordKey) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		map.put("user", username);
-		map.put(CINE_FRONTEND_URL[0],
-				String.format("%s/password/change/%s", CINE_FRONTEND_URL[1], redefinePasswordKey));
+		map.put(MOVIE_MUX_FRONTEND_URL[0],
+				String.format("%s/password/change/%s", MOVIE_MUX_FRONTEND_URL[1], redefinePasswordKey));
 		return SendMailTemplate.builder()
-				.from(FROM)
 				.to(to)
 				.subject(String.format("%s, sua solicitação de recuperação de senha!", username))
 				.params(map)
@@ -63,7 +59,6 @@ public class SendMailTemplate {
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		map.put("user", username);
 		return SendMailTemplate.builder()
-				.from(FROM)
 				.to(to)
 				.subject(String.format("%s, sua conta foi bloqueada!", username))
 				.params(map)
