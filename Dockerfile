@@ -6,6 +6,6 @@ RUN mvn clean package -DskipTests
 FROM amazoncorretto:21-alpine3.19
 ENV TZ=America/Sao_Paulo
 WORKDIR /app
-COPY --from=build /app/target/cineapi.jar /app/cineapi.jar
+COPY --from=build /app/target/moviemux.jar /app/moviemux.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/moviemux.jar"]
