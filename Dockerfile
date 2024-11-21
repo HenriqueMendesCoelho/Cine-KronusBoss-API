@@ -8,4 +8,4 @@ ENV TZ=America/Sao_Paulo
 WORKDIR /app
 COPY --from=build /app/target/cineapi.jar /app/cineapi.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/cineapi.jar"]
+ENTRYPOINT ["java", "-jar", "/app/moviemux.jar"]
