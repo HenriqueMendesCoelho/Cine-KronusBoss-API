@@ -18,7 +18,7 @@ import java.util.UUID;
 @Component
 public class JWTUtil {
 
-	private static final String AUDIENCE = "https://www.cine.kronusboss.com/api";
+	private static final String AUDIENCE = "https://www.moviemux.com/api";
 
 	@Value("${jwt.secret}")
 	public String secret;

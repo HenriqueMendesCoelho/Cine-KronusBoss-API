@@ -19,7 +19,7 @@ public class SendMailTemplate {
 			.toArray(String[]::new);
 
 	@Builder.Default
-	private String from = "noreply-cine@kronusboss.com";
+	private String from = "no-reply@moviemux.com";
 	@Builder.Default
 	private String name = "Movie Mux";
 	private String to;
