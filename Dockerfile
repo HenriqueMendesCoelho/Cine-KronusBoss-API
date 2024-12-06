@@ -8,4 +8,4 @@ ENV TZ=America/Sao_Paulo
 WORKDIR /app
 COPY --from=build /app/target/moviemux.jar /app/moviemux.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/moviemux.jar"]
+ENTRYPOINT ["java","-Xms256M", "-Xmx1G", "-XX:+UseZGC", "-jar", "/app/moviemux.jar"]
